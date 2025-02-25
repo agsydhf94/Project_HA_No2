@@ -17,7 +17,7 @@ namespace HA
             stateMachine = new PlayerStateMachine();
 
             idleState = new PlayerIdleState(this, stateMachine, "Idle");
-            moveState = new PlayerMoveState(this, stateMachine, "Walk");
+            moveState = new PlayerMoveState(this, stateMachine, "Move");
             
         }
 

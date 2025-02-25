@@ -17,17 +17,17 @@ namespace HA
             this.animationBoolName = animationBoolName;
         }
 
-        public virtual void StateEnter()
+        public virtual void EnterState()
         {
 
         }
 
-        public virtual void StateUpdate()
+        public virtual void UpdateState()
         {
 
         }
 
-        public virtual void StateExit()
+        public virtual void ExitState()
         {
 
         }

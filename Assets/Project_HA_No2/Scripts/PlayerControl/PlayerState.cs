@@ -24,7 +24,7 @@ namespace HA
 
         public virtual void UpdateState()
         {
-
+            playerCharacter.CameraRotation();
         }
 
         public virtual void ExitState()

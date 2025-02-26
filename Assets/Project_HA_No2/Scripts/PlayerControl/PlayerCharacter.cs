@@ -70,6 +70,28 @@ namespace HA
             characterController.Move(movement * Time.deltaTime * movingSpeed);
         }
 
+        public void CameraRotation()
+        {
+            if (inputSystem.Look.sqrMagnitude > 0f)
+            {
+                float yaw = inputSystem.Look.x;
+                float pitch = inputSystem.Look.y;
+
+                targetYaw += yaw;
+                targetPitch -= pitch;
+            }
+
+            targetYaw = ClampAngle(targetYaw, float.MinValue, float.MaxValue);
+            targetPitch = ClampAngle(targetPitch, bottomClamp, topClamp);
+            cameraPivot.rotation = Quaternion.Euler(targetPitch, targetYaw, 0f);
+        }
+
+        private float ClampAngle(float lfAngle, float lfMin, float lfMax)
+        {
+            if (lfAngle < -360f) lfAngle += 360f;
+            if (lfAngle > 360f) lfAngle -= 360f;
+            return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
 
     }
 }

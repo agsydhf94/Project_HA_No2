@@ -48,7 +48,7 @@ namespace HA
             stateMachine.currentState.UpdateState();
         }
 
-        public void CharacterMove(Vector2 input)
+        public void CharacterMove(Vector2 input, float yAxisAngle)
         {
             horizontal = input.x;
             vertical = input.y;
@@ -62,6 +62,25 @@ namespace HA
                 movingSpeed = 2f;
             }
             runningBlend = Mathf.Lerp(runningBlend, IsRun ? 1f : 0f, Time.deltaTime * 10f);
+
+            // 마우스로 카메라 회전 후 이동 시 이동 방향 갱신 가능
+            // Mathf.Atan2 에서 Horizontal 성분을 제거하여 전후 방향에 대한 갱신만 허용
+            if (input.magnitude > 0f)
+            {
+                targetRotation = Mathf.Atan2(0, input.y) * Mathf.Rad2Deg + yAxisAngle;
+                if (Mathf.Sign(vertical) >= 0)
+                {    
+                    float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref rotationSpeed, 0.1f);
+                    transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                }
+                else
+                {
+                    // 뒤로 갈때는 targetRotation에 180을 추가함으로서 뒷걸음하는 모습을 연출
+                    float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation + 180f, ref rotationSpeed, 0.1f);
+                    transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+                }
+                
+            }
 
             characterAnimator.SetFloat("Horizontal", horizontal);
             characterAnimator.SetFloat("Vertical", vertical);

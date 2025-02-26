@@ -25,7 +25,7 @@ namespace HA
                 stateMachine.ChangeState(playerCharacter.idleState);
             }
 
-            playerCharacter.CharacterMove(playerCharacter.inputSystem.Movement);
+            playerCharacter.CharacterMove(playerCharacter.inputSystem.Movement, playerCharacter.mainCamera.transform.eulerAngles.y);
             
             
         }

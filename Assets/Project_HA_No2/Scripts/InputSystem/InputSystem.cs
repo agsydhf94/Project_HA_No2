@@ -4,17 +4,15 @@ using UnityEngine;
 
 namespace HA
 {
-    public class InputSystem : MonoBehaviour
+    public class InputSystem : Singleton<InputSystem>
     {
-        public static InputSystem Instance { get; private set; }
-
         public Vector2 Movement => movement;
         public Vector2 Look => look;
-        public bool IsLeftShift => isLeftShift;
+        public bool IsRunKey => isRunKey;
 
         private Vector2 movement;
         private Vector2 look;
-        private bool isLeftShift;
+        private bool isRunKey;
         private bool isShowCursor = false;
 
         public System.Action OnClickSpace;
@@ -25,18 +23,14 @@ namespace HA
         public System.Action<float> OnMouseScrollWheel;
         public System.Action OnClickThrowButton;
 
-        private void Awake()
+        public override void Awake()
         {
-            Instance = this;
+            base.Awake();
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 
-        private void OnDestroy()
-        {
-            Instance = null;
-        }
 
         private void Update()
         {
@@ -85,7 +79,7 @@ namespace HA
             float lookY = Input.GetAxis("Mouse Y");
             look = isShowCursor ? Vector2.zero : new Vector2(lookX, lookY);
 
-            isLeftShift = Input.GetKey(KeyCode.LeftShift);
+            isRunKey = Input.GetKey(KeyCode.LeftShift);
 
             float mouseScroll = Input.GetAxis("Mouse ScrollWheel");
             if (mouseScroll > 0 || mouseScroll < 0)

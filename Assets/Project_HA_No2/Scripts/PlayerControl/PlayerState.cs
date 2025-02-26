@@ -4,22 +4,22 @@ using UnityEngine;
 
 namespace HA
 {
-    public class PlayerState : MonoBehaviour
+    public class PlayerState
     {
-        protected PlayerController playerController;
+        protected PlayerCharacter playerCharacter;
         protected PlayerStateMachine stateMachine;
         private string animationBoolName;
 
-        public PlayerState(PlayerController playerController, PlayerStateMachine stateMachine, string animationBoolName)
+        public PlayerState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName)
         {
-            this.playerController = playerController;
+            this.playerCharacter = playerCharacter;
             this.stateMachine = stateMachine;
             this.animationBoolName = animationBoolName;
         }
 
         public virtual void EnterState()
         {
-
+            playerCharacter.characterAnimator.SetBool(animationBoolName, true);
         }
 
         public virtual void UpdateState()
@@ -29,7 +29,7 @@ namespace HA
 
         public virtual void ExitState()
         {
-
+            playerCharacter.characterAnimator.SetBool(animationBoolName, false);
         }
     }
 }

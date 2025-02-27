@@ -10,6 +10,7 @@ namespace HA
         protected PlayerStateMachine stateMachine;
         private string animationBoolName;
 
+
         public PlayerState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName)
         {
             this.playerCharacter = playerCharacter;

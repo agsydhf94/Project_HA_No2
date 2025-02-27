@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace HA
 {
-    public class PlayerMoveState : PlayerGroundedState
+    public class PlayerAirState : PlayerState
     {
-        public PlayerMoveState(PlayerCharacter playerController, PlayerStateMachine stateMachine, string animationBoolName) : base(playerController, stateMachine, animationBoolName)
+        public PlayerAirState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName) : base(playerCharacter, stateMachine, animationBoolName)
         {
         }
 
@@ -20,21 +19,20 @@ namespace HA
         {
             base.UpdateState();
 
-            if(InputSystem.Instance.Movement.magnitude == 0)
-            {
+            playerCharacter.characterAnimator.SetBool("IsGroundDetected", playerCharacter.IsGroundedDetected());
+            if (playerCharacter.IsGroundedDetected())
+            {    
                 stateMachine.ChangeState(playerCharacter.idleState);
             }
+            
 
-            playerCharacter.CharacterMove(playerCharacter.inputSystem.Movement, playerCharacter.mainCamera.transform.eulerAngles.y);
-            
-            
+            playerCharacter.ApplyGravity();
+            playerCharacter.CharacterJump();
         }
 
         public override void ExitState()
         {
             base.ExitState();
         }
-
-        
     }
 }

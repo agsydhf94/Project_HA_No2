@@ -20,14 +20,6 @@ namespace HA
         public float targetRotation;
         public float rotationSpeed;
 
-        [Header("Aiming Properties")]
-        public Transform aimingPointTransform;
-        public Vector3 AimingPoint
-        {
-            get => aimingPointTransform.position;
-            set => aimingPointTransform.position = value;
-        }
-
         public bool IsRun { get; set; } = false;
 
         public virtual void Awake()

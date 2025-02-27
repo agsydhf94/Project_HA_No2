@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace HA
 {
-    public class PlayerIdleState : PlayerGroundedState
+    public class PlayerGroundedState : PlayerState
     {
-        public PlayerIdleState(PlayerCharacter playerController, PlayerStateMachine stateMachine, string animationBoolName) : base(playerController, stateMachine, animationBoolName)
+        public PlayerGroundedState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName) : base(playerCharacter, stateMachine, animationBoolName)
         {
         }
 
@@ -19,17 +19,18 @@ namespace HA
         {
             base.UpdateState();
 
-            if(InputSystem.Instance.Movement.magnitude != 0)
+            if(Input.GetKeyDown(KeyCode.Space))
             {
-                stateMachine.ChangeState(playerCharacter.moveState);
+                stateMachine.ChangeState(playerCharacter.jumpState);
             }
+
+
         }
 
         public override void ExitState()
         {
             base.ExitState();
         }
-
-        
+   
     }
 }

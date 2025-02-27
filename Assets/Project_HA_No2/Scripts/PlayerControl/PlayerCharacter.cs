@@ -12,10 +12,13 @@ namespace HA
         public PlayerStateMachine stateMachine { get; private set; }
         public PlayerIdleState idleState { get; private set; }
         public PlayerMoveState moveState { get; private set; }
+        public PlayerJumpState jumpState { get; private set; }
+        public PlayerAirState airState { get; private set; }
         #endregion
 
 
-        #region Components
+        #region Player Character Camera
+        [Header("Player Character Camera")]
         public InputSystem inputSystem;
         public Camera mainCamera;
         public Transform cameraPivot;
@@ -24,6 +27,26 @@ namespace HA
         private float targetYaw;
         private float targetPitch;
         #endregion
+
+        #region Collision Information
+        [SerializeField] private Transform groundCheck;
+        [SerializeField] private float groundCheckDistance;
+        [SerializeField] private LayerMask groundLayer;
+        #endregion
+
+        #region Player Moving Values
+        public Vector3 playerMovementVec;
+        #endregion
+
+        #region Player Jump
+        [Header("Player Jump")]
+        [SerializeField] private float gravity;
+        [SerializeField] private float maxJumpHeight;
+        [SerializeField] private float maxJumpTime;
+        public float verticalVelocity;
+        public bool isGroundDetected;
+        #endregion
+
 
         public override void Awake()
         {
@@ -34,6 +57,8 @@ namespace HA
 
             idleState = new PlayerIdleState(this, stateMachine, "Idle");
             moveState = new PlayerMoveState(this, stateMachine, "Move");
+            jumpState = new PlayerJumpState(this, stateMachine, "Jump");
+            airState = new PlayerAirState(this, stateMachine, "Jump");
         }
 
         private void Start()
@@ -48,6 +73,7 @@ namespace HA
             stateMachine.currentState.UpdateState();
         }
 
+        #region Character Move
         public void CharacterMove(Vector2 input, float yAxisAngle)
         {
             horizontal = input.x;
@@ -70,6 +96,7 @@ namespace HA
                 targetRotation = Mathf.Atan2(0, input.y) * Mathf.Rad2Deg + yAxisAngle;
                 if (Mathf.Sign(vertical) >= 0)
                 {    
+                    // 앞으로 갈때는 targetRotation(정면)을 바라보도록 설정
                     float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref rotationSpeed, 0.1f);
                     transform.rotation = Quaternion.Euler(0f, rotation, 0f);
                 }
@@ -86,9 +113,12 @@ namespace HA
             characterAnimator.SetFloat("Vertical", vertical);
             characterAnimator.SetFloat("RunningBlend", runningBlend);
 
-            characterController.Move(movement * Time.deltaTime * movingSpeed);
+            playerMovementVec = movement * Time.deltaTime * movingSpeed;
+            characterController.Move(playerMovementVec);
         }
+        #endregion
 
+        #region Camera Rotation
         public void CameraRotation()
         {
             if (inputSystem.Look.sqrMagnitude > 0f)
@@ -111,6 +141,34 @@ namespace HA
             if (lfAngle > 360f) lfAngle -= 360f;
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
+        #endregion
+
+        #region Gravity and Jump
+        public void ApplyGravity() => verticalVelocity += gravity * Time.deltaTime;
+
+        public void CharacterJump()
+        {
+            Vector3 jumpMove = new Vector3(0, verticalVelocity * Time.deltaTime, 0);
+            characterController.Move(playerMovementVec + jumpMove);
+        }
+
+        public void GravityCalculate()
+        {
+            float timeToApex = maxJumpTime / 2;
+            gravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
+            verticalVelocity = (2 * maxJumpHeight) / timeToApex;        
+        }
+        #endregion
+
+
+        #region Collision
+        public bool IsGroundedDetected() => Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayer);
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(groundCheck.position, groundCheckDistance); 
+        }
+        #endregion
+
 
     }
 }

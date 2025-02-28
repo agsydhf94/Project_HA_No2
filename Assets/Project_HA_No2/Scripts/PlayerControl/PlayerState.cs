@@ -10,6 +10,8 @@ namespace HA
         protected PlayerStateMachine stateMachine;
         private string animationBoolName;
 
+        protected float stateTimer;
+
 
         public PlayerState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName)
         {
@@ -26,6 +28,8 @@ namespace HA
         public virtual void UpdateState()
         {
             playerCharacter.CameraRotation();
+
+            stateTimer -= Time.deltaTime;
         }
 
         public virtual void ExitState()

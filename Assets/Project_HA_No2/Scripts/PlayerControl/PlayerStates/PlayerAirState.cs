@@ -20,14 +20,15 @@ namespace HA
             base.UpdateState();
 
             playerCharacter.characterAnimator.SetBool("IsGroundDetected", playerCharacter.IsGroundedDetected());
+            
+
             if (playerCharacter.IsGroundedDetected())
             {    
                 stateMachine.ChangeState(playerCharacter.idleState);
             }
-            
-
             playerCharacter.ApplyGravity();
             playerCharacter.CharacterJump();
+
         }
 
         public override void ExitState()

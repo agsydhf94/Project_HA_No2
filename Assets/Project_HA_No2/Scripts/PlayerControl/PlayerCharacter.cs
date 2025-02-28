@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -14,6 +16,7 @@ namespace HA
         public PlayerMoveState moveState { get; private set; }
         public PlayerJumpState jumpState { get; private set; }
         public PlayerAirState airState { get; private set; }
+        public PlayerDashState dashState { get; private set; }
         #endregion
 
 
@@ -40,17 +43,26 @@ namespace HA
 
         #region Player Jump
         [Header("Player Jump")]
-        [SerializeField] private float gravity;
         [SerializeField] private float maxJumpHeight;
         [SerializeField] private float maxJumpTime;
+        private float gravity;
         public float verticalVelocity;
-        public bool isGroundDetected;
+        #endregion
+
+        #region Player Dash
+        public float dashSpeed;
+        public float dashDuration;
+        #endregion
+
+        #region Player Cosmetics
+        public TrailRenderer trailRenderer;
         #endregion
 
 
         public override void Awake()
         {
             base.Awake();
+            trailRenderer = GetComponent<TrailRenderer>();
             inputSystem = InputSystem.Instance;
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
@@ -59,6 +71,7 @@ namespace HA
             moveState = new PlayerMoveState(this, stateMachine, "Move");
             jumpState = new PlayerJumpState(this, stateMachine, "Jump");
             airState = new PlayerAirState(this, stateMachine, "Jump");
+            dashState = new PlayerDashState(this, stateMachine, "Dash");
         }
 
         private void Start()
@@ -160,6 +173,26 @@ namespace HA
         }
         #endregion
 
+        #region Character Dash
+        public void CharacterDash()
+        {
+            // 현재 캐릭터의 Forward 방향을 기준으로 XZ 평면 벡터 생성
+            Vector3 currentCharacterForward_xz = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+
+            // 플레이어 이동 방향을 기준으로 XZ 평면 벡터 생성
+            Vector3 planeDirection_xz = new Vector3(playerMovementVec.x, 0, playerMovementVec.z).normalized;
+
+            // 현재 방향과 목표 방향의 각도 차이 계산 (SignedAngle로 시계/반시계 방향 판별)
+            float angleDifference = Vector3.SignedAngle(currentCharacterForward_xz, planeDirection_xz, Vector3.up);
+
+            // Y축 회전 적용 (부드럽게 회전)
+            Quaternion targetRotation = Quaternion.Euler(0, transform.eulerAngles.y + angleDifference, 0);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500f); // 속도 조절 가능
+
+            // XZ 평면상에서 이동
+            characterController.Move(playerMovementVec + planeDirection_xz * dashSpeed);
+        }
+        #endregion
 
         #region Collision
         public bool IsGroundedDetected() => Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayer);
@@ -167,6 +200,11 @@ namespace HA
         {
             Gizmos.DrawSphere(groundCheck.position, groundCheckDistance); 
         }
+        #endregion
+
+        #region Trail Renderer System
+        public void DashTrailRenderer_On() => trailRenderer.emitting = true;
+        public void DashTrailRenderer_Off() => trailRenderer.emitting = false;
         #endregion
 
 

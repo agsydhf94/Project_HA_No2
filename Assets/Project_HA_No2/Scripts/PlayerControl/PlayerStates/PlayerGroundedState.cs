@@ -29,6 +29,11 @@ namespace HA
             {
                 stateMachine.ChangeState(playerCharacter.dashState);
             }
+
+            if(Input.GetKeyDown(KeyCode.U))
+            {
+                playerCharacter.CharacterArmed();
+            }
         }
 
         public override void ExitState()

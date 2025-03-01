@@ -17,6 +17,7 @@ namespace HA
         public PlayerJumpState jumpState { get; private set; }
         public PlayerAirState airState { get; private set; }
         public PlayerDashState dashState { get; private set; }
+        public PlayerArmedState armedState { get; private set; }
         #endregion
 
 
@@ -72,6 +73,7 @@ namespace HA
             jumpState = new PlayerJumpState(this, stateMachine, "Jump");
             airState = new PlayerAirState(this, stateMachine, "Jump");
             dashState = new PlayerDashState(this, stateMachine, "Dash");
+            armedState = new PlayerArmedState(this, stateMachine, "Armed");
         }
 
         private void Start()
@@ -84,6 +86,9 @@ namespace HA
             base.Update();
 
             stateMachine.currentState.UpdateState();
+            
+            if(stateMachine.subState != null)
+                stateMachine.subState.UpdateState();
         }
 
         #region Character Move
@@ -191,6 +196,20 @@ namespace HA
 
             // XZ 평면상에서 이동
             characterController.Move(playerMovementVec + planeDirection_xz * dashSpeed);
+        }
+        #endregion
+
+        #region Character Armed Check
+        public void CharacterArmed()
+        {
+            stateMachine.SubState_On(armedState);
+            characterAnimator.SetTrigger("ArmedTrigger");
+        }
+
+        public void CharacterUnArmed()
+        {
+            stateMachine.SubState_Off();
+            characterAnimator.SetTrigger("UnArmedTrigger");
         }
         #endregion
 

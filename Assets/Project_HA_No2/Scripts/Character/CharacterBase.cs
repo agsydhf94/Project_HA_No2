@@ -12,13 +12,16 @@ namespace HA
         public CharacterController characterController;
 
         [Header("Moving Properties")]
-        public float unitSpeed;
-        public float movingSpeed;
-        public float horizontal;
-        public float vertical;
-        public float runningBlend;
-        public float targetRotation;
-        public float rotationSpeed;
+        public float basicSpeed;
+        public float unArmed_RunningDelta;
+        public float armed_WalkingDelta;
+        public float armed_RunningDelta;
+        [HideInInspector] public float unitSpeed;
+        [HideInInspector] public float horizontal;
+        [HideInInspector] public float vertical;
+        [HideInInspector] public float runningBlend;
+        [HideInInspector] public float targetRotation;
+        [HideInInspector] public float rotationSpeed;
 
         public bool IsRun { get; set; } = false;
 

@@ -40,6 +40,10 @@ namespace HA
 
         #region Player Moving Values
         public Vector3 playerMovementVec;
+        public float currentWalkingSpeedDelta;
+        public float currentRunningSpeedDelta;
+        public float subWalkingSpeedDelta;
+        public float subRunningSpeedDelta;
         #endregion
 
         #region Player Jump
@@ -98,17 +102,29 @@ namespace HA
             vertical = input.y;
             unitSpeed = input.magnitude > 0f ? 1f : 0f;
 
-            Vector3 movement = transform.forward * vertical + transform.right * horizontal;
 
+            float movingSpeed = basicSpeed;
             IsRun = inputSystem.IsRunKey;
             if(inputSystem.IsRunKey)
             {
-                movingSpeed = 2f;
+                movingSpeed += currentRunningSpeedDelta;
+
+                if (stateMachine.subState != null)
+                    movingSpeed += subRunningSpeedDelta;
+            }
+            else
+            {
+                movingSpeed += currentWalkingSpeedDelta;
+
+                if (stateMachine.subState != null)
+                    movingSpeed += subWalkingSpeedDelta;
             }
             runningBlend = Mathf.Lerp(runningBlend, IsRun ? 1f : 0f, Time.deltaTime * 10f);
 
+
             // 마우스로 카메라 회전 후 이동 시 이동 방향 갱신 가능
             // Mathf.Atan2 에서 Horizontal 성분을 제거하여 전후 방향에 대한 갱신만 허용
+            Vector3 movement = transform.forward * vertical + transform.right * horizontal;
             if (input.magnitude > 0f)
             {
                 targetRotation = Mathf.Atan2(0, input.y) * Mathf.Rad2Deg + yAxisAngle;

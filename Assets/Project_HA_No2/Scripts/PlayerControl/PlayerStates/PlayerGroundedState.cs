@@ -13,6 +13,8 @@ namespace HA
         public override void EnterState()
         {
             base.EnterState();
+            playerCharacter.currentWalkingSpeedDelta = 0f;
+            playerCharacter.currentRunningSpeedDelta = playerCharacter.unArmed_RunningDelta;
         }
 
         public override void UpdateState()

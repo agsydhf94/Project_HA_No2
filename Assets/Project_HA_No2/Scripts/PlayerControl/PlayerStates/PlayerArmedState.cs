@@ -13,6 +13,8 @@ namespace HA
         public override void EnterState()
         {
             base.EnterState();
+            playerCharacter.subWalkingSpeedDelta = playerCharacter.armed_WalkingDelta;
+            playerCharacter.subRunningSpeedDelta = playerCharacter.armed_RunningDelta;
         }
 
         public override void UpdateState()
@@ -27,6 +29,8 @@ namespace HA
         public override void ExitState()
         {
             base.ExitState();
+            playerCharacter.subWalkingSpeedDelta = 0f;
+            playerCharacter.subRunningSpeedDelta = 0f;
         }
     }
 }

@@ -19,7 +19,6 @@ namespace HA
 
         public override void UpdateState()
         {
-            base.UpdateState();
             if (Input.GetKeyDown(KeyCode.Y))
             {
                 playerCharacter.CharacterUnArmed();

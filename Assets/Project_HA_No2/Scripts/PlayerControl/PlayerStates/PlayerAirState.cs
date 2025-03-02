@@ -12,28 +12,27 @@ namespace HA
 
         public override void EnterState()
         {
-            base.EnterState();
+            base.EnterState();        
         }
 
         public override void UpdateState()
         {
             base.UpdateState();
-
-            playerCharacter.characterAnimator.SetBool("IsGroundDetected", playerCharacter.IsGroundedDetected());
             
-
             if (playerCharacter.IsGroundedDetected())
-            {    
+            {
                 stateMachine.ChangeState(playerCharacter.idleState);
+                playerCharacter.playerMovementVec = Vector3.zero;
             }
-            playerCharacter.ApplyGravity();
+            playerCharacter.ApplyModifiedGravity();
             playerCharacter.CharacterJump();
+            playerCharacter.characterAnimator.SetFloat("stopDetectGroundDuration", stateTimer);
 
         }
 
         public override void ExitState()
         {
-            base.ExitState();
+            base.ExitState();            
         }
     }
 }

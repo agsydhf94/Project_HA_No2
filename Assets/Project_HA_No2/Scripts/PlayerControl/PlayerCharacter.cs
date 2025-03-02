@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -50,8 +51,9 @@ namespace HA
         [Header("Player Jump")]
         [SerializeField] private float maxJumpHeight;
         [SerializeField] private float maxJumpTime;
-        private float gravity;
+        private float modifiedGravity;
         public float verticalVelocity;
+        public float stopDetectGroundDuration;
         #endregion
 
         #region Player Dash
@@ -178,7 +180,13 @@ namespace HA
         #endregion
 
         #region Gravity and Jump
-        public void ApplyGravity() => verticalVelocity += gravity * Time.deltaTime;
+        public void ApplyModifiedGravity() => verticalVelocity += modifiedGravity * Time.deltaTime;
+
+        public void ApplyNaturalGravity()
+        {
+            Vector3 freefallVec = new Vector3(0, -9.81f * Time.deltaTime * 0.5f, 0);
+            characterController.Move(playerMovementVec + freefallVec);
+        }
 
         public void CharacterJump()
         {
@@ -189,7 +197,7 @@ namespace HA
         public void GravityCalculate()
         {
             float timeToApex = maxJumpTime / 2;
-            gravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
+            modifiedGravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
             verticalVelocity = (2 * maxJumpHeight) / timeToApex;        
         }
         #endregion

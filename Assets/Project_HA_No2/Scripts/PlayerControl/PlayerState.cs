@@ -29,6 +29,9 @@ namespace HA
         {
             playerCharacter.CameraRotation();
 
+            playerCharacter.ApplyNaturalGravity();
+            playerCharacter.characterAnimator.SetBool("IsGroundDetected", playerCharacter.IsGroundedDetected());        
+
             stateTimer -= Time.deltaTime;
         }
 

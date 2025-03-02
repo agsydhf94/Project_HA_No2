@@ -15,14 +15,17 @@ namespace HA
             base.EnterState();
 
             playerCharacter.GravityCalculate();
+
+            stateTimer = playerCharacter.stopDetectGroundDuration;
         }
 
         public override void UpdateState()
         {
             base.UpdateState();
             playerCharacter.CharacterJump();
-            playerCharacter.ApplyGravity();
-            playerCharacter.characterAnimator.SetBool("IsGroundDetected", playerCharacter.IsGroundedDetected());
+            playerCharacter.characterAnimator.SetFloat("stopDetectGroundDuration", stateTimer);
+            playerCharacter.ApplyModifiedGravity();
+
 
             if (playerCharacter.verticalVelocity < 0)
             {

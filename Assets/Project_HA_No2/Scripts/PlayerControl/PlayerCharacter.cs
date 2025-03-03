@@ -54,6 +54,7 @@ namespace HA
         private float modifiedGravity;
         public float verticalVelocity;
         public float stopDetectGroundDuration;
+        public bool isFromJump;
         #endregion
 
         #region Player Dash
@@ -77,7 +78,7 @@ namespace HA
             idleState = new PlayerIdleState(this, stateMachine, "Idle");
             moveState = new PlayerMoveState(this, stateMachine, "Move");
             jumpState = new PlayerJumpState(this, stateMachine, "Jump");
-            airState = new PlayerAirState(this, stateMachine, "Jump");
+            airState = new PlayerAirState(this, stateMachine, "Air");
             dashState = new PlayerDashState(this, stateMachine, "Dash");
             armedState = new PlayerArmedState(this, stateMachine, "Armed");
         }
@@ -102,7 +103,6 @@ namespace HA
         {
             horizontal = input.x;
             vertical = input.y;
-            unitSpeed = input.magnitude > 0f ? 1f : 0f;
 
 
             float movingSpeed = basicSpeed;

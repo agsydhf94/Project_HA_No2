@@ -29,6 +29,7 @@ namespace HA
 
             if (playerCharacter.verticalVelocity < 0)
             {
+                playerCharacter.isFromJump = true;
                 stateMachine.ChangeState(playerCharacter.airState);
             }
         }

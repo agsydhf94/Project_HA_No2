@@ -10,6 +10,7 @@ namespace HA
         protected PlayerStateMachine stateMachine;
         private string animationBoolName;
 
+
         protected float stateTimer;
 
 
@@ -30,7 +31,7 @@ namespace HA
             playerCharacter.CameraRotation();
 
             playerCharacter.ApplyNaturalGravity();
-            playerCharacter.characterAnimator.SetBool("IsGroundDetected", playerCharacter.IsGroundedDetected());        
+            playerCharacter.characterAnimator.SetBool("IsGroundDetected", playerCharacter.IsGroundedDetected());
 
             stateTimer -= Time.deltaTime;
         }

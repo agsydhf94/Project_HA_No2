@@ -36,6 +36,11 @@ namespace HA
             {
                 playerCharacter.CharacterArmed();
             }
+
+            if(!playerCharacter.IsGroundedDetected())
+            {
+                stateMachine.ChangeState(playerCharacter.airState);
+            }
         }
 
         public override void ExitState()

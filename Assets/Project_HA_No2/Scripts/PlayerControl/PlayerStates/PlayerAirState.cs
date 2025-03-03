@@ -23,8 +23,15 @@ namespace HA
             {
                 stateMachine.ChangeState(playerCharacter.idleState);
                 playerCharacter.playerMovementVec = Vector3.zero;
+                
             }
-            playerCharacter.ApplyModifiedGravity();
+
+            if(playerCharacter.isFromJump)
+            {
+                playerCharacter.ApplyModifiedGravity();
+            }
+            
+            
             playerCharacter.CharacterJump();
             playerCharacter.characterAnimator.SetFloat("stopDetectGroundDuration", stateTimer);
 
@@ -32,7 +39,8 @@ namespace HA
 
         public override void ExitState()
         {
-            base.ExitState();            
+            base.ExitState();
+            playerCharacter.isFromJump = false;
         }
     }
 }

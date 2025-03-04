@@ -13,6 +13,7 @@ namespace HA
 
         protected float stateTimer;
         protected bool triggerCalled;
+        protected bool comboAttackQueued;
 
 
         public PlayerState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName)

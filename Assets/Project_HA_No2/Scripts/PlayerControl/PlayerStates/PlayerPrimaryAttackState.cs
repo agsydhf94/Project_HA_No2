@@ -8,9 +8,6 @@ namespace HA
     {
         private int comboCounter;
 
-        private float lastTimeAttacked;
-        private float comboWindow = 2;
-
         public PlayerPrimaryAttackState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName) : base(playerCharacter, stateMachine, animationBoolName)
         {
         }
@@ -19,7 +16,9 @@ namespace HA
         {
             base.EnterState();
 
-            if(comboCounter > 2 || Time.time >= lastTimeAttacked + comboWindow)
+            // Time.time >= lastTimeAttacked + comboWindow 이 부분은
+            // 현재 Animation event trigger로 통제하고 있기에 불필요
+            if (comboCounter > 2)
             {
                 comboCounter = 0;
             }
@@ -32,9 +31,29 @@ namespace HA
         {
             base.UpdateState();        
 
+            if(Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                // 마지막 콤보에서는 Queued 되면 안됨
+                if(comboCounter < 2)
+                {
+                    comboAttackQueued = true;
+                }                
+            }
+
+            // 여기서의 trigger는 해당 콤보 공격 애니메이션이 거의 끝나는 시점
             if(triggerCalled)
             {
-                stateMachine.ChangeState(playerCharacter.idleState);
+                if (comboAttackQueued && comboCounter < 3)
+                {
+                    comboAttackQueued = false;
+                    comboCounter++;
+                    stateMachine.ChangeState(playerCharacter.primaryAttackState);
+                }
+                else
+                {
+                    comboCounter = 0;
+                    stateMachine.ChangeState(playerCharacter.idleState);
+                }
             }
         }
 
@@ -42,10 +61,7 @@ namespace HA
         {
             base.ExitState();
 
-            comboCounter++;
-            lastTimeAttacked = Time.time;
             playerCharacter.characterAnimator.applyRootMotion = false;
-            Debug.Log(lastTimeAttacked);
         } 
     }
 }

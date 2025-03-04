@@ -19,6 +19,7 @@ namespace HA
         public PlayerAirState airState { get; private set; }
         public PlayerDashState dashState { get; private set; }
         public PlayerArmedState armedState { get; private set; }
+        public PlayerPrimaryAttackState primaryAttackState { get; private set; }
         #endregion
 
 
@@ -81,6 +82,7 @@ namespace HA
             airState = new PlayerAirState(this, stateMachine, "Air");
             dashState = new PlayerDashState(this, stateMachine, "Dash");
             armedState = new PlayerArmedState(this, stateMachine, "Armed");
+            primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
         }
 
         private void Start()
@@ -244,6 +246,10 @@ namespace HA
             Gizmos.DrawSphere(groundCheck.position, groundCheckDistance); 
         }
         #endregion
+
+        #region Animation Control
+        public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
+        #endregion 
 
         #region Trail Renderer System
         public void DashTrailRenderer_On() => trailRenderer.emitting = true;

@@ -23,6 +23,12 @@ namespace HA
             {
                 playerCharacter.CharacterUnArmed();
             }
+
+            if(Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                stateMachine.ChangeState(playerCharacter.primaryAttackState);
+            }
+
         }
 
         public override void ExitState()

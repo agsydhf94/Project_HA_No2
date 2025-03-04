@@ -12,6 +12,7 @@ namespace HA
 
 
         protected float stateTimer;
+        protected bool triggerCalled;
 
 
         public PlayerState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName)
@@ -24,6 +25,7 @@ namespace HA
         public virtual void EnterState()
         {
             playerCharacter.characterAnimator.SetBool(animationBoolName, true);
+            triggerCalled = false;
         }
 
         public virtual void UpdateState()
@@ -40,5 +42,7 @@ namespace HA
         {
             playerCharacter.characterAnimator.SetBool(animationBoolName, false);
         }
+
+        public virtual void AnimationFinishTrigger() => triggerCalled = true;
     }
 }

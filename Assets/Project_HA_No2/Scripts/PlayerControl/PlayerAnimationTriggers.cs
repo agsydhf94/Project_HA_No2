@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace HA
 {
-    public class PlayerAnimationTrigger : MonoBehaviour
+    public class PlayerAnimationTriggers : MonoBehaviour
     {
         private PlayerCharacter playerCharacter => GetComponent<PlayerCharacter>();
 
-        private void AnimationTrigger()
+        private void AnimationTrigger_On()
         {
             playerCharacter.AnimationTrigger();
         }

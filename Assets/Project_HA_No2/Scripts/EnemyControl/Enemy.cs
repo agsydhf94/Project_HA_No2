@@ -4,19 +4,26 @@ using UnityEngine;
 
 namespace HA
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : CharacterBase
     {
         public Animator enemyAnimator;
-
         public EnemyStateMachine stateMachine { get; private set; }
 
-        private void Awake()
+        #region Enemy Moving Information
+        [Header("Enemy Moving Information")]
+        public float moveSpeed;
+        public float idleTime;
+        #endregion
+
+
+        public override void Awake()
         {
             stateMachine = new EnemyStateMachine();
         }
 
-        private void Update()
+        public override void Update()
         {
+            base.Update();
             stateMachine.currentState.UpdateState();
         }
     }

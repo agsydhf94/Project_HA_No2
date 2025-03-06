@@ -7,15 +7,15 @@ namespace HA
     public class EnemyState : MonoBehaviour
     {
         protected EnemyStateMachine stateMachine;
-        protected Enemy enemy;
+        protected Enemy enemyBase;
 
         private string animationBoolname;
         protected bool triggerCalled;
         protected float stateTimer;
 
-        public EnemyState(Enemy enemy, EnemyStateMachine stateMachine, string animationBoolname)
+        public EnemyState(Enemy enemyBase, EnemyStateMachine stateMachine, string animationBoolname)
         {
-            this.enemy = enemy;
+            this.enemyBase = enemyBase;
             this.stateMachine = stateMachine;
             this.animationBoolname = animationBoolname;
         }
@@ -23,7 +23,7 @@ namespace HA
         public virtual void EnterState()
         {
             triggerCalled = false;
-            enemy.enemyAnimator.SetBool(animationBoolname, true);
+            enemyBase.enemyAnimator.SetBool(animationBoolname, true);
         }
 
         public virtual void UpdateState()
@@ -33,7 +33,7 @@ namespace HA
 
         public virtual void ExitState()
         {
-            enemy.enemyAnimator.SetBool(animationBoolname, false);
+            enemyBase.enemyAnimator.SetBool(animationBoolname, false);
         }
     }
 }

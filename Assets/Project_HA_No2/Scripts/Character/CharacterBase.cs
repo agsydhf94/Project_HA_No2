@@ -7,11 +7,13 @@ namespace HA
 {
     public class CharacterBase : MonoBehaviour, IDamagable
     {
-        [Header("Animation")]
-        public Animator characterAnimator;
-        public CharacterController characterController;
+        #region Animation Components
+        [Header("Animation Components")]
+        public Animator characterAnimator;       
+        #endregion
 
-        [Header("Moving Properties")]
+        #region Moving Information
+        [Header("Moving Information")]
         public float basicSpeed;
         public float unArmed_RunningDelta;
         public float armed_WalkingDelta;
@@ -22,13 +24,21 @@ namespace HA
         [HideInInspector] public float runningBlend;
         [HideInInspector] public float targetRotation;
         [HideInInspector] public float rotationSpeed;
+        #endregion
+
+        #region Collision Information
+        [Header("Collision Information")]
+        [SerializeField] private Transform groundCheck;
+        [SerializeField] private float groundCheckDistance;
+        [SerializeField] private LayerMask groundLayer;
+        #endregion
 
         public bool IsRun { get; set; } = false;
 
         public virtual void Awake()
         {
             characterAnimator = GetComponent<Animator>();
-            characterController = GetComponent<CharacterController>();
+            
         }
 
         public virtual void Update()
@@ -41,5 +51,13 @@ namespace HA
         {
             
         }
+
+        #region Collision
+        public bool IsGroundedDetected() => Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayer);
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(groundCheck.position, groundCheckDistance);
+        }
+        #endregion
     }
 }

@@ -34,13 +34,13 @@ namespace HA
         private float targetPitch;
         #endregion
 
-        #region Collision Information
-        [SerializeField] private Transform groundCheck;
-        [SerializeField] private float groundCheckDistance;
-        [SerializeField] private LayerMask groundLayer;
+        #region Player Character Controller
+        [Header("Player Character Controller")]
+        public CharacterController characterController;
         #endregion
 
         #region Player Moving Values
+        [Header("Player Moving Values")]
         public Vector3 playerMovementVec;
         public float currentWalkingSpeedDelta;
         public float currentRunningSpeedDelta;
@@ -59,11 +59,13 @@ namespace HA
         #endregion
 
         #region Player Dash
+        [Header("Player Dash")]
         public float dashSpeed;
         public float dashDuration;
         #endregion
 
         #region Player Cosmetics
+        [Header("Player Cosmetics")]
         public TrailRenderer trailRenderer;
         #endregion
 
@@ -75,6 +77,7 @@ namespace HA
             inputSystem = InputSystem.Instance;
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
+            characterController = GetComponent<CharacterController>();
 
             idleState = new PlayerIdleState(this, stateMachine, "Idle");
             moveState = new PlayerMoveState(this, stateMachine, "Move");
@@ -239,13 +242,7 @@ namespace HA
         }
         #endregion
 
-        #region Collision
-        public bool IsGroundedDetected() => Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayer);
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawSphere(groundCheck.position, groundCheckDistance); 
-        }
-        #endregion
+        
 
         #region Animation Control
         public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();

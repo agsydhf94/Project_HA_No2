@@ -6,22 +6,24 @@ namespace HA
 {
     public class Enemy : CharacterBase
     {
-        public Animator enemyAnimator;
         public EnemyStateMachine stateMachine { get; private set; }
 
         #region Enemy Moving Information
         [Header("Enemy Moving Information")]
-        public float moveSpeed;
+        public float patrolSpeed;
+        public float chaseSpeed;
         public float idleTime;
+        public float patrolTime;
         #endregion
 
 
-        public override void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             stateMachine = new EnemyStateMachine();
         }
 
-        public override void Update()
+        protected override void Update()
         {
             base.Update();
             stateMachine.currentState.UpdateState();

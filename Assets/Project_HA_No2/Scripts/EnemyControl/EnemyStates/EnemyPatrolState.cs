@@ -16,11 +16,19 @@ namespace HA
         public override void EnterState()
         {
             base.EnterState();
+
+            stateTimer = enemyBear.patrolTime;
+            enemyBear.EnemyPatrol_RandomDirection();
         }
 
         public override void UpdateState()
         {
             base.UpdateState();
+
+            if(stateTimer < 0 || enemyBear.IsGroundedDetected())
+            {
+                stateMachine.ChangeState(enemyBear.IdleState);
+            }
         }
 
         public override void ExitState()

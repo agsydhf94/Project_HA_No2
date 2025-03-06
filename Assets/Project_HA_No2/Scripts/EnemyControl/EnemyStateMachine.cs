@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class EnemyStateMachine : MonoBehaviour
+    public class EnemyStateMachine
     {
         public EnemyState currentState { get; private set; }
 

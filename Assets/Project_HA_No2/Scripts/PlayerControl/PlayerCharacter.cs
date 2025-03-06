@@ -70,7 +70,7 @@ namespace HA
         #endregion
 
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
             trailRenderer = GetComponent<TrailRenderer>();
@@ -88,12 +88,12 @@ namespace HA
             primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
         }
 
-        private void Start()
+        protected override void Start()
         {
             stateMachine.Initialize(idleState);
         }
 
-        public override void Update()
+        protected override void Update()
         {
             base.Update();
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class EnemyState : MonoBehaviour
+    public class EnemyState
     {
         protected EnemyStateMachine stateMachine;
         protected Enemy enemyBase;
@@ -23,17 +23,17 @@ namespace HA
         public virtual void EnterState()
         {
             triggerCalled = false;
-            enemyBase.enemyAnimator.SetBool(animationBoolname, true);
+            enemyBase.characterAnimator.SetBool(animationBoolname, true);
         }
 
         public virtual void UpdateState()
         {
-
+            stateTimer -= Time.deltaTime;
         }
 
         public virtual void ExitState()
         {
-            enemyBase.enemyAnimator.SetBool(animationBoolname, false);
+            enemyBase.characterAnimator.SetBool(animationBoolname, false);
         }
     }
 }

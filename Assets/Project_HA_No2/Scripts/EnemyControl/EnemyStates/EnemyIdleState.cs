@@ -16,6 +16,9 @@ namespace HA
         public override void EnterState()
         {
             base.EnterState();
+
+            stateTimer = enemyBear.idleTime;
+            enemyBear.SetNavMeshAgent_Stop();
         }
 
         public override void UpdateState()

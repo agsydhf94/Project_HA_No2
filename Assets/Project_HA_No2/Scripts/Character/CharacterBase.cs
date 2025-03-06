@@ -35,13 +35,17 @@ namespace HA
 
         public bool IsRun { get; set; } = false;
 
-        public virtual void Awake()
+        protected virtual void Awake()
         {
-            characterAnimator = GetComponent<Animator>();
-            
+                    
         }
 
-        public virtual void Update()
+        protected virtual void Start()
+        {
+            characterAnimator = GetComponent<Animator>();
+        }
+
+        protected virtual void Update()
         {
             
         }

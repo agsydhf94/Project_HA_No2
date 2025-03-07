@@ -30,7 +30,9 @@ namespace HA
         [Header("Collision Information")]
         [SerializeField] private Transform groundCheck;
         [SerializeField] private float groundCheckDistance;
-        [SerializeField] private LayerMask groundLayer;
+        [SerializeField] protected Transform eyeCheck;
+        [SerializeField] protected float eyeCheckDistance;
+        [SerializeField] protected LayerMask groundLayer;
         #endregion
 
         public bool IsRun { get; set; } = false;

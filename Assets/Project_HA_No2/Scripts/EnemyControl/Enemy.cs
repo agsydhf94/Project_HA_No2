@@ -27,6 +27,10 @@ namespace HA
         public float patrolTime;
         #endregion
 
+        #region Enemy Attack Information
+        public float attackDistance;
+        #endregion
+
 
         protected override void Awake()
         {
@@ -67,7 +71,7 @@ namespace HA
         #endregion
 
         #region Object Detection
-        public virtual List<Collider> IsObjectDetected<T>(Transform center, float radius, LayerMask layerMask) where T : class
+        public virtual List<Collider> ObjectDetection<T>(Transform center, float radius, LayerMask layerMask) where T : class
         {
             // 조건에 맞는 콜라이더가 몇 개인지 길이 예측이 안되기 때문에 배열대신 리스트로 선언
             List<Collider> result = new List<Collider>();
@@ -85,6 +89,26 @@ namespace HA
         }
         #endregion
 
+        #region Distance Caluate by Raycast
+
+        public float Distance_byRaycast()
+        {
+            float distance;
+
+            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, Mathf.Infinity, playerLayerMask))
+            {
+                distance = hit.distance; // 거리 값 저장
+            }
+            else
+            {
+                distance = Mathf.Infinity; // 충돌하지 않은 경우 무한대 거리 반환
+            }  
+
+            return distance;
+        }
+
+        #endregion
+
         #region Enemy Chase
         public void ChaseMode_BySector(List<Collider> colliders, float viewAngle)
         {
@@ -92,6 +116,7 @@ namespace HA
             {
                 Vector3 directonToTarget = collider.transform.position - transform.position;
                 Vector3 forwardDirection = transform.forward;
+                float distance = Vector3.Distance(transform.position, collider.transform.position);
 
                 if (Vector3.Angle(directonToTarget, forwardDirection) < viewAngle * 0.5f)
                 {
@@ -101,5 +126,11 @@ namespace HA
             }
         }
         #endregion
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + attackDistance * transform.forward);
+        }
     }
 }

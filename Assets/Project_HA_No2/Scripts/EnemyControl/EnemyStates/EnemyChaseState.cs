@@ -20,7 +20,18 @@ namespace HA
         {
             base.UpdateState();
 
-            enemyBear.ChaseMode_BySector(enemyBear.IsObjectDetected<PlayerCharacter>(enemyBear.eyeCheck, enemyBear.eyeCheckDistance, enemyBear.playerLayerMask), enemyBear.viewAngle);
+            List<Collider> colliders = enemyBear.ObjectDetection<PlayerCharacter>(enemyBear.eyeCheck, enemyBear.eyeCheckDistance, enemyBear.playerLayerMask);
+            if(colliders.Count > 0) // 플레이어가 감지되면
+            {
+                if (enemyBear.Distance_byRaycast() < enemyBear.attackDistance)
+                {
+                    Debug.Log("ATTACK");
+                    enemyBear.SetNavMeshAgent_Stop();
+                    return;
+                }
+            }
+            enemyBear.ChaseMode_BySector(colliders, enemyBear.viewAngle);
+
         }
 
         public override void ExitState()

@@ -41,5 +41,11 @@ namespace HA
         {
             enemyBase.characterAnimator.SetBool(animationBoolname, false);
         }
+
+
+        public virtual void AnimationFinishTrigger()
+        {
+            triggerCalled = true;
+        }
     }
 }

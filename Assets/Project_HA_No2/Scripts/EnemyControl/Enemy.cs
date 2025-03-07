@@ -127,6 +127,8 @@ namespace HA
         }
         #endregion
 
+        public virtual void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

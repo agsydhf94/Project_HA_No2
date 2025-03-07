@@ -14,6 +14,7 @@ namespace HA
         public override void EnterState()
         {
             base.EnterState();
+            enemyBear.SetNavMeshAgent_Go();
         }
 
         public override void UpdateState()
@@ -25,9 +26,7 @@ namespace HA
             {
                 if (enemyBear.Distance_byRaycast() < enemyBear.attackDistance)
                 {
-                    Debug.Log("ATTACK");
-                    enemyBear.SetNavMeshAgent_Stop();
-                    return;
+                    stateMachine.ChangeState(enemyBear.attackState);
                 }
             }
             enemyBear.ChaseMode_BySector(colliders, enemyBear.viewAngle);

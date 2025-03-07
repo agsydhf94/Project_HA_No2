@@ -6,8 +6,6 @@ namespace HA
 {
     public class EnemyChaseState : EnemyState
     {
-        private EnemyBear enemyBear;
-
         public EnemyChaseState(Enemy enemyBase, EnemyStateMachine stateMachine, string animationBoolname, EnemyBear enemyBear) : base(enemyBase, stateMachine, animationBoolname)
         {
             this.enemyBear = enemyBear;
@@ -18,14 +16,16 @@ namespace HA
             base.EnterState();
         }
 
-        public override void ExitState()
-        {
-            base.ExitState();
-        }
-
         public override void UpdateState()
         {
             base.UpdateState();
+
+            enemyBear.ChaseMode_BySector(enemyBear.IsObjectDetected<PlayerCharacter>(enemyBear.eyeCheck, enemyBear.eyeCheckDistance, enemyBear.playerLayerMask), enemyBear.viewAngle);
+        }
+
+        public override void ExitState()
+        {
+            base.ExitState();
         }
     }
 }

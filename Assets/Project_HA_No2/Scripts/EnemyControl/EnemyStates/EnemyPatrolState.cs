@@ -4,13 +4,10 @@ using UnityEngine;
 
 namespace HA
 {
-    public class EnemyPatrolState : EnemyState
+    public class EnemyPatrolState : EnemyGroundedState
     {
-        private EnemyBear enemyBear;
-
-        public EnemyPatrolState(Enemy enemyBase, EnemyStateMachine stateMachine, string animationBoolname, EnemyBear enemyBear) : base(enemyBase, stateMachine, animationBoolname)
+        public EnemyPatrolState(Enemy enemyBase, EnemyStateMachine stateMachine, string animationBoolname, EnemyBear enemyBear) : base(enemyBase, stateMachine, animationBoolname, enemyBear)
         {
-            this.enemyBear = enemyBear;
         }
 
         public override void EnterState()

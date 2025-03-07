@@ -6,8 +6,14 @@ namespace HA
 {
     public class EnemyState
     {
+        #region Enemy Common Components
         protected EnemyStateMachine stateMachine;
         protected Enemy enemyBase;
+        #endregion
+
+        #region Enemy Classes
+        protected EnemyBear enemyBear;
+        #endregion
 
         private string animationBoolname;
         protected bool triggerCalled;

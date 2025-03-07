@@ -4,13 +4,11 @@ using UnityEngine;
 
 namespace HA
 {
-    public class EnemyIdleState : EnemyState
+    public class EnemyIdleState : EnemyGroundedState
     {
-        private EnemyBear enemyBear;
-
-        public EnemyIdleState(Enemy enemy, EnemyStateMachine stateMachine, string animationBoolname, EnemyBear enemyBear) : base(enemy, stateMachine, animationBoolname)
+        public EnemyIdleState(Enemy enemyBase, EnemyStateMachine stateMachine, string animationBoolname, EnemyBear enemyBear) : base(enemyBase, stateMachine, animationBoolname, enemyBear)
         {
-            this.enemyBear = enemyBear;
+
         }
 
         public override void EnterState()
@@ -35,6 +33,7 @@ namespace HA
         public override void ExitState()
         {
             base.ExitState();
+            enemyBear.SetNavMeshAgent_Go();
         }  
     }
 }

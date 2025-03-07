@@ -11,7 +11,7 @@ namespace HA
         public EnemyStateMachine stateMachine { get; private set; }
 
         #region LayerMask and Sight Information
-        protected LayerMask playerLayerMask;
+        public LayerMask playerLayerMask;
         public float viewAngle;
         #endregion
 
@@ -38,7 +38,7 @@ namespace HA
         protected override void Update()
         {
             base.Update();
-            stateMachine.currentState.UpdateState();
+            stateMachine.currentState.UpdateState();       
         }
 
         #region Enemy Patrol
@@ -63,18 +63,19 @@ namespace HA
 
         #region Nav Mesh Agent Status
         public void SetNavMeshAgent_Stop() => navMeshAgent.isStopped = true;
+        public void SetNavMeshAgent_Go() => navMeshAgent.isStopped = false;
         #endregion
 
         #region Object Detection
-        public virtual List<Collider> IsObjectDetected<T>(T objectClass, Transform center, float radius, LayerMask layerMask) where T : class
+        public virtual List<Collider> IsObjectDetected<T>(Transform center, float radius, LayerMask layerMask) where T : class
         {
             // 조건에 맞는 콜라이더가 몇 개인지 길이 예측이 안되기 때문에 배열대신 리스트로 선언
             List<Collider> result = new List<Collider>();
             Collider[] colliders = Physics.OverlapSphere(center.position, radius, layerMask);
 
-            foreach(var collider in colliders)
+            foreach (var collider in colliders)
             {
-                if(collider.gameObject.TryGetComponent<T>(out T _objectClass))
+                if (collider.gameObject.TryGetComponent<T>(out T _objectClass))
                 {
                     result.Add(collider);
                 }
@@ -87,13 +88,14 @@ namespace HA
         #region Enemy Chase
         public void ChaseMode_BySector(List<Collider> colliders, float viewAngle)
         {
-            foreach(var collider in colliders)
+            foreach (var collider in colliders)
             {
                 Vector3 directonToTarget = collider.transform.position - transform.position;
                 Vector3 forwardDirection = transform.forward;
 
                 if (Vector3.Angle(directonToTarget, forwardDirection) < viewAngle * 0.5f)
                 {
+                    navMeshAgent.speed = chaseSpeed;
                     navMeshAgent.SetDestination(collider.transform.position);
                 }
             }

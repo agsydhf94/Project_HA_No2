@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace HA
@@ -13,5 +15,14 @@ namespace HA
             playerCharacter.AnimationTrigger();
         }
 
+        private void AttackTrigger()
+        {
+            List<Collider> colliders = CharacterBase.ObjectDetection<IDamagable>(playerCharacter.attackCheck, playerCharacter.attackCheckRadius);
+            foreach(var collider in colliders)
+            {
+                if (collider.TryGetComponent<IDamagable>(out IDamagable damagable))
+                    damagable.ApplyDamage();
+            }
+        }
     }
 }

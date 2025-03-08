@@ -91,24 +91,7 @@ namespace HA
         public void SetNavMeshAgent_Go() => navMeshAgent.isStopped = false;
         #endregion
 
-        #region Object Detection
-        public virtual List<Collider> ObjectDetection<T>(Transform center, float radius, LayerMask layerMask) where T : class
-        {
-            // 조건에 맞는 콜라이더가 몇 개인지 길이 예측이 안되기 때문에 배열대신 리스트로 선언
-            List<Collider> result = new List<Collider>();
-            Collider[] colliders = Physics.OverlapSphere(center.position, radius, layerMask);
-
-            foreach (var collider in colliders)
-            {
-                if (collider.gameObject.TryGetComponent<T>(out T _objectClass))
-                {
-                    result.Add(collider);
-                }
-            }
-
-            return result;
-        }
-        #endregion
+        
 
         #region Distance Caluate by Raycast
 

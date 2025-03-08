@@ -12,5 +12,17 @@ namespace HA
         {
             enemyBear.AnimationFinishTrigger();
         }
+
+        private void AttackTrigger()
+        {
+            List<Collider> colliders = CharacterBase.ObjectDetection<PlayerCharacter>(enemyBear.attackCheck, enemyBear.attackCheckRadius);
+            foreach(var collider in colliders)
+            {
+                if(collider.TryGetComponent<IDamagable>(out IDamagable damagable))
+                {
+                    damagable.ApplyDamage();
+                }
+            }
+        }
     }
 }

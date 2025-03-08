@@ -21,7 +21,7 @@ namespace HA
         {
             base.UpdateState();
 
-            List<Collider> colliders = enemyBear.ObjectDetection<PlayerCharacter>(enemyBear.eyeCheck, enemyBear.eyeCheckDistance, enemyBear.playerLayerMask);
+            List<Collider> colliders = CharacterBase.ObjectDetection<PlayerCharacter>(enemyBear.eyeCheck, enemyBear.eyeCheckDistance, enemyBear.playerLayerMask);
             if(colliders.Count > 0) // 플레이어가 감지되면
             {
                 // 플레이어 감지시, 추척 타이머 리셋

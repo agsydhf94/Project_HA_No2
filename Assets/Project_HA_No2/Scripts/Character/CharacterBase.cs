@@ -28,11 +28,14 @@ namespace HA
 
         #region Collision Information
         [Header("Collision Information")]
+        public Transform attackCheck;
+        public float attackCheckRadius;
         [SerializeField] private Transform groundCheck;
         [SerializeField] private float groundCheckDistance;
         [SerializeField] public Transform eyeCheck;
         [SerializeField] public float eyeCheckDistance;
         [SerializeField] public LayerMask groundLayer;
+        [SerializeField] public LayerMask defaultLayer;
         #endregion
 
         public bool IsRun { get; set; } = false;
@@ -53,16 +56,39 @@ namespace HA
         }
 
 
-        public void ApplyDamage(float damage)
+        public void ApplyDamage()
         {
-            
+            Debug.Log(gameObject.name + "Damaged");
         }
+
+        #region Object Detection
+        public static List<Collider> ObjectDetection<T>(Transform center, float radius, LayerMask layerMask = default) where T : class
+        {
+            // 마지막 인수를 쓰지 않으면, 레이어 상관없이 탐색
+            if (layerMask == default) layerMask = ~0;
+
+            // 조건에 맞는 콜라이더가 몇 개인지 길이 예측이 안되기 때문에 배열대신 리스트로 선언
+            List<Collider> result = new List<Collider>();
+            Collider[] colliders = Physics.OverlapSphere(center.position, radius, layerMask);
+
+            foreach (var collider in colliders)
+            {
+                if (collider.gameObject.TryGetComponent<T>(out T _objectClass))
+                {
+                    result.Add(collider);
+                }
+            }
+
+            return result;
+        }
+        #endregion
 
         #region Collision
         public bool IsGroundedDetected() => Physics.CheckSphere(groundCheck.position, groundCheckDistance, groundLayer);
         private void OnDrawGizmos()
         {
             Gizmos.DrawSphere(groundCheck.position, groundCheckDistance);
+            Gizmos.DrawSphere(attackCheck.position, attackCheckRadius);
         }
         #endregion
     }

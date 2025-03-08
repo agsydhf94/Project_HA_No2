@@ -20,7 +20,7 @@ namespace HA
         {
             base.UpdateState();
 
-            if(enemyBear.ObjectDetection<PlayerCharacter>(enemyBear.eyeCheck, enemyBear.eyeCheckDistance, enemyBear.playerLayerMask).Count > 0)
+            if(CharacterBase.ObjectDetection<PlayerCharacter>(enemyBear.eyeCheck, enemyBear.eyeCheckDistance, enemyBear.playerLayerMask).Count > 0)
             {
                 stateMachine.ChangeState(enemyBear.chaseState);
             }

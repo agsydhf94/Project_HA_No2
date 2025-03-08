@@ -48,6 +48,8 @@ namespace HA
         public float subRunningSpeedDelta;
         #endregion
 
+
+
         #region Player Jump
         [Header("Player Jump")]
         [SerializeField] private float maxJumpHeight;

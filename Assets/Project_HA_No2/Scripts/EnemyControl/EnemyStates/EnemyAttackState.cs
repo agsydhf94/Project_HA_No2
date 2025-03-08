@@ -26,12 +26,16 @@ namespace HA
             if(triggerCalled)
             {
                 stateMachine.ChangeState(enemyBear.chaseState);
+                return;
             }
+
         }
 
         public override void ExitState()
         {
             base.ExitState();
+
+            enemyBear.lastTimeAttacked = Time.time;
         }   
     }
 }

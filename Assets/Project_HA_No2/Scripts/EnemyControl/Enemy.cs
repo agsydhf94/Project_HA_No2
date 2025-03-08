@@ -25,10 +25,13 @@ namespace HA
         public float chaseSpeed;
         public float idleTime;
         public float patrolTime;
+        public float chaseTime;
         #endregion
 
         #region Enemy Attack Information
         public float attackDistance;
+        public float attackCooldownTime;
+        [HideInInspector] public float lastTimeAttacked;
         #endregion
 
 
@@ -62,6 +65,24 @@ namespace HA
             navMeshAgent.isStopped = false;
             navMeshAgent.speed = patrolSpeed;
             navMeshAgent.SetDestination(targetDestination);
+        }
+        #endregion
+
+        #region Enemy Chase
+        public void ChaseMode_BySector(List<Collider> colliders, float viewAngle)
+        {
+            foreach (var collider in colliders)
+            {
+                Vector3 directonToTarget = collider.transform.position - transform.position;
+                Vector3 forwardDirection = transform.forward;
+                float distance = Vector3.Distance(transform.position, collider.transform.position);
+
+                if (Vector3.Angle(directonToTarget, forwardDirection) < viewAngle * 0.5f)
+                {
+                    navMeshAgent.speed = chaseSpeed;
+                    navMeshAgent.SetDestination(collider.transform.position);
+                }
+            }
         }
         #endregion
 
@@ -109,20 +130,18 @@ namespace HA
 
         #endregion
 
-        #region Enemy Chase
-        public void ChaseMode_BySector(List<Collider> colliders, float viewAngle)
+        #region Cooldown Between Attack
+        // 모든 종류의 적이 공용으로 사용할 수 있어서 클래스에 상관없이 static으로 선언
+        public static bool CanAttack(Enemy enemy)
         {
-            foreach (var collider in colliders)
+            if(Time.time >= enemy.lastTimeAttacked + enemy.attackCooldownTime)
             {
-                Vector3 directonToTarget = collider.transform.position - transform.position;
-                Vector3 forwardDirection = transform.forward;
-                float distance = Vector3.Distance(transform.position, collider.transform.position);
-
-                if (Vector3.Angle(directonToTarget, forwardDirection) < viewAngle * 0.5f)
-                {
-                    navMeshAgent.speed = chaseSpeed;
-                    navMeshAgent.SetDestination(collider.transform.position);
-                }
+                return true;
+            }
+            else
+            {
+                Debug.Log("Cooldown 중입니다.");
+                return false;
             }
         }
         #endregion

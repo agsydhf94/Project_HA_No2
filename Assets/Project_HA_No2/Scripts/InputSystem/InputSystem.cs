@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class InputSystem : Singleton<InputSystem>
+    public class InputSystem : SingletonBase<InputSystem>
     {
         public Vector2 Movement => movement;
         public Vector2 Look => look;

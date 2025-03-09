@@ -21,7 +21,9 @@ namespace HA
             foreach(var collider in colliders)
             {
                 if (collider.TryGetComponent<IDamagable>(out IDamagable damagable))
+                {
                     damagable.ApplyDamage();
+                }
             }
         }
     }

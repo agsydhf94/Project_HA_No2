@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class ObjectPool : MonoBehaviour
+    public class ObjectPool : SingletonBase<ObjectPool>
     {
         public Dictionary<string, Queue<Component>> objectPools = new Dictionary<string, Queue<Component>>();
 

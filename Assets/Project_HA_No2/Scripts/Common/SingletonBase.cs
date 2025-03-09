@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+    public class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T _instance;
         public static T Instance

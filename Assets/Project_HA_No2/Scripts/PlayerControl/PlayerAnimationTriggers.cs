@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,8 +21,9 @@ namespace HA
             List<Collider> colliders = CharacterBase.ObjectDetection<IDamagable>(playerCharacter.attackCheck, playerCharacter.attackCheckRadius);
             foreach(var collider in colliders)
             {
-                if (collider.TryGetComponent<IDamagable>(out IDamagable damagable))
+                if (collider.TryGetComponent(out IDamagable damagable))
                 {
+                    playerCharacter.entityFx.SwordFX().Forget();
                     damagable.ApplyDamage();
                 }
             }

@@ -1041,6 +1041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 0}
+  entityFx: {fileID: 0}
   basicSpeed: 0
   unArmed_RunningDelta: 0
   armed_WalkingDelta: 0
@@ -2978,6 +2979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 1418896976}
+  entityFx: {fileID: 0}
   basicSpeed: 0.8
   unArmed_RunningDelta: 1.6
   armed_WalkingDelta: 1.4
@@ -3184,7 +3186,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerManager: {fileID: 0}
   objectPool: {fileID: 0}
-  mari_SwordHit: {fileID: 0}
+  mari_SwordHit: {fileID: 1248535372447819786, guid: 6edbb0c8d2c446f4ba025d8f86ad5775,
+    type: 3}
 --- !u!1 &1443094259
 GameObject:
   m_ObjectHideFlags: 3

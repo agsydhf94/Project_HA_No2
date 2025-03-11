@@ -2188,6 +2188,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 21
       objectReference: {fileID: 0}
+    - target: {fileID: -1728013695380148634, guid: 8a44e3abe22d7044ea9a99b70a641a61,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: -1645138214116120069, guid: 8a44e3abe22d7044ea9a99b70a641a61,
         type: 3}
       propertyPath: m_Layer
@@ -2979,7 +2984,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 1418896976}
-  entityFx: {fileID: 0}
+  entityFx: {fileID: 1418896980}
   basicSpeed: 0.8
   unArmed_RunningDelta: 1.6
   armed_WalkingDelta: 1.4
@@ -3392,7 +3397,7 @@ PrefabInstance:
     - target: {fileID: 3673253246448587658, guid: f6edf3be6d4fcab448e45329ee138bd4,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

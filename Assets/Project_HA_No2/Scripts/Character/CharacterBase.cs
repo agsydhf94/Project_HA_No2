@@ -27,6 +27,13 @@ namespace HA
         [HideInInspector] public float rotationSpeed;
         #endregion
 
+        #region Knockback Information
+        [Header("Knockback Information")]
+        [SerializeField] protected Vector3 knockbackDirection;
+        [SerializeField] protected float knockbackDuration;
+        protected bool isKnocked;
+        #endregion
+
         #region Collision Information
         [Header("Collision Information")]
         public Transform attackCheck;

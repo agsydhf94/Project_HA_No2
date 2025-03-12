@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 
 namespace HA
 {
@@ -29,8 +31,10 @@ namespace HA
 
         #region Knockback Information
         [Header("Knockback Information")]
-        [SerializeField] protected Vector3 knockbackDirection;
         [SerializeField] protected float knockbackDuration;
+        [SerializeField] protected int knockbackVibrato;    // 진동 횟수 (숫자가 클수록 더 세밀한 떨림)
+        [SerializeField] protected float knockbackstrength;   // 흔들리는 강도 (위치 변화 범위)
+        [SerializeField] protected float knockbackRandomness;    // 랜덤한 방향성
         protected bool isKnocked;
         #endregion
 
@@ -68,6 +72,8 @@ namespace HA
         public void ApplyDamage()
         {
             Debug.Log(gameObject.name + "Damaged");
+
+            HitKnockback().Forget();
         }
 
         #region Object Detection
@@ -89,6 +95,27 @@ namespace HA
             }
 
             return result;
+        }
+        #endregion
+
+        #region Knockback
+        protected virtual async UniTask HitKnockback()
+        {
+            isKnocked = true;
+
+            // 현재 위치 저장
+            Vector3 originalPosition = transform.position;
+
+            // DoTween 흔들림 효과 (ShakePosition)
+            Tween shakeTween = transform.DOShakePosition(knockbackDuration, knockbackstrength, knockbackVibrato, knockbackRandomness)
+                .SetEase(Ease.InOutQuad); // 부드러운 시작 및 종료
+
+            await shakeTween.AsyncWaitForCompletion(); // UniTask로 변환하여 완료될 때까지 대기
+
+            // 원래 위치로 복귀 (오차 방지)
+            transform.position = originalPosition;
+
+            isKnocked = false;
         }
         #endregion
 

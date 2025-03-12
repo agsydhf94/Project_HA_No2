@@ -88,7 +88,13 @@ namespace HA
 
         #region Nav Mesh Agent Status
         public void SetNavMeshAgent_Stop() => navMeshAgent.isStopped = true;
-        public void SetNavMeshAgent_Go() => navMeshAgent.isStopped = false;
+        public void SetNavMeshAgent_Go()
+        {
+            if (isKnocked)
+                return;
+
+            navMeshAgent.isStopped = false;
+        }
         #endregion
 
         

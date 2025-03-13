@@ -34,6 +34,12 @@ namespace HA
         [HideInInspector] public float lastTimeAttacked;
         #endregion
 
+        #region Enemy Stunned Information
+        public float stunnedDuration;
+        protected bool canBeStunned;
+        [SerializeField] protected GameObject counterSphere;
+        #endregion
+
 
         protected override void Awake()
         {
@@ -132,6 +138,31 @@ namespace HA
                 Debug.Log("Cooldown 중입니다.");
                 return false;
             }
+        }
+        #endregion
+
+        #region CounterAttack
+        public virtual void OpenCounterAttackWindow()
+        {
+            canBeStunned = true;
+            counterSphere.SetActive(true);
+        }
+
+        public virtual void CloseCounterAttackWindow()
+        {
+            canBeStunned = false;
+            counterSphere.SetActive(false);
+        }
+
+        protected virtual bool CanBeStunned()
+        {
+            if(canBeStunned)
+            {
+                CloseCounterAttackWindow();
+                return true;
+            }
+
+            return false;
         }
         #endregion
 

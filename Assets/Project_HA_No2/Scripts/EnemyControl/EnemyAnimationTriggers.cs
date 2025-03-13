@@ -24,5 +24,9 @@ namespace HA
                 }
             }
         }
+
+        private void OpenCounterWindow() => enemyBear.OpenCounterAttackWindow();
+        private void CloseCounterWindow() => enemyBear.CloseCounterAttackWindow();
+
     }
 }

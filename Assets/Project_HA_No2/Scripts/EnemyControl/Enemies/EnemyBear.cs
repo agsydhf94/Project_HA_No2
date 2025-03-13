@@ -38,7 +38,16 @@ namespace HA
             base.Update();
         }
 
-        
+        protected override bool CanBeStunned()
+        {
+            if(base.CanBeStunned())
+            {
+                stateMachine.ChangeState(stunnedState);
+                return true;
+            }
+
+            return false;
+        }
 
 
     }

@@ -14,11 +14,18 @@ namespace HA
         public override void EnterState()
         {
             base.EnterState();
+
+            stateTimer = enemyBear.stunnedDuration;
         }
 
         public override void UpdateState()
         {
             base.UpdateState();
+
+            if(stateTimer < 0)
+            {
+                stateMachine.ChangeState(enemyBear.IdleState);
+            }
         }
 
         public override void ExitState()

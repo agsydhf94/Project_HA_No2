@@ -104,16 +104,16 @@ namespace HA
             isKnocked = true;
 
             // 현재 위치 저장
-            Vector3 originalPosition = transform.position;
+            Vector3 originalPosition = gameObject.transform.position;
 
             // DoTween 흔들림 효과 (ShakePosition)
-            Tween shakeTween = transform.DOShakePosition(knockbackDuration, knockbackstrength, knockbackVibrato, knockbackRandomness)
+            Tween shakeTween = gameObject.transform.DOShakePosition(knockbackDuration, knockbackstrength, knockbackVibrato, knockbackRandomness)
                 .SetEase(Ease.InOutQuad); // 부드러운 시작 및 종료
 
             await shakeTween.AsyncWaitForCompletion(); // UniTask로 변환하여 완료될 때까지 대기
 
             // 원래 위치로 복귀 (오차 방지)
-            transform.position = originalPosition;
+            gameObject.transform.position = originalPosition;
 
             isKnocked = false;
         }

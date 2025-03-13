@@ -37,6 +37,11 @@ namespace HA
                 playerCharacter.CharacterArmed();
             }
 
+            if(Input.GetKeyDown(KeyCode.Q))
+            {
+                stateMachine.ChangeState(playerCharacter.counterAttackState);
+            }
+
             if(!playerCharacter.IsGroundedDetected())
             {
                 stateMachine.ChangeState(playerCharacter.airState);

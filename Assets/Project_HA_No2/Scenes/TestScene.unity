@@ -4297,6 +4297,7 @@ MonoBehaviour:
   currentRunningSpeedDelta: 0
   subWalkingSpeedDelta: 0
   subRunningSpeedDelta: 0
+  counterAttackDuration: 0.2
   maxJumpHeight: 4
   maxJumpTime: 1
   verticalVelocity: 0

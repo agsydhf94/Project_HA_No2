@@ -20,6 +20,7 @@ namespace HA
         public PlayerDashState dashState { get; private set; }
         public PlayerArmedState armedState { get; private set; }
         public PlayerPrimaryAttackState primaryAttackState { get; private set; }
+        public PlayerCounterAttackState counterAttackState { get; private set; }
         #endregion
 
 
@@ -48,7 +49,9 @@ namespace HA
         public float subRunningSpeedDelta;
         #endregion
 
-
+        #region Player Attack
+        public float counterAttackDuration;
+        #endregion
 
         #region Player Jump
         [Header("Player Jump")]
@@ -88,6 +91,7 @@ namespace HA
             dashState = new PlayerDashState(this, stateMachine, "Dash");
             armedState = new PlayerArmedState(this, stateMachine, "Armed");
             primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
+            counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
         }
 
         protected override void Start()
@@ -158,6 +162,13 @@ namespace HA
 
             playerMovementVec = movement * Time.deltaTime * movingSpeed;
             characterController.Move(playerMovementVec);
+        }
+
+        public void Character_SetZeroVelocity()
+        {
+            // 이동 속도를 기억하고 있으면 쭉 미끄러지게 된다.
+            playerMovementVec = Vector3.zero;  // 이동 벡터 초기화
+            characterController.Move(Vector3.zero);
         }
         #endregion
 
@@ -244,7 +255,21 @@ namespace HA
         }
         #endregion
 
-        
+        #region Check Stunnable Enemies
+        public bool CheckStunnableEnemies()
+        {
+            Collider[] colliders = Physics.OverlapSphere(attackCheck.position, attackCheckRadius);
+
+            foreach(var hit in colliders)
+            {
+                if(hit.TryGetComponent<Enemy>(out Enemy enemy) && enemy.CanBeStunned())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion
 
         #region Animation Control
         public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();

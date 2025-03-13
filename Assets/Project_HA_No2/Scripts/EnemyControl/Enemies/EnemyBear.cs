@@ -38,7 +38,7 @@ namespace HA
             base.Update();
         }
 
-        protected override bool CanBeStunned()
+        public override bool CanBeStunned()
         {
             if(base.CanBeStunned())
             {

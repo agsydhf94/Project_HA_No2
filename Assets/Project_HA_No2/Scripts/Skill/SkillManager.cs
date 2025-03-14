@@ -6,6 +6,16 @@ namespace HA
 {
     public class SkillManager : SingletonBase<SkillManager>
     {
+        public DashSkill dashSkill;
 
+        private void Awake()
+        {
+            
+        }
+
+        private void Start()
+        {
+            dashSkill = GetComponent<DashSkill>();
+        }
     }
 }

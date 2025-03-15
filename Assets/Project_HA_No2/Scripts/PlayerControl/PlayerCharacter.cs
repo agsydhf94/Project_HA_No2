@@ -40,6 +40,10 @@ namespace HA
         public CharacterController characterController;
         #endregion
 
+        #region Player Character Skill Manager
+        public SkillManager skillManager;
+        #endregion
+
         #region Player Moving Values
         [Header("Player Moving Values")]
         public Vector3 playerMovementVec;
@@ -82,6 +86,7 @@ namespace HA
             inputSystem = InputSystem.Instance;
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
+            skillManager = SkillManager.Instance;
             characterController = GetComponent<CharacterController>();
 
             idleState = new PlayerIdleState(this, stateMachine, "Idle");
@@ -107,6 +112,8 @@ namespace HA
             
             if(stateMachine.subState != null)
                 stateMachine.subState.UpdateState();
+
+            CheckDashInput();
         }
 
         #region Character Move
@@ -238,6 +245,14 @@ namespace HA
 
             // XZ 평면상에서 이동
             characterController.Move(playerMovementVec + planeDirection_xz * dashSpeed);
+        }
+
+        public void CheckDashInput()
+        {
+            if(Input.GetKeyDown(KeyCode.C) && skillManager.dashSkill.CanUseSkill())
+            {
+                stateMachine.ChangeState(dashState);
+            }
         }
         #endregion
 

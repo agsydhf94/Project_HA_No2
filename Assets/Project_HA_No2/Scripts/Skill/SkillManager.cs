@@ -8,7 +8,7 @@ namespace HA
     {
         public DashSkill dashSkill;
 
-        private void Awake()
+        public override void Awake()
         {
             
         }

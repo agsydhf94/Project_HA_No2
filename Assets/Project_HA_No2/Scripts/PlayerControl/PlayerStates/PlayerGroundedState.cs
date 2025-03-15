@@ -26,12 +26,6 @@ namespace HA
                 stateMachine.ChangeState(playerCharacter.jumpState);
             }
 
-            // 땅에 서있는 상태에서 정면 대시
-            if(Input.GetKeyDown(KeyCode.C))
-            {
-                stateMachine.ChangeState(playerCharacter.dashState);
-            }
-
             if(Input.GetKeyDown(KeyCode.U))
             {
                 playerCharacter.CharacterArmed();

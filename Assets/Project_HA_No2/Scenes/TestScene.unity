@@ -175,6 +175,80 @@ Transform:
   - {fileID: 539908087}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &88755528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 88755531}
+  - component: {fileID: 88755530}
+  - component: {fileID: 88755529}
+  - component: {fileID: 88755532}
+  m_Layer: 0
+  m_Name: HA.SkillManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &88755529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88755528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f10c0d7e0d067eb43bd0f83628b7cf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 2
+--- !u!114 &88755530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88755528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8c101186fab0541b747031b061fadb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &88755531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88755528}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.859084, y: 2.558584, z: -4.305472}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &88755532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88755528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 622a56e86e755ae4090c18dbb126e5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  clonePrefab: {fileID: 7376851358314968761, guid: 4b419cdbb7d40714f9707e0b093b7018,
+    type: 3}
 --- !u!1001 &90379197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4292,6 +4366,7 @@ MonoBehaviour:
   bottomClamp: -90
   topClamp: 90
   characterController: {fileID: 0}
+  skillManager: {fileID: 0}
   playerMovementVec: {x: 0, y: 0, z: 0}
   currentWalkingSpeedDelta: 0
   currentRunningSpeedDelta: 0
@@ -5303,6 +5378,7 @@ SceneRoots:
   - {fileID: 405070174}
   - {fileID: 15033603}
   - {fileID: 125302975}
+  - {fileID: 88755531}
   - {fileID: 195012767}
   - {fileID: 1418896962}
   - {fileID: 800007142}

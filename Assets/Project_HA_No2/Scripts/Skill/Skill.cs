@@ -19,7 +19,7 @@ namespace HA
         {
             if(cooldownTimer < 0)
             {
-                // Use Skill
+                UseSkill();
                 cooldownTimer = cooldown;
                 return true;
             }

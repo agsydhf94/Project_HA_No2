@@ -7611,6 +7611,7 @@ GameObject:
   - component: {fileID: 2444337794517172156}
   - component: {fileID: 3985294293899205702}
   - component: {fileID: 6390424325108654502}
+  - component: {fileID: 6412425493965869692}
   m_Layer: 0
   m_Name: Clone_Mari
   m_TagString: Untagged
@@ -8136,6 +8137,18 @@ MonoBehaviour:
   DrawLookAtGizmo: 1
   LookAtTarget: {fileID: 0}
   LookAtTargetType: 0
+--- !u!114 &6412425493965869692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7376851358314968761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b2432faa889b7740b1c5ccc9dadbcb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7441538391322887330
 GameObject:
   m_ObjectHideFlags: 0

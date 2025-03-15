@@ -8,9 +8,10 @@ namespace HA
     {
         [SerializeField] private GameObject clonePrefab;
 
-        public void CreateClone()
+        public void CreateClone(Transform cloneTransform)
         {
             GameObject newClone = Instantiate(clonePrefab);
+            newClone.GetComponent<CloneSkillController>().SetUpClone(cloneTransform);
         }
     }
 }

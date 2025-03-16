@@ -13,6 +13,7 @@ namespace HA
 
         [SerializeField] private Transform attackCheck;
         [SerializeField] private float attackCheckRadius;
+        private Transform closestEnemy;
 
         
 
@@ -51,6 +52,26 @@ namespace HA
                 {
                     damagable.ApplyDamage();
                 }
+            }
+        }
+
+        private void FaceClosestTarget()
+        {
+            List<Collider> coliiders = CharacterBase.ObjectDetection<IDamagable>(transform, 25f);
+
+            float closestDistance = Mathf.Infinity;
+            
+            foreach(var collider in coliiders)
+            {
+                float distanceToEnemy = Vector3.Distance(transform.position, collider.transform.position);
+
+                if (distanceToEnemy < closestDistance)
+                    closestEnemy = collider.transform;
+            }
+
+            if(closestEnemy != null)
+            {
+                // To do : Face the clone towards the closest enemy
             }
         }
     }

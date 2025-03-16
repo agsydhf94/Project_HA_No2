@@ -10,6 +10,10 @@ namespace HA
         private float cloneTimer;
 
         private Animator animator;
+
+        [SerializeField] private Transform attackCheck;
+        [SerializeField] private float attackCheckRadius;
+
         
 
         private void Awake()
@@ -31,6 +35,23 @@ namespace HA
 
             transform.position = newTransform.position;
             cloneTimer = cloneDuration;
+        }
+
+        private void AnimationTrigger_On()
+        {
+            cloneTimer = -0.1f;
+        }
+
+        private void AttackTrigger()
+        {
+            List<Collider> colliders = CharacterBase.ObjectDetection<IDamagable>(attackCheck, attackCheckRadius);
+            foreach (var collider in colliders)
+            {
+                if (collider.TryGetComponent(out IDamagable damagable))
+                {
+                    damagable.ApplyDamage();
+                }
+            }
         }
     }
 }

@@ -8149,6 +8149,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b2432faa889b7740b1c5ccc9dadbcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cloneDuration: 1.5
+  smr_Face: {fileID: 2854310855021498424}
+  smr_Body: {fileID: 6530078928337819343}
+  smr_Hair: {fileID: 2396589077748038888}
+  colorLoosingSpeed: 1
 --- !u!1 &7441538391322887330
 GameObject:
   m_ObjectHideFlags: 0

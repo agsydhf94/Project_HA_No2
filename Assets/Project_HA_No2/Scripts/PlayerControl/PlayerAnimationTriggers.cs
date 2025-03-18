@@ -28,5 +28,10 @@ namespace HA
                 }
             }
         }
+
+        private void ThrowBall()
+        {
+            SkillManager.Instance.ballThrowSkill.CreateBall();
+        }
     }
 }

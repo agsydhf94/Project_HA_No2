@@ -86,7 +86,7 @@ namespace HA
                 isZoom = !isZoom;
             }
 
-            float targetFov = isZoom ? 20f : 60f;
+            float targetFov = isZoom ? 30f : 60f;
             tpsCamera.m_Lens.FieldOfView = Mathf.Lerp(tpsCamera.m_Lens.FieldOfView, targetFov, Time.deltaTime * 5);
 
             // Aiming Point °è»ê

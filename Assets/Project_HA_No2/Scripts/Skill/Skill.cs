@@ -10,6 +10,13 @@ namespace HA
         [SerializeField] protected float cooldown;
         protected float cooldownTimer;
 
+        protected PlayerCharacter playerCharacter;
+
+        private void Start()
+        {
+            playerCharacter = PlayerManager.Instance.playerCharacter;
+        }
+
         protected virtual void Update()
         {
             cooldownTimer -= Time.deltaTime;

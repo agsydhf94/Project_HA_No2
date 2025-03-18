@@ -21,6 +21,11 @@ namespace HA
         {
             base.UpdateState();
 
+            if(Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                stateMachine.ChangeState(playerCharacter.aimBallState);
+            }
+
             if(Input.GetKeyDown(KeyCode.Space))
             {
                 stateMachine.ChangeState(playerCharacter.jumpState);

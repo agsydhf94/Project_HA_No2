@@ -23,6 +23,11 @@ namespace HA
         public override void UpdateState()
         {
             base.UpdateState();
+
+            if(Input.GetKeyUp(KeyCode.Mouse1))
+            {
+                stateMachine.ChangeState(playerCharacter.idleState);
+            }
         }
     }
 }

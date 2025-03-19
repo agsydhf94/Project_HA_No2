@@ -29,7 +29,7 @@ namespace HA
             }
         }
 
-        private void ThrowBall()
+        private void CreateBallOnHand()
         {
             SkillManager.Instance.ballThrowSkill.CreateBall();
         }

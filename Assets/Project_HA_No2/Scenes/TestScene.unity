@@ -267,7 +267,7 @@ MonoBehaviour:
   ballPrefab: {fileID: 926460389482130754, guid: 009d4883ba464484286b08854e7f61b6,
     type: 3}
   ballPosition: {fileID: 0}
-  throwDirection: {x: 0, y: 0, z: 0}
+  throwForce: 0
 --- !u!1001 &90379197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2812,7 +2812,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 613403034}
   m_Lens:
-    FieldOfView: 30.00004
+    FieldOfView: 59.99997
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -5209,7 +5209,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 30.00004
+  field of view: 59.99997
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

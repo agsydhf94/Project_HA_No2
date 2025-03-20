@@ -36901,7 +36901,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 1
   m_Events:
   - time: 0.3
-    functionName: ThrowBall
+    functionName: CreateBallOnHand
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

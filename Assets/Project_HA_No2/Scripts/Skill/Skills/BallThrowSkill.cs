@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace HA
 {
@@ -41,27 +42,65 @@ namespace HA
             }
             else
             {
-                launchVelocity = ballPosition.forward * throwSpeed; // 타겟 없으면 정면으로 던지기
+                Vector3 forwardDir = GetForwardThrowDirection();
+                float throwSpeed = 15f;
+                launchVelocity = forwardDir * throwSpeed;
             }
 
             rb.velocity = launchVelocity;
         }
 
 
-        private Vector3 CalculateLaunchVelocity(Vector3 targetPosition)
+        public Vector3 CalculateLaunchVelocity(Vector3 targetPos)
         {
-            Vector3 direction = targetPosition - ballPosition.position;
-            float distance = direction.magnitude; // 목표까지의 거리
-            float heightDifference = targetPosition.y - ballPosition.position.y;
-            float timeToTarget = Mathf.Sqrt(2 * heightDifference / gravity) + (distance / throwSpeed);
+            Vector3 startPos = ballPosition.position;
+            Vector3 toTarget = targetPos - startPos;
 
-            Vector3 horizontalVelocity = (direction / timeToTarget);
-            Vector3 verticalVelocity = Vector3.up * gravity * timeToTarget * 0.5f;
+            float gravity = Mathf.Abs(Physics.gravity.y);
+            float heightDifference = toTarget.y;
 
-            return horizontalVelocity + verticalVelocity;
+            // XZ 평면 거리
+            toTarget.y = 0;
+            float horizontalDistance = toTarget.magnitude;
+
+            float angle = 45f * Mathf.Deg2Rad;
+
+            float denominator = 2 * (heightDifference - Mathf.Tan(angle) * horizontalDistance) * Mathf.Pow(Mathf.Cos(angle), 2);
+
+            // 예외 처리: 분모가 0 또는 음수이면 도달 불가능
+            if (Mathf.Approximately(denominator, 0f) || denominator < 0f)
+            {
+                Debug.LogWarning("포물선 계산 실패: 도달 불가 또는 분모 오류");
+                return toTarget.normalized * 5f + Vector3.up * 2f; // fallback
+            }
+
+            float velocitySquared = (gravity * horizontalDistance * horizontalDistance) / denominator;
+            float velocity = Mathf.Sqrt(velocitySquared);
+
+            Vector3 dir = toTarget.normalized;
+            Vector3 launchVelocity = dir * velocity * Mathf.Cos(angle);
+            launchVelocity.y = velocity * Mathf.Sin(angle);
+
+            return launchVelocity;
         }
 
 
+        public Vector3 GetForwardThrowDirection(float distance = 10f)
+        {
+            // 화면 중앙에서 정면으로 Ray 쏘기
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
+            // 만약 Ray가 무언가에 맞았다면
+            if (Physics.Raycast(ray, out RaycastHit hit, distance))
+            {
+                return (hit.point - ballPosition.position).normalized;
+            }
+            else
+            {
+                // 아무것도 안 맞았다면 그냥 카메라 방향으로 일정 거리 앞
+                Vector3 fallbackPoint = ray.GetPoint(distance);
+                return (fallbackPoint - ballPosition.position).normalized;
+            }
+        }
     }
 }

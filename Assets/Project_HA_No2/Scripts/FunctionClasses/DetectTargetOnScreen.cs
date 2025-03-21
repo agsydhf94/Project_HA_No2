@@ -10,37 +10,38 @@ namespace HA
     {
 
         [Header("Targeting Settings")]
-        [SerializeField] private LayerMask targetLayer; // 감지할 레이어
-        [SerializeField] private float maxDetectionDistance = 15f; // 감지 범위
-        [SerializeField] private float detectionRadius = 5f; // 감지 반지름
+        [SerializeField] private float maxDetectionDistance = 1000f;
+        [SerializeField] private float detectionRadius = 100f;
 
-        private List<TargetToStrike> validTargets = new List<TargetToStrike>();
+        private List<ITargetable> validTargets = new List<ITargetable>();
         private int currentTargetIndex = 0;
-
 
         public void UpdateTargetList()
         {
-            Debug.Log("UpdateTargetList 갱신중");
+            List<ITargetable> detectedTargets = new List<ITargetable>();
 
-            List<TargetToStrike> detectedTargets = new List<TargetToStrike>();
             Vector3 rayStart = Camera.main.transform.position + Camera.main.transform.forward * 0.5f;
             Vector3 rayDirection = Camera.main.transform.forward;
 
-            RaycastHit[] hits = Physics.SphereCastAll(rayStart, detectionRadius, rayDirection, maxDetectionDistance, targetLayer);
-
+            // LayerMask 없이 모든 Collider 대상
+            RaycastHit[] hits = Physics.SphereCastAll(rayStart, detectionRadius, rayDirection, maxDetectionDistance);
 
             float screenRadius = CalculateScreenRadius(rayStart, detectionRadius);
 
             foreach (RaycastHit hit in hits)
             {
-                TargetToStrike target = hit.collider.GetComponent<TargetToStrike>();
+                ITargetable target = hit.collider.GetComponent<ITargetable>();
                 if (target == null) continue;
 
-                Vector3 screenPos = Camera.main.WorldToScreenPoint(target.transform.position);
-                if (screenPos.z < 0) continue; // 카메라 뒤쪽 제거
+                Transform targetPoint = target.GetTargetPoint();
+                if (targetPoint == null) continue; // null이면 감지 무시
+
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(targetPoint.position);
+
+                if (screenPos.z < 0) continue;
 
                 float distanceToCenter = Vector2.Distance(
-                    new Vector2(Screen.width / 2, Screen.height / 2),
+                    new Vector2(Screen.width / 2f, Screen.height / 2f),
                     new Vector2(screenPos.x, screenPos.y)
                 );
 
@@ -61,21 +62,25 @@ namespace HA
             }
         }
 
+
         private float CalculateScreenRadius(Vector3 worldPosition, float radius)
         {
             Vector3 worldRadiusPoint = worldPosition + Camera.main.transform.right * radius;
-            return Vector2.Distance(Camera.main.WorldToScreenPoint(worldPosition), Camera.main.WorldToScreenPoint(worldRadiusPoint));
+            return Vector2.Distance(
+                Camera.main.WorldToScreenPoint(worldPosition),
+                Camera.main.WorldToScreenPoint(worldRadiusPoint)
+            );
         }
 
-        private int CompareByScreenCenter(TargetToStrike a, TargetToStrike b)
+        private int CompareByScreenCenter(ITargetable a, ITargetable b)
         {
             Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2);
-            float distA = Vector2.Distance(Camera.main.WorldToScreenPoint(a.transform.position), screenCenter);
-            float distB = Vector2.Distance(Camera.main.WorldToScreenPoint(b.transform.position), screenCenter);
+            float distA = Vector2.Distance(Camera.main.WorldToScreenPoint(a.GetTargetPoint().position), screenCenter);
+            float distB = Vector2.Distance(Camera.main.WorldToScreenPoint(b.GetTargetPoint().position), screenCenter);
             return distA.CompareTo(distB);
         }
 
-        public TargetToStrike GetCurrentTarget()
+        public ITargetable GetCurrentTarget()
         {
             if (validTargets.Count == 0 || currentTargetIndex >= validTargets.Count)
                 return null;

@@ -19,10 +19,6 @@ namespace HA
         private NavMeshAgent navMeshAgent;
         #endregion
 
-        #region Variable for ITargetable
-        public Transform targetPoint;
-        #endregion
-
         #region Enemy Moving Information
         [Header("Enemy Moving Information")]
         public float patrolSpeed;
@@ -173,7 +169,7 @@ namespace HA
         public virtual void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
         #region Itargetable Interface
-        public Transform GetTargetPoint() => targetPoint;
+        public Transform GetTargetPoint() => transform;
         #endregion
 
         private void OnDrawGizmos()

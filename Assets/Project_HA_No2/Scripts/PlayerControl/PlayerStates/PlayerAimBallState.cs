@@ -28,7 +28,7 @@ namespace HA
 
             if(Input.GetKeyUp(KeyCode.Mouse1))
             {
-                Transform target = playerCharacter.detectTargetOnScreen.GetCurrentTarget()?.transform;
+                Transform target = playerCharacter.detectTargetOnScreen.GetCurrentTarget()?.GetTargetPoint();
                 playerCharacter.skillManager.ballThrowSkill.createdBall.transform.parent = null;
                 playerCharacter.skillManager.ballThrowSkill.ThrowBallWithTarget(playerCharacter.skillManager.ballThrowSkill.createdBall ,target);
 

@@ -51,35 +51,19 @@ namespace HA
         }
 
 
-        public Vector3 CalculateLaunchVelocity(Vector3 targetPos)
+        public Vector3 CalculateLaunchVelocity(Vector3 targetPos, float timeToTarget = 0.5f)
         {
             Vector3 startPos = ballPosition.position;
             Vector3 toTarget = targetPos - startPos;
 
-            float gravity = Mathf.Abs(Physics.gravity.y);
-            float heightDifference = toTarget.y;
+            Vector3 toTargetXZ = new Vector3(toTarget.x, 0, toTarget.z);
+            float distanceXZ = toTargetXZ.magnitude;
 
-            // XZ 평면 거리
-            toTarget.y = 0;
-            float horizontalDistance = toTarget.magnitude;
+            float velocityY = toTarget.y / timeToTarget + 0.5f * Mathf.Abs(Physics.gravity.y) * timeToTarget;
+            float velocityXZ = distanceXZ / timeToTarget;
 
-            float angle = 45f * Mathf.Deg2Rad;
-
-            float denominator = 2 * (heightDifference - Mathf.Tan(angle) * horizontalDistance) * Mathf.Pow(Mathf.Cos(angle), 2);
-
-            // 예외 처리: 분모가 0 또는 음수이면 도달 불가능
-            if (Mathf.Approximately(denominator, 0f) || denominator < 0f)
-            {
-                Debug.LogWarning("포물선 계산 실패: 도달 불가 또는 분모 오류");
-                return toTarget.normalized * 5f + Vector3.up * 2f; // fallback
-            }
-
-            float velocitySquared = (gravity * horizontalDistance * horizontalDistance) / denominator;
-            float velocity = Mathf.Sqrt(velocitySquared);
-
-            Vector3 dir = toTarget.normalized;
-            Vector3 launchVelocity = dir * velocity * Mathf.Cos(angle);
-            launchVelocity.y = velocity * Mathf.Sin(angle);
+            Vector3 launchVelocity = toTargetXZ.normalized * velocityXZ;
+            launchVelocity.y = velocityY;
 
             return launchVelocity;
         }

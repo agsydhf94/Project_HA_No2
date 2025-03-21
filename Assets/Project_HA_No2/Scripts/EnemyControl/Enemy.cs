@@ -6,7 +6,7 @@ using UnityEngine.SocialPlatforms.GameCenter;
 
 namespace HA
 {
-    public class Enemy : CharacterBase
+    public class Enemy : CharacterBase, ITargetable
     {
         public EnemyStateMachine stateMachine { get; private set; }
 
@@ -17,6 +17,10 @@ namespace HA
 
         #region NavMesh Components
         private NavMeshAgent navMeshAgent;
+        #endregion
+
+        #region Variable for ITargetable
+        public Transform targetPoint;
         #endregion
 
         #region Enemy Moving Information
@@ -168,10 +172,16 @@ namespace HA
 
         public virtual void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
+        #region Itargetable Interface
+        public Transform GetTargetPoint() => targetPoint;
+        #endregion
+
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, transform.position + attackDistance * transform.forward);
         }
+
+        
     }
 }

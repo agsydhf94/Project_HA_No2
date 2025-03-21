@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class DetectTargetOnScreen : MonoBehaviour
+    public class DetectTargetOnScreen : SingletonBase<DetectTargetOnScreen>
     {
 
         [Header("Targeting Settings")]
@@ -74,5 +74,14 @@ namespace HA
             float distB = Vector2.Distance(Camera.main.WorldToScreenPoint(b.transform.position), screenCenter);
             return distA.CompareTo(distB);
         }
+
+        public TargetToStrike GetCurrentTarget()
+        {
+            if (validTargets.Count == 0 || currentTargetIndex >= validTargets.Count)
+                return null;
+
+            return validTargets[currentTargetIndex];
+        }
+
     }
 }

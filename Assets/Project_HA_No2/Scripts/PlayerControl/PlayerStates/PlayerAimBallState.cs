@@ -24,8 +24,14 @@ namespace HA
         {
             base.UpdateState();
 
+            playerCharacter.detectTargetOnScreen.UpdateTargetList();
+
             if(Input.GetKeyUp(KeyCode.Mouse1))
             {
+                Transform target = playerCharacter.detectTargetOnScreen.GetCurrentTarget()?.transform;
+                playerCharacter.skillManager.ballThrowSkill.createdBall.transform.parent = null;
+                playerCharacter.skillManager.ballThrowSkill.ThrowBallWithTarget(playerCharacter.skillManager.ballThrowSkill.createdBall ,target);
+
                 stateMachine.ChangeState(playerCharacter.idleState);
             }
         }

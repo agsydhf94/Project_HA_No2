@@ -42,8 +42,9 @@ namespace HA
         public CharacterController characterController;
         #endregion
 
-        #region Player Character Skill Manager
+        #region Player Character Skill Components
         public SkillManager skillManager;
+        public DetectTargetOnScreen detectTargetOnScreen;
         #endregion
 
         #region Player Moving Values
@@ -89,6 +90,7 @@ namespace HA
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
             skillManager = SkillManager.Instance;
+            detectTargetOnScreen = DetectTargetOnScreen.Instance;
             characterController = GetComponent<CharacterController>();
 
             idleState = new PlayerIdleState(this, stateMachine, "Idle");

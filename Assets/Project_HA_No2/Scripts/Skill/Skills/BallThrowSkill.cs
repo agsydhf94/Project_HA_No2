@@ -39,6 +39,13 @@ namespace HA
             if (target != null)
             {
                 launchVelocity = CalculateLaunchVelocity(target.position);
+
+                // HomingProjectile 컴포넌트가 있다면 타겟 설정
+                HomingProjectile homing = ball.GetComponent<HomingProjectile>();
+                if (homing != null)
+                {
+                    homing.SetTarget(target);
+                }
             }
             else
             {

@@ -22,7 +22,7 @@ namespace HA
         public PlayerPrimaryAttackState primaryAttackState { get; private set; }
         public PlayerCounterAttackState counterAttackState { get; private set; }
         public PlayerAimBallState aimBallState { get; private set; }
-        public PlayerCatchBallState catchBallState { get; private set; }
+        public PlayerThrowState throwBallState { get; private set; }
         #endregion
 
 
@@ -102,7 +102,7 @@ namespace HA
             primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
             counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
             aimBallState = new PlayerAimBallState(this, stateMachine, "AimBall");
-            catchBallState = new PlayerCatchBallState(this, stateMachine, "CatchBall");
+            throwBallState = new PlayerThrowState(this, stateMachine, "ThrowBall");
         }
 
         protected override void Start()
@@ -293,14 +293,13 @@ namespace HA
         #endregion
 
         #region Animation Control
-        public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
+        public void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
         #endregion 
 
         #region Trail Renderer System
         public void DashTrailRenderer_On() => trailRenderer.emitting = true;
         public void DashTrailRenderer_Off() => trailRenderer.emitting = false;
         #endregion
-
 
     }
 }

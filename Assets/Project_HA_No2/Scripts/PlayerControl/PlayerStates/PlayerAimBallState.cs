@@ -12,7 +12,7 @@ namespace HA
 
         public override void EnterState()
         {
-            base.EnterState();       
+            base.EnterState();
         }
 
         public override void ExitState()
@@ -33,7 +33,7 @@ namespace HA
                 playerCharacter.skillManager.ballThrowSkill.createdBall.transform.parent = null;
                 playerCharacter.skillManager.ballThrowSkill.ThrowBallWithTarget(playerCharacter.skillManager.ballThrowSkill.createdBall ,target);
 
-                stateMachine.ChangeState(playerCharacter.idleState);
+                stateMachine.ChangeState(playerCharacter.throwBallState);
             }
         }
     }

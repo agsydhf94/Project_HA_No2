@@ -11,9 +11,9 @@ namespace HA
     {
         private PlayerCharacter playerCharacter => GetComponent<PlayerCharacter>();
 
-        private void AnimationTrigger_On()
+        private void AnimationTrigger()
         {
-            playerCharacter.AnimationTrigger();
+            playerCharacter.AnimationFinishTrigger();
         }
 
         private void AttackTrigger()
@@ -34,6 +34,7 @@ namespace HA
         {
             SkillManager.Instance.ballThrowSkill.CreateBall();
         }
+
         
     }
 }

@@ -127,5 +127,6 @@ namespace HA
             Gizmos.DrawSphere(attackCheck.position, attackCheckRadius);
         }
         #endregion
+
     }
 }

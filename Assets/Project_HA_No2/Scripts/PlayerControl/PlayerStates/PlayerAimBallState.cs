@@ -12,7 +12,7 @@ namespace HA
 
         public override void EnterState()
         {
-            base.EnterState();
+            base.EnterState();       
         }
 
         public override void ExitState()
@@ -24,6 +24,7 @@ namespace HA
         {
             base.UpdateState();
 
+            playerCharacter.Character_SetZeroVelocity();
             playerCharacter.detectTargetOnScreen.UpdateTargetList();
 
             if(Input.GetKeyUp(KeyCode.Mouse1))

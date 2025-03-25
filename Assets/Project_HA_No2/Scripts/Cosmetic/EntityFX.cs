@@ -20,6 +20,7 @@ namespace HA
         private void Awake()
         {
             playerManager = PlayerManager.Instance;
+            fxManager = FXManager.Instance;
             objectPool = ObjectPool.Instance;
 
             objectPool.CreatePool("mari_SwordHit", mari_SwordHit, 2);

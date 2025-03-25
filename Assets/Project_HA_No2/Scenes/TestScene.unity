@@ -2814,7 +2814,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 613403034}
   m_Lens:
-    FieldOfView: 30.00004
+    FieldOfView: 60
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -4571,6 +4571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerManager: {fileID: 0}
+  fxManager: {fileID: 0}
   objectPool: {fileID: 0}
   mari_SwordHit: {fileID: 1248535372447819786, guid: 6edbb0c8d2c446f4ba025d8f86ad5775,
     type: 3}
@@ -5212,7 +5213,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 30.00004
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

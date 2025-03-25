@@ -8,33 +8,11 @@ namespace HA
 {
     public class FXManager : SingletonBase<FXManager>
     {
-        [System.Serializable]
-        public struct FXPrefabEntry
-        {
-            public string key;
-            public GameObject prefab;
-            public int poolSize;
-        }
-
-        public List<FXPrefabEntry> effectPrefabs;
         private ObjectPool objectPool;
 
         public override void Awake()
         {
-            objectPool = ObjectPool.Instance;
-
-            foreach (var entry in effectPrefabs)
-            {
-                var component = entry.prefab.GetComponent<Component>();
-                if (component != null)
-                {
-                    objectPool.CreatePool(entry.key, component, entry.poolSize);
-                }
-                else
-                {
-                    Debug.LogError($"Prefab '{entry.key}'에 Component가 없습니다.");
-                }
-            }
+            objectPool = ObjectPool.Instance;         
         }
 
         public async void PlayEffect(string key, Vector3 position, Quaternion rotation, Transform parent = null, float customDuration = -1f)

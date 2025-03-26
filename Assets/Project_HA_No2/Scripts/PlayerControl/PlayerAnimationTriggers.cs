@@ -23,7 +23,7 @@ namespace HA
             {
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    playerCharacter.entityFx.SwordFX();
+                    playerCharacter.entityFx.SwordHitVFX();
                     damagable.ApplyDamage();
                 }
             }

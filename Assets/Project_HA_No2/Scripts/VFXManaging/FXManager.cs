@@ -8,16 +8,16 @@ namespace HA
 {
     public class FXManager : SingletonBase<FXManager>
     {
-        private ObjectPool objectPool;
+        private IFXFactory fxFactory;
 
         public override void Awake()
         {
-            objectPool = ObjectPool.Instance;         
+            fxFactory = new FXFactory(ObjectPool.Instance); // 필요 시 교체 가능
         }
 
         public async void PlayEffect(string key, Vector3 position, Quaternion rotation, Transform parent = null, float customDuration = -1f)
         {
-            Component fxComponent = objectPool.GetFromPool<Component>(key);
+            Component fxComponent = fxFactory.CreateFX(key);
             if (fxComponent == null) return;
 
             GameObject fxObject = fxComponent.gameObject;
@@ -61,7 +61,7 @@ namespace HA
         public void ReturnEffect(string key, Component fxComponent)
         {
             fxComponent.transform.SetParent(this.transform);
-            objectPool.ReturnToPool(key, fxComponent);
+            ObjectPool.Instance.ReturnToPool(key, fxComponent);
         }
     }
 }

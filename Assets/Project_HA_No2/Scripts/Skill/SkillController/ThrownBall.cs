@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+using System;
 
 namespace HA
 {
-    public class ThrowBallSkillController : MonoBehaviour
+    public class ThrownBall : MonoBehaviour
     {
         private new Rigidbody rigidbody;
-        private SphereCollider sphereCollider;
-        private PlayerCharacter playerCharacter;
         private bool hasHitTarget = false;
+
+        public LayerMask enemyLayer;
+        public VFXManager vfxManager;
 
         private void Awake()
         {
-            sphereCollider = GetComponent<SphereCollider>();
+            vfxManager = VFXManager.Instance;
             rigidbody = GetComponent<Rigidbody>();
         }
 
@@ -42,10 +45,25 @@ namespace HA
             Destroy(gameObject); // 마지막 타격 후 공 제거
         }
 
-        private void OnCollisionEnter(Collision collision)
+
+        private void OnTriggerEnter(Collider other)
         {
-            hasHitTarget = true;
+            if ((enemyLayer.value & (1 << other.gameObject.layer)) != 0)
+            {
+                hasHitTarget = true;
+
+                BallExplosion();
+                Debug.Log("지금 충돌 :" + other.gameObject.name);
+            }
         }
 
+        private void BallExplosion()
+        {
+            Vector3 fxPosition = transform.position;
+            Quaternion fxRotation = Quaternion.identity; // 필요 시 방향 지정
+            vfxManager.PlayEffect("mari_BallSkillHit", fxPosition, fxRotation, null, 0.5f);
+        }
+
+        
     }
 }

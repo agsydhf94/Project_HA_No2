@@ -6,7 +6,7 @@ using System;
 
 namespace HA
 {
-    public class EntityVFX : MonoBehaviour
+    public class EntityVFX : MonoBehaviour, IVFXInjection
     {
         #region Components
         public PlayerManager playerManager;

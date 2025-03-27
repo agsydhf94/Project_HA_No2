@@ -10,6 +10,8 @@ namespace HA
     public class PlayerAnimationTriggers : MonoBehaviour
     {
         private PlayerCharacter playerCharacter => GetComponent<PlayerCharacter>();
+        private EntityVFX entityVFX => GetComponent<EntityVFX>();
+
 
         private void AnimationTrigger()
         {
@@ -23,7 +25,7 @@ namespace HA
             {
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    playerCharacter.entityFx.SwordHitVFX();
+                    entityVFX.SwordHitVFX();
                     damagable.ApplyDamage();
                 }
             }

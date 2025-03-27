@@ -40,6 +40,10 @@ namespace HA
         [SerializeField] protected GameObject counterSphere;
         #endregion
 
+        #region Enemy Points
+        public GameObject center;
+        #endregion
+
 
         protected override void Awake()
         {
@@ -169,7 +173,7 @@ namespace HA
         public virtual void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
         #region Itargetable Interface
-        public Transform GetTargetPoint() => transform;
+        public Transform GetTargetPoint() => center.transform;
         #endregion
 
         private void OnDrawGizmos()

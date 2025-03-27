@@ -2362,6 +2362,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1807305074}
+    - targetCorrespondingSourceObject: {fileID: 3312499663655723257, guid: c13bc1d4eeb22ff428e44a1ab4e03056,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 119975621}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2788726836488354371, guid: c13bc1d4eeb22ff428e44a1ab4e03056,
         type: 3}
@@ -2405,7 +2409,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 0}
-  entityFx: {fileID: 0}
   basicSpeed: 0
   unArmed_RunningDelta: 0
   armed_WalkingDelta: 0
@@ -2446,6 +2449,7 @@ MonoBehaviour:
   lastTimeAttacked: 0
   stunnedDuration: 0.5
   counterSphere: {fileID: 1807305070}
+  center: {fileID: 119975620}
 --- !u!195 &90379202
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2483,7 +2487,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -2503,6 +2507,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21274cf11596504aafde4ebcbd3d4fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &119975620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 119975621}
+  m_Layer: 22
+  m_Name: Center
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &119975621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119975620}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.016, z: 0.275}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 90379199}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &120310109
 GameObject:
   m_ObjectHideFlags: 0
@@ -2814,7 +2849,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 613403034}
   m_Lens:
-    FieldOfView: 59.99999
+    FieldOfView: 30
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -3189,6 +3224,50 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1725274329}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1258671152
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1258671154}
+  - component: {fileID: 1258671153}
+  m_Layer: 0
+  m_Name: HA.GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1258671153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258671152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 986dade3a1f54ee45bd194021759a25b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1258671154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258671152}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.156347, y: 13.922852, z: -25.155508}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1322115327
 GameObject:
   m_ObjectHideFlags: 0
@@ -3250,6 +3329,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mari_SwordHit: {fileID: 1248535372447819786, guid: 6edbb0c8d2c446f4ba025d8f86ad5775,
+    type: 3}
+  mari_BallSkillHit: {fileID: 8551289439838141467, guid: ea3e7c31b68742c4d9329374c44fa182,
+    type: 3}
+  mari_BallSkillHit_Final: {fileID: 145045547740256387, guid: 884a010ff183758419b716ac90c10ba2,
     type: 3}
 --- !u!4 &1388971544
 Transform:
@@ -4404,7 +4487,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 1418896976}
-  entityFx: {fileID: 1418896980}
   basicSpeed: 0.8
   unArmed_RunningDelta: 1.6
   armed_WalkingDelta: 1.4
@@ -4617,7 +4699,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerManager: {fileID: 0}
-  fxManager: {fileID: 0}
 --- !u!1 &1443094259
 GameObject:
   m_ObjectHideFlags: 3
@@ -5256,7 +5337,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 59.99999
+  field of view: 30
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -5547,6 +5628,7 @@ SceneRoots:
   - {fileID: 405070174}
   - {fileID: 15033603}
   - {fileID: 125302975}
+  - {fileID: 1258671154}
   - {fileID: 88755531}
   - {fileID: 1388971544}
   - {fileID: 195012767}

@@ -147,6 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0621b30d29f59a842b885cecc4a7bd6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 4194304
+  vfxManager: {fileID: 0}
 --- !u!114 &5863120148885248365
 MonoBehaviour:
   m_ObjectHideFlags: 0

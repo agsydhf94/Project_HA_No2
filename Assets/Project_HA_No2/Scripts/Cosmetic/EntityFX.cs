@@ -10,7 +10,7 @@ namespace HA
     {
         #region Components
         public PlayerManager playerManager;
-        public FXManager fxManager;
+        public IVFXPlayable ivfxPlayable;
         #endregion
 
         
@@ -18,7 +18,7 @@ namespace HA
         private void Awake()
         {
             playerManager = PlayerManager.Instance;
-            fxManager = FXManager.Instance;
+            ivfxPlayable = VFXManager.Instance;
         }
 
 
@@ -27,7 +27,7 @@ namespace HA
             Vector3 fxPosition = playerManager.playerCharacter.attackCheck.transform.position;
             Quaternion fxRotation = Quaternion.identity; // 필요 시 방향 지정
 
-            fxManager.PlayEffect("mari_SwordHit", fxPosition, fxRotation, null, 0.5f);
+            ivfxPlayable.PlayEffect("mari_SwordHit", fxPosition, fxRotation, null, 0.5f);
         }
 
     }

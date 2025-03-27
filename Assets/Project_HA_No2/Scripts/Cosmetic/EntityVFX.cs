@@ -6,7 +6,7 @@ using System;
 
 namespace HA
 {
-    public class EntityFX : MonoBehaviour
+    public class EntityVFX : MonoBehaviour
     {
         #region Components
         public PlayerManager playerManager;
@@ -18,7 +18,11 @@ namespace HA
         private void Awake()
         {
             playerManager = PlayerManager.Instance;
-            ivfxPlayable = VFXManager.Instance;
+        }
+
+        public void Initialize(IVFXPlayable injectedVFXPlayer)
+        {
+            ivfxPlayable = injectedVFXPlayer;
         }
 
 

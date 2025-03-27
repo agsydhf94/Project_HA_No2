@@ -12,7 +12,6 @@ namespace HA
         #region Components
         [Header("Components")]
         public Animator characterAnimator;
-        public EntityFX entityFx;
         #endregion
 
         #region Moving Information
@@ -60,7 +59,6 @@ namespace HA
         protected virtual void Start()
         {
             characterAnimator = GetComponent<Animator>();
-            entityFx = GetComponent<EntityFX>();
         }
 
         protected virtual void Update()

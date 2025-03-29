@@ -13,18 +13,9 @@ namespace HA
             this.pool = pool;
         }
 
-        public Component CreateObject(string key, Vector3 position, Quaternion rotation, Transform parent = null)
+        public Component LoadObject(string key)
         {
-            var component = pool.GetFromPool<Component>(key);
-            if (component == null) return null;
-
-            GameObject obj = component.gameObject;
-            obj.transform.SetParent(parent);
-            obj.transform.position = position;
-            obj.transform.rotation = rotation;
-            obj.SetActive(true);
-
-            return component;
+            return pool.GetFromPool<Component>(key);
         }
     }
 }

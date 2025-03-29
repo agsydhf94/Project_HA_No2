@@ -6,6 +6,6 @@ namespace HA
 {
     public interface IObjectFactory
     {
-        Component CreateObject(string key, Vector3 position, Quaternion rotation, Transform parent = null);
+        Component LoadObject(string key);
     }
 }

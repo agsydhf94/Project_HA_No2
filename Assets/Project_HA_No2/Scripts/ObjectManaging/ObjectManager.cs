@@ -1,29 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace HA
 {
-    public class ObjectManager : SingletonBase<ObjectManager>
+    public class ObjectManager : SingletonBase<ObjectManager>, IObjectSpawner, IObjectReturn
     {
         private IObjectFactory factory;
+
+        public event Action OnReturnRequested;
 
         public override void Awake()
         {
             factory = new ObjectFactory(ObjectPool.Instance);
         }
 
-        public T SpawnObject<T>(string key, Vector3 position, Quaternion rotation, Transform parent = null) where T : Component
-        {
-            Component component = factory.CreateObject(key, position, rotation, parent);
-            return component as T;
-        }
+        /// <summary>
+        /// 오브젝트를 로드하고 위치/회전까지 설정함
+        /// </summary>
 
-        public void DespawnObject(string key, Component component)
+        public Component Spawn(string key, Vector3 position, Quaternion rotation, Transform parent = null)
+    {
+        var component = factory.LoadObject(key);
+        if (component == null) return null;
+
+        GameObject obj = component.gameObject;
+        obj.transform.SetParent(parent);
+        obj.transform.position = position;
+        obj.transform.rotation = rotation;
+        obj.SetActive(true);
+
+        return component;
+    }
+
+        public void Return(string key, Component component)
         {
-            if (component == null) return;
-            component.transform.SetParent(this.transform);
             ObjectPool.Instance.ReturnToPool(key, component);
         }
+
     }
 }

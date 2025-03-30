@@ -10,10 +10,15 @@ namespace HA
     public class ThrownBall : MonoBehaviour
     {
         private new Rigidbody rigidbody;
-        private bool hasHitTarget = false;
 
         public LayerMask enemyLayer;
         public VFXManager vfxManager;
+
+        public int crashCount = 0;
+        private Transform currentTarget;
+
+        private IObjectReturn objectReturn;
+        public event Action OnReturnRequested;
 
         private void Awake()
         {
@@ -21,11 +26,49 @@ namespace HA
             rigidbody = GetComponent<Rigidbody>();
         }
 
-        public void SetUpBall(Vector3 initialVelocity)
+        public void Initialize(IObjectReturn returnHandler)
         {
-            rigidbody.isKinematic = false;
-            rigidbody.velocity = initialVelocity;
+            this.objectReturn = returnHandler;
+            crashCount = 0;
         }
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+
+            if (((1 << other.gameObject.layer) & enemyLayer) != 0)
+            {
+                crashCount++;
+
+                // 일반 VFX
+                vfxManager.PlayEffect("mari_BallSkillHit", transform.position, Quaternion.identity, null, 0.5f);
+
+                Debug.Log($"[{crashCount}] 충돌 대상 : {other.gameObject.name}");
+
+                if (crashCount >= 5)
+                {
+                    // 마지막 피니시 VFX
+                    vfxManager.PlayEffect("mari_BallSkillHit_Final", transform.position, Quaternion.identity, null, 0.8f);
+                    currentTarget = null;
+                    Return();
+                }
+                else
+                {
+                    Transform nextTarget = FindNextTarget(other.transform);
+                    if (nextTarget != null)
+                    {
+                        StartChaining(nextTarget).Forget();
+                    }
+                    else
+                    {
+                        Return(); // 더 이상 타겟 없음
+                        currentTarget = null;
+                    }
+                }
+            }
+        }
+
+        #region Chain Attack
 
         public async UniTask ChainBallAttack(Transform[] targets, float speed)
         {
@@ -33,37 +76,66 @@ namespace HA
             {
                 Transform target = targets[i];
 
-                while (!hasHitTarget && Vector3.Distance(transform.position, target.position) > 0.1f)
+                while (Vector3.Distance(transform.position, target.position) > 0.1f)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
                     await UniTask.Yield();
                 }
 
-                hasHitTarget = false;
             }
 
             Destroy(gameObject); // 마지막 타격 후 공 제거
         }
 
-
-        private void OnTriggerEnter(Collider other)
+        public async UniTask StartChaining(Transform target)
         {
-            if ((enemyLayer.value & (1 << other.gameObject.layer)) != 0)
-            {
-                hasHitTarget = true;
+            currentTarget = target;
 
-                BallExplosion();
-                Debug.Log("지금 충돌 :" + other.gameObject.name);
+            while (Vector3.Distance(transform.position, target.position) > 0.1f)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.position, 20f * Time.deltaTime);
+                await UniTask.Yield();
+            }
+
+            // 위치에 도달해도 충돌이 없을 경우 대비
+            await UniTask.Delay(TimeSpan.FromMilliseconds(200));
+            if (crashCount < 5)
+            {
+                Return();
             }
         }
 
-        private void BallExplosion()
+        private Transform FindNextTarget(Transform from)
         {
-            Vector3 fxPosition = transform.position;
-            Quaternion fxRotation = Quaternion.identity; // 필요 시 방향 지정
-            vfxManager.PlayEffect("mari_BallSkillHit", fxPosition, fxRotation, null, 0.5f);
+            float minDistance = float.MaxValue;
+            Transform closest = null;
+
+            Collider[] hits = Physics.OverlapSphere(from.position, 10f, enemyLayer);
+            foreach (var hit in hits)
+            {
+                if (hit.transform == from) continue;
+
+                float dist = Vector3.Distance(from.position, hit.transform.position);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    closest = hit.transform;
+                }
+            }
+
+            return closest;
+        }
+        #endregion
+
+        private void Return()
+        {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.isKinematic = true;
+
+            objectReturn.Return("skillBall", this);
         }
 
-        
+
+
     }
 }

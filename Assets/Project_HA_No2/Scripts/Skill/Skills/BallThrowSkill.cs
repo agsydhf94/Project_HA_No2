@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,18 +16,31 @@ namespace HA
         [SerializeField] private float gravity = 9.81f;  // Áß·Â °ª
 
         public GameObject createdBall;
+        public IObjectSpawner objectSpawner;
+        public ObjectPool objectPool;
 
         private void Awake()
         {
             ballPosition = GameObject.FindWithTag("BallPosition").transform;
         }
 
+        public void InitializeSpawner(IObjectSpawner spawner)
+        {
+            this.objectSpawner = spawner;
+        }
+
         public void CreateBall()
         {
-            GameObject ball = Instantiate(ballPrefab, ballPosition.position, Quaternion.identity);
-            ball.transform.SetParent(ballPosition);
+            //GameObject ball = Instantiate(ballPrefab, ballPosition.position, Quaternion.identity);
 
-            createdBall = ball;
+            var ball = objectSpawner.Spawn("skillBall", ballPosition.position, Quaternion.identity);
+            ball.transform.SetParent(ballPosition);
+            createdBall = ball.gameObject;
+
+            var thrownBallComponent = createdBall.GetComponent<ThrownBall>();
+            thrownBallComponent.Initialize(ObjectManager.Instance);
+            thrownBallComponent.crashCount = 0;
+
         }
 
         public void ThrowBallWithTarget(GameObject ball, Transform target = null)

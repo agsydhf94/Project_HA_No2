@@ -8,19 +8,23 @@ namespace HA
     {
         public DashSkill dashSkill { get; private set; }
         public CloneSkill cloneSkill { get; private set; }
-
         public BallThrowSkill ballThrowSkill { get; private set; }
 
-        public override void Awake()
-        {
-            
-        }
+
+
 
         private void Start()
         {
             dashSkill = GetComponent<DashSkill>();
             cloneSkill = GetComponent<CloneSkill>();
             ballThrowSkill = GetComponent<BallThrowSkill>();
+
+            Initialize_BallthrowSkill();
+        }
+
+        private void Initialize_BallthrowSkill()
+        {
+            ballThrowSkill.InitializeSpawner(ObjectManager.Instance);
         }
     }
 }

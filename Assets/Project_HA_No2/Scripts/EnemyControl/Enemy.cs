@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -107,8 +108,6 @@ namespace HA
         }
         #endregion
 
-        
-
         #region Distance Caluate by Raycast
 
         public float Distance_byRaycast()
@@ -167,6 +166,32 @@ namespace HA
             }
 
             return false;
+        }
+        #endregion
+
+        #region Enemy Freeze
+        public virtual void FreezeTime(bool timeFrozen)
+        {
+            if(timeFrozen)
+            {
+                SetNavMeshAgent_Stop();
+                characterAnimator.speed = 0;
+                
+            }
+            else
+            {
+                SetNavMeshAgent_Go();
+                characterAnimator.speed = 1;
+            }
+        }
+
+        protected virtual async UniTask FreezeTimer_ForTime(float seconds)
+        {
+            FreezeTime(true);
+
+            await UniTask.WaitForSeconds(seconds);
+
+            FreezeTime(false);
         }
         #endregion
 

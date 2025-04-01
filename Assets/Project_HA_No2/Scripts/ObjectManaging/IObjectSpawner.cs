@@ -6,7 +6,7 @@ namespace HA
 {
     public interface IObjectSpawner
     {
-        void Spawn(Component component, Vector3 position, Quaternion rotation, Transform parent = null);
+        Component Spawn(string key, Vector3 position, Quaternion rotation, Transform parent = null);
     }
 }
 

@@ -22,7 +22,8 @@ namespace HA
         {
             if(other.GetComponent<Enemy>() != null)
             {
-                detectedTargets.Add(other.transform);
+                //detectedTargets.Add(other.transform);
+                other.GetComponent<Enemy>().FreezeTime(true);
             }
         }
     }

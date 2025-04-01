@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -43,10 +44,14 @@ namespace HA
 
         }
 
-        public void ThrowBallWithTarget(GameObject ball, Transform target = null)
+        public async UniTask ThrowBallWithTarget(GameObject ball, Transform target = null)
         {
+            await UniTask.Yield(); // 프레임 대기 (부모 해제와 위치 반영 보장)
+
             Rigidbody rb = ball.GetComponent<Rigidbody>();
             rb.isKinematic = false; // 물리 적용
+
+            await UniTask.Yield();
 
             Vector3 launchVelocity;
 

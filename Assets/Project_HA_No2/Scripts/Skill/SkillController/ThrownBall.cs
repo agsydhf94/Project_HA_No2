@@ -26,10 +26,15 @@ namespace HA
             rigidbody = GetComponent<Rigidbody>();
         }
 
-        public void Initialize(IObjectReturn returnHandler)
+        public async void Initialize(IObjectReturn returnHandler)
         {
             this.objectReturn = returnHandler;
             crashCount = 0;
+
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+
+            rigidbody.isKinematic = true; // 초기화는 끄고, 던질 때 다시 켜기
         }
 
 
@@ -84,7 +89,7 @@ namespace HA
 
             }
 
-            Destroy(gameObject); // 마지막 타격 후 공 제거
+            objectReturn.Return("skillBall", this);; // 마지막 타격 후 공 제거
         }
 
         public async UniTask StartChaining(Transform target)

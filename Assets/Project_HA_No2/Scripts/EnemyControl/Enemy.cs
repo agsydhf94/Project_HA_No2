@@ -45,6 +45,8 @@ namespace HA
         public GameObject center;
         #endregion
 
+        public GameObject blackHoleFlag;
+
 
         protected override void Awake()
         {

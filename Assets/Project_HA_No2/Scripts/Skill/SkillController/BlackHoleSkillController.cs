@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace HA
@@ -12,16 +13,20 @@ namespace HA
         public float growSpeed;
         public bool canGrow;
 
-        public List<Transform> attackedTargets = new List<Transform>();
-        public Queue<Transform> detectedTargets = new Queue<Transform>();
-        public KeyCode hotkey;
+        public List<Enemy> attackedTargets = new List<Enemy>();
+        public Queue<Enemy> detectedTargets = new Queue<Enemy>();
 
         private void Update()
         {
             transform.localScale
-                = Vector3.Lerp(transform.localScale, new Vector3(maxSize, maxSize, maxSize), growSpeed * Time.deltaTime);  
+                = Vector3.Lerp(transform.localScale, new Vector3(maxSize, maxSize, maxSize), growSpeed * Time.deltaTime);
 
-            
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                var enemy = detectedTargets.Dequeue();
+                AddEnemyToList(enemy);
+                enemy.blackHoleFlag.SetActive(false);
+            }
         }
 
         private void OnTriggerEnter(Collider other)
@@ -30,7 +35,7 @@ namespace HA
             {
                 enemy.FreezeTime(true);
                 enemy.blackHoleFlag.SetActive(true);
-                detectedTargets.Enqueue(enemy.transform);
+                detectedTargets.Enqueue(enemy);
                 Debug.Log(enemy.gameObject.name);
 
                 BlackHoleSkill_AttackIcon attackIcon = enemy.blackHoleFlag.gameObject.GetComponent<BlackHoleSkill_AttackIcon>();
@@ -38,6 +43,6 @@ namespace HA
             }
         }
 
-        public void AddEnemyToList(Transform enemyTransform) => attackedTargets.Add(enemyTransform);
+        public void AddEnemyToList(Enemy enemyTransform) => attackedTargets.Add(enemyTransform);
     }
 }

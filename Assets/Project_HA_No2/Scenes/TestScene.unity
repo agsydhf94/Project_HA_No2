@@ -3588,7 +3588,7 @@ MonoBehaviour:
   growSpeed: 1
   canGrow: 1
   attackedTargets: []
-  hotkey: 122
+  hotkey: 0
 --- !u!135 &2041309948
 SphereCollider:
   m_ObjectHideFlags: 0

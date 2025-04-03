@@ -330,11 +330,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  amountOfAttacks: 5
+  amountOfAttacks: 2
   cloneCoolTime: 0.35
   blackHoldPrefab: {fileID: 4844594332241887397, guid: 2ba400d36f6d6934ea9dcf4cc01c316c,
     type: 3}
-  maxSize: 15
+  maxSize: 7
   growSpeed: 3
   shrinkSpeed: 6
 --- !u!1001 &90379197
@@ -821,7 +821,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 613403034}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 59.99998
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -1289,6 +1289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1258671154}
   - component: {fileID: 1258671153}
+  - component: {fileID: 1258671155}
   m_Layer: 0
   m_Name: HA.GameManager
   m_TagString: Untagged
@@ -1323,6 +1324,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1258671155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258671152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ef3ed1c7f13304197e16888a1ec525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCharacter: {fileID: 0}
 --- !u!1001 &1260561707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3392,7 +3406,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 59.99998
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

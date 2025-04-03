@@ -296,7 +296,14 @@ namespace HA
 
         #region Animation Control
         public void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
-        #endregion 
+        #endregion
+
+        #region Character State Control
+        public void ExitBlackHoleSkill()
+        {
+            stateMachine.ChangeState(idleState);
+        }
+        #endregion
 
         #region Trail Renderer System
         public void DashTrailRenderer_On() => trailRenderer.emitting = true;

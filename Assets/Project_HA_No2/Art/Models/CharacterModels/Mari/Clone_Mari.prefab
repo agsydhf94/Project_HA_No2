@@ -8187,7 +8187,7 @@ MonoBehaviour:
   smr_Face: {fileID: 2854310855021498424}
   smr_Body: {fileID: 6530078928337819343}
   smr_Hair: {fileID: 2396589077748038888}
-  colorLoosingSpeed: 0
+  colorLoosingSpeed: 2
 --- !u!1 &7441538391322887330
 GameObject:
   m_ObjectHideFlags: 0

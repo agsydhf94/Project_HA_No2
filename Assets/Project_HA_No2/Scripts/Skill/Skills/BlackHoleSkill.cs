@@ -8,6 +8,7 @@ namespace HA
     {
         [SerializeField] private int amountOfAttacks;
         [SerializeField] private float cloneCoolTime;
+        [SerializeField] private float blackHoleDuration;
         [SerializeField] private GameObject blackHoldPrefab;
         [SerializeField] private float maxSize;
         [SerializeField] private float growSpeed;
@@ -29,7 +30,7 @@ namespace HA
             currentBlackHole.transform.localPosition = Vector3.zero;
 
             var controller = currentBlackHole.GetComponent<BlackHoleSkillController>();
-            controller.SetupBlackHole(maxSize, growSpeed, shrinkSpeed, amountOfAttacks, cloneCoolTime);
+            controller.SetupBlackHole(maxSize, growSpeed, shrinkSpeed, amountOfAttacks, cloneCoolTime, blackHoleDuration);
         }
 
         protected override void Start()

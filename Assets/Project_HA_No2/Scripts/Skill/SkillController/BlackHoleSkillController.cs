@@ -14,6 +14,7 @@ namespace HA
         private float maxSize;
         private float growSpeed;
         private float shrinkSpeed;
+        private float blackHoleTimer;
 
         private bool canGrow = true;
         private bool canShrink = false;
@@ -28,13 +29,14 @@ namespace HA
 
         public bool playerCanExitState { get; private set; }
 
-        public void SetupBlackHole(float maxSize, float growSpeed, float shrinkSpeed, int amountOfAttacks, float cloneAttackCooldown)
+        public void SetupBlackHole(float maxSize, float growSpeed, float shrinkSpeed, int amountOfAttacks, float cloneAttackCooldown, float blackHoleDuration)
         {
             this.maxSize = maxSize;
             this.growSpeed = growSpeed;
             this.shrinkSpeed = shrinkSpeed;
             this.amountOfAttacks = amountOfAttacks;
             this.cloneAttackCooldown = cloneAttackCooldown;
+            this.blackHoleTimer = blackHoleDuration;
         }
 
         private void Awake()
@@ -46,6 +48,16 @@ namespace HA
         private void Update()
         {
             cloneAttackTimer -= Time.deltaTime;
+            blackHoleTimer -= Time.deltaTime;
+
+            AttackByClone();
+
+            if (blackHoleTimer < 0)
+            {
+                blackHoleTimer = Mathf.Infinity;
+
+                FinishBlackHoleSkill();
+            }
 
             if (cloneAttackTimer < 0)
             {
@@ -68,29 +80,24 @@ namespace HA
                 }
             }
 
-            AttackByClone();
         }
 
         private void AttackByClone()
         {
             if (Input.GetKeyDown(KeyCode.X))
             {
-                if(detectedTargets.Count == 0)
-                {
-                    canShrink = true;
-                    playerManager.playerCharacter.ExitBlackHoleSkill();
-                }
-
                 var enemy = detectedTargets.Dequeue();
                 AddEnemyToList(enemy);
                 enemy.blackHoleFlag.SetActive(false);
                 skillManager.cloneSkill.CreateClone(enemy.transform, new Vector3(0.7f, 0f, 0f));
 
+                
                 amountOfAttacks--;
                 if (amountOfAttacks <= 0)
                 {
                     Invoke("FinishBlackHoleSkill", 0.8f);
                 }
+                
             }
         }
 

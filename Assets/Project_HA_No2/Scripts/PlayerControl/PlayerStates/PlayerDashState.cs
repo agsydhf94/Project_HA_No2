@@ -14,7 +14,7 @@ namespace HA
         {
             base.EnterState();
 
-            playerCharacter.skillManager.cloneSkill.CreateClone(playerCharacter.transform);
+            playerCharacter.skillManager.cloneSkill.CreateClone(playerCharacter.transform, Vector3.zero);
 
             stateTimer = playerCharacter.dashDuration;
         }

@@ -13,7 +13,7 @@ namespace HA
 
         protected PlayerCharacter playerCharacter;
 
-        private void Start()
+        protected virtual void Start()
         {
             playerCharacter = PlayerManager.Instance.playerCharacter;
         }

@@ -14,8 +14,8 @@ namespace HA
         private float growSpeed;
         private float shrinkSpeed;
 
-        private bool canGrow;
-        private bool canShrink;
+        private bool canGrow = true;
+        private bool canShrink = false;
         private bool canAttack;
 
         public int amountOfAttacks = 4;

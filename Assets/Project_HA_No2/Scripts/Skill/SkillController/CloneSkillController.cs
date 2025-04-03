@@ -72,12 +72,12 @@ namespace HA
         }
 
 
-        public void SetUpClone(Transform newTransform, bool canAttack)
+        public void SetUpClone(Transform newTransform, bool canAttack, Vector3 offset)
         {
             if (canAttack)
                 animator.SetInteger("AttackNumber", Random.Range(1, 3));
 
-            transform.position = newTransform.position;
+            transform.position = newTransform.position + offset;
             cloneTimer = cloneDuration;
         }
 

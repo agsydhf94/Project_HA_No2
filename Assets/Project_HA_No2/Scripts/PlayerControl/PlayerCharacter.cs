@@ -23,6 +23,7 @@ namespace HA
         public PlayerCounterAttackState counterAttackState { get; private set; }
         public PlayerAimBallState aimBallState { get; private set; }
         public PlayerThrowState throwBallState { get; private set; }
+        public PlayerBlackHoleState blackHoleState { get; private set; }
         #endregion
 
 
@@ -103,6 +104,7 @@ namespace HA
             counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
             aimBallState = new PlayerAimBallState(this, stateMachine, "AimBall");
             throwBallState = new PlayerThrowState(this, stateMachine, "ThrowBall");
+            blackHoleState = new PlayerBlackHoleState(this, stateMachine, "BlackHole");
         }
 
         protected override void Start()

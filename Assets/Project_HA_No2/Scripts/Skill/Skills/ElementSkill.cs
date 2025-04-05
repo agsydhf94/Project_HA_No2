@@ -16,6 +16,8 @@ namespace HA
 
         [Header("Explosive Element")]
         [SerializeField] private bool canExplode;
+        [SerializeField] private float explodeRadius;
+        [SerializeField] private LayerMask explodeLayer;
 
         public override bool CanUseSkill()
         {
@@ -32,7 +34,16 @@ namespace HA
                 currentElement.transform.position = playerCharacter.transform.position + new Vector3(0f, 1f, 0f);
 
                 ElementSkillController currentElementController = currentElement.GetComponent<ElementSkillController>();
-                currentElementController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
+                if(canExplode)
+                {
+                    currentElementController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
+                    currentElementController.SetupExplode(explodeRadius, explodeLayer);
+                }
+                else
+                {
+                    currentElementController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
+                }
+                
             }
             else
             {

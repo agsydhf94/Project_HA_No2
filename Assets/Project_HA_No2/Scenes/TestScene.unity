@@ -309,6 +309,10 @@ MonoBehaviour:
   cooldown: 0
   elementPrefab: {fileID: 5482492701479079410, guid: 30cc61457a64e0d4491686318320a4f2,
     type: 3}
+  elementDuration: 1.4
+  canMoveToEnemy: 0
+  moveSpeed: 0
+  canExplode: 0
 --- !u!1001 &90379197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1148,6 +1152,8 @@ MonoBehaviour:
   mari_BallSkillHit: {fileID: 8551289439838141467, guid: ea3e7c31b68742c4d9329374c44fa182,
     type: 3}
   mari_BallSkillHit_Final: {fileID: 145045547740256387, guid: 884a010ff183758419b716ac90c10ba2,
+    type: 3}
+  mari_ElementExplode: {fileID: 637434297790916055, guid: 6a5e390212c2de84594fde097a700ef5,
     type: 3}
 --- !u!4 &1388971544
 Transform:

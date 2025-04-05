@@ -12,6 +12,10 @@ namespace HA
         private bool canMove;
         private float moveSpeed;
 
+        private float explodeRadius;
+        private LayerMask explodeLayer;
+
+
         private VFXManager vfxManager;
 
         private void Awake()
@@ -38,11 +42,19 @@ namespace HA
             moveSpeed = _moveSpeed;            
         }
 
+        public void SetupExplode(float _explodeRadius, LayerMask _layer)
+        {
+            explodeRadius = _explodeRadius;
+            explodeLayer = _layer;
+        }
+
         public void FinishElement()
         {
             if(canExplode)
             {
                 vfxManager.PlayEffect("mari_ElementExplode", transform.position, transform.rotation, null, 1f);
+                AddDamage();
+                SelfDestruct();
             }
             else
             {
@@ -51,5 +63,18 @@ namespace HA
         }
 
         public void SelfDestruct() => Destroy(gameObject);
+
+
+        public void AddDamage()
+        {
+            Collider[] colliders = Physics.OverlapSphere(transform.position, explodeRadius, explodeLayer);
+            foreach (var collider in colliders)
+            {
+                if (TryGetComponent(out IDamagable damagable))
+                {
+                    damagable.ApplyDamage();
+                }
+            }
+        }
     }
 }

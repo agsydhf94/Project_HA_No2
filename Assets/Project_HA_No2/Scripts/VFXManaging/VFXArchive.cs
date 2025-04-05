@@ -15,6 +15,9 @@ namespace HA
         [SerializeField] private ParticleSystem mari_BallSkillHit;
         [SerializeField] private ParticleSystem mari_BallSkillHit_Final;
 
+        [Header("ElementExplode VFX")]
+        [SerializeField] private ParticleSystem mari_ElementExplode;
+
         public override void Awake()
         {
             objectPool = ObjectPool.Instance;
@@ -25,6 +28,9 @@ namespace HA
             // Ball Skill Hit VFX
             objectPool.CreatePool("mari_BallSkillHit", mari_BallSkillHit, 5);
             objectPool.CreatePool("mari_BallSkillHit_Final", mari_BallSkillHit_Final, 2);
+
+            // ElementExplode VFX
+            objectPool.CreatePool("mari_ElementExplode", mari_ElementExplode, 2);
         }
     }
 }

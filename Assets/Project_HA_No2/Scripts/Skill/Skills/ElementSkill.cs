@@ -10,6 +10,13 @@ namespace HA
         [SerializeField] private float elementDuration;
         private GameObject currentElement;
 
+        [Header("Moving Element")]
+        [SerializeField] private bool canMoveToEnemy;
+        [SerializeField] private float moveSpeed;
+
+        [Header("Explosive Element")]
+        [SerializeField] private bool canExplode;
+
         public override bool CanUseSkill()
         {
             return base.CanUseSkill();
@@ -25,14 +32,14 @@ namespace HA
                 currentElement.transform.position = playerCharacter.transform.position + new Vector3(0f, 1f, 0f);
 
                 ElementSkillController currentElementController = currentElement.GetComponent<ElementSkillController>();
-                currentElementController.SetupElement(elementDuration);
+                currentElementController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
             }
             else
             {
                 playerCharacter.GetComponent<CharacterController>().enabled = false;
                 playerCharacter.transform.position = currentElement.transform.position - new Vector3(0f, 1f, 0f);
                 playerCharacter.GetComponent<CharacterController>().enabled = true;
-                Destroy(currentElement);
+                currentElement.GetComponent<ElementSkillController>().FinishElement();
             }
         }
 

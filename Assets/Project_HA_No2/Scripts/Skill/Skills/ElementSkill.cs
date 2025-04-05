@@ -7,6 +7,7 @@ namespace HA
     public class ElementSkill : Skill
     {
         [SerializeField] private GameObject elementPrefab;
+        [SerializeField] private float elementDuration;
         private GameObject currentElement;
 
         public override bool CanUseSkill()
@@ -22,6 +23,9 @@ namespace HA
             {
                 currentElement = Instantiate(elementPrefab);
                 currentElement.transform.position = playerCharacter.transform.position + new Vector3(0f, 1f, 0f);
+
+                ElementSkillController currentElementController = currentElement.GetComponent<ElementSkillController>();
+                currentElementController.SetupElement(elementDuration);
             }
             else
             {

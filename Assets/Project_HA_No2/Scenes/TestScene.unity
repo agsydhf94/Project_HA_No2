@@ -312,7 +312,11 @@ MonoBehaviour:
   elementDuration: 1.4
   canMoveToEnemy: 0
   moveSpeed: 0
-  canExplode: 0
+  canExplode: 1
+  explodeRadius: 10
+  explodeLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &90379197
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -388,7 +392,11 @@ PrefabInstance:
     - {fileID: 7855825750807890768, guid: c13bc1d4eeb22ff428e44a1ab4e03056, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2788726836488354371, guid: c13bc1d4eeb22ff428e44a1ab4e03056,
+        type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 1512092601}
   m_SourcePrefab: {fileID: 100100000, guid: c13bc1d4eeb22ff428e44a1ab4e03056, type: 3}
 --- !u!1 &120310109
 GameObject:
@@ -2248,6 +2256,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -1728013695380148634, guid: 8a44e3abe22d7044ea9a99b70a641a61,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1418896983}
+    - targetCorrespondingSourceObject: {fileID: -1728013695380148634, guid: 8a44e3abe22d7044ea9a99b70a641a61,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1418896980}
     - targetCorrespondingSourceObject: {fileID: -1728013695380148634, guid: 8a44e3abe22d7044ea9a99b70a641a61,
         type: 3}
@@ -2520,6 +2532,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerManager: {fileID: 0}
+--- !u!114 &1418896983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418896963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14db0bc4cde30f848a114e174c5e247d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage:
+    baseValue: 10
+  maxHp:
+    baseValue: 100
+  currentHp: 0
 --- !u!1 &1443094259
 GameObject:
   m_ObjectHideFlags: 3
@@ -2648,6 +2677,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1418896969}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1512092594 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2788726836488354371, guid: c13bc1d4eeb22ff428e44a1ab4e03056,
+    type: 3}
+  m_PrefabInstance: {fileID: 90379197}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1512092601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512092594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14db0bc4cde30f848a114e174c5e247d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage:
+    baseValue: 10
+  maxHp:
+    baseValue: 100
+  currentHp: 0
 --- !u!1001 &1725274329
 PrefabInstance:
   m_ObjectHideFlags: 0

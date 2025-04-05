@@ -70,7 +70,7 @@ namespace HA
             Collider[] colliders = Physics.OverlapSphere(transform.position, explodeRadius, explodeLayer);
             foreach (var collider in colliders)
             {
-                if (TryGetComponent(out IDamagable damagable))
+                if (collider.TryGetComponent(out IDamagable damagable))
                 {
                     damagable.ApplyDamage();
                 }

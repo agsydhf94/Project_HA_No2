@@ -12,6 +12,7 @@ namespace HA
         #region Components
         [Header("Components")]
         public Animator characterAnimator;
+        public CharacterStats characterStats { get; private set; }
         #endregion
 
         #region Moving Information
@@ -53,11 +54,12 @@ namespace HA
 
         protected virtual void Awake()
         {
-                    
+            characterStats = GetComponent<CharacterStats>();
         }
 
         protected virtual void Start()
         {
+            
             characterAnimator = GetComponent<Animator>();
         }
 
@@ -70,6 +72,7 @@ namespace HA
         public void ApplyDamage()
         {
             Debug.Log(gameObject.name + "Damaged");
+            characterStats.TakeDamage(characterStats.damage.GetValue());
 
             HitKnockback().Forget();
         }

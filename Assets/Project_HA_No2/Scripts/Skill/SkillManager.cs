@@ -10,6 +10,7 @@ namespace HA
         public CloneSkill cloneSkill { get; private set; }
         public BallThrowSkill ballThrowSkill { get; private set; }
         public BlackHoleSkill blackHoleSkill { get; private set; }
+        public ElementSkill elementSkill { get; private set; }
 
 
 
@@ -20,6 +21,7 @@ namespace HA
             cloneSkill = GetComponent<CloneSkill>();
             ballThrowSkill = GetComponent<BallThrowSkill>();
             blackHoleSkill = GetComponent<BlackHoleSkill>();
+            elementSkill = GetComponent<ElementSkill>();
 
             Initialize_BallthrowSkill();
         }

@@ -25,7 +25,9 @@ namespace HA
             }
             else
             {
+                playerCharacter.GetComponent<CharacterController>().enabled = false;
                 playerCharacter.transform.position = currentElement.transform.position - new Vector3(0f, 1f, 0f);
+                playerCharacter.GetComponent<CharacterController>().enabled = true;
                 Destroy(currentElement);
             }
         }
@@ -41,7 +43,7 @@ namespace HA
 
             if(Input.GetKeyDown(KeyCode.E))
             {
-                CanUseSkill();
+                CanUseSkill(); 
             }
         }
     }

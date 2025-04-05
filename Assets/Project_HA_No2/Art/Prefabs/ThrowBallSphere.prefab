@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2705711144987385682}
   - component: {fileID: 5863120148885248365}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: ThrowBallSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

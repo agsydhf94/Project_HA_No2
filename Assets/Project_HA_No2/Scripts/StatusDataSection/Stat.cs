@@ -21,6 +21,11 @@ namespace HA
             return finalValue;
         }
 
+        public void SetDefaultValue(int value)
+        {
+            baseValue = value;
+        }
+
         public void AddModifier(int _mod)
         {
             modifiers.Add(_mod);

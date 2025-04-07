@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace HA
@@ -10,17 +11,23 @@ namespace HA
         public Stat inteligence;  // 1 point : 마법 데미지 +1, 마법 저항력 + 3%
         public Stat vitality;     // 1 point : 최대 체력 +5
 
+        [Header("Attack Stats")]
+        public Stat damage;
+        public Stat criticalChance;
+        public Stat criticalPower;     // Default : 150%
+
+
         [Header("Defense Stats")]
         public Stat maxHp;
         public Stat armor;
         public Stat evasion;
 
-        public Stat damage;
 
         [SerializeField] private int currentHp;
 
         protected virtual void Start()
         {
+            criticalPower.SetDefaultValue(150);
             currentHp = maxHp.GetValue();
         }
 
@@ -31,7 +38,12 @@ namespace HA
             
             int totalDamage = damage.GetValue() + strength.GetValue();
 
-
+            if (CanCritical())
+            {
+                totalDamage = CalculateCriticalDamage(totalDamage);
+            }
+                
+            
 
             totalDamage = CheckTargetArmor(targetStats, totalDamage);
             targetStats.TakeDamage(totalDamage);
@@ -57,7 +69,7 @@ namespace HA
         {
             int totalEvasion = targetStats.evasion.GetValue() + targetStats.agility.GetValue();
 
-            if (Random.Range(1, 100) < totalEvasion)
+            if (UnityEngine.Random.Range(1, 100) < totalEvasion)
             {
                 Debug.Log("Attack Avoided");
                 return true;
@@ -69,6 +81,24 @@ namespace HA
             totalDamage -= targetStats.armor.GetValue();
             totalDamage = Mathf.Clamp(totalDamage, 0, int.MaxValue);
             return totalDamage;
+        }
+        private bool CanCritical()
+        {
+            int totalCriticalChance = criticalChance.GetValue() + agility.GetValue();
+
+            if(UnityEngine.Random.Range(1, 100) <= totalCriticalChance)
+            {
+                return true;
+            }
+            return false;
+        }
+        private int CalculateCriticalDamage(int damage)
+        {
+            float totalCriticalPower = (criticalPower.GetValue() + strength.GetValue()) * 0.01f;
+
+            float criticalDamage = damage * totalCriticalPower;
+
+            return Mathf.RoundToInt(criticalDamage);
         }
     }
 }

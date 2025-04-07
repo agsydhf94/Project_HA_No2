@@ -16,11 +16,20 @@ namespace HA
         public Stat criticalChance;
         public Stat criticalPower;     // Default : 150%
 
-
         [Header("Defense Stats")]
         public Stat maxHp;
         public Stat armor;
         public Stat evasion;
+        public Stat magicResistance;
+
+        [Header("Magic Stats")]
+        public Stat fireDamage;
+        public Stat iceDamage;
+        public Stat lightingDamage;
+
+        public bool isIgnited;  // 시간이 지남에 따라 데미지 
+        public bool isChilled;  // armor를 20% 줄인다
+        public bool isShocked;  // accuracy를 20% 줄인다
 
 
         [SerializeField] private int currentHp;
@@ -35,18 +44,84 @@ namespace HA
         {
             if (TargetCanAvoidAttack(targetStats))
                 return;
-            
+
             int totalDamage = damage.GetValue() + strength.GetValue();
 
             if (CanCritical())
             {
                 totalDamage = CalculateCriticalDamage(totalDamage);
             }
-                
-            
+
+
 
             totalDamage = CheckTargetArmor(targetStats, totalDamage);
             targetStats.TakeDamage(totalDamage);
+        }
+
+        public virtual void DoMagicalDamage(CharacterStats targetStats)
+        {
+            int _fireDamage = fireDamage.GetValue();
+            int _iceDamage = iceDamage.GetValue();
+            int _lightingDamage = lightingDamage.GetValue();
+
+            int totalMagicalDamage = _fireDamage + _iceDamage + _lightingDamage + inteligence.GetValue();
+            totalMagicalDamage = CheckTargetResistance(targetStats, totalMagicalDamage);
+
+            targetStats.TakeDamage(totalMagicalDamage);
+
+
+
+            if (Mathf.Max(_fireDamage, _iceDamage, _lightingDamage) <= 0)
+                return;
+
+            bool canApplyIgnite = _fireDamage > _iceDamage && _fireDamage > _lightingDamage;
+            bool canApplyChill = _iceDamage > _fireDamage && _iceDamage > _lightingDamage;
+            bool canApplyShock = _lightingDamage > _fireDamage && _lightingDamage > _iceDamage;
+
+
+            while(!canApplyIgnite && !canApplyChill && !canApplyShock)
+            {
+                if(UnityEngine.Random.value < 0.5f && _fireDamage > 0)
+                {
+                    canApplyIgnite = true;
+                    targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
+                    return;
+                }
+
+                if(UnityEngine.Random.value < 0.5f && _iceDamage > 0)
+                {
+                    canApplyChill = true;
+                    targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
+                    return;
+                }
+
+                if (UnityEngine.Random.value < 0.5f && _lightingDamage > 0)
+                {
+                    canApplyShock = true;
+                    targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
+                    return;
+                }
+            }
+
+            targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
+
+        }
+
+        private int CheckTargetResistance(CharacterStats targetStats, int totalMagicalDamage)
+        {
+            totalMagicalDamage -= targetStats.magicResistance.GetValue() + (targetStats.inteligence.GetValue() * 3);
+            totalMagicalDamage = Mathf.Clamp(totalMagicalDamage, 0, int.MaxValue);
+            return totalMagicalDamage;
+        }
+
+        public void ApplyAilments(bool ignite, bool chill, bool shock)
+        {
+            if (isIgnited || isChilled || isShocked)
+                return;
+
+            isIgnited = ignite;
+            isChilled = chill;
+            isShocked = shock;
         }
 
 

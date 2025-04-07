@@ -1351,12 +1351,48 @@ MonoBehaviour:
   strength:
     baseValue: 0
     modifiers: 
+  agility:
+    baseValue: 0
+    modifiers: 
+  inteligence:
+    baseValue: 0
+    modifiers: 
+  vitality:
+    baseValue: 0
+    modifiers: 
   damage:
-    baseValue: 15
+    baseValue: 100
+    modifiers: 
+  criticalChance:
+    baseValue: 0
+    modifiers: 
+  criticalPower:
+    baseValue: 0
     modifiers: 
   maxHp:
     baseValue: 20
     modifiers: 
+  armor:
+    baseValue: 0
+    modifiers: 
+  evasion:
+    baseValue: 70
+    modifiers: 
+  magicResistance:
+    baseValue: 1
+    modifiers: 
+  fireDamage:
+    baseValue: 0
+    modifiers: 
+  iceDamage:
+    baseValue: 0
+    modifiers: 
+  lightingDamage:
+    baseValue: 0
+    modifiers: 
+  isIgnited: 0
+  isChilled: 0
+  isShocked: 0
   currentHp: 0
 --- !u!1 &1443094259
 GameObject:
@@ -13790,14 +13826,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   strength:
+    baseValue: 2
+    modifiers: 
+  agility:
+    baseValue: 0
+    modifiers: 
+  inteligence:
+    baseValue: 0
+    modifiers: 
+  vitality:
     baseValue: 0
     modifiers: 
   damage:
-    baseValue: 10
+    baseValue: 13
+    modifiers: 
+  criticalChance:
+    baseValue: 99
+    modifiers: 
+  criticalPower:
+    baseValue: 0
     modifiers: 
   maxHp:
     baseValue: 5
     modifiers: 
+  armor:
+    baseValue: 0
+    modifiers: 
+  evasion:
+    baseValue: 0
+    modifiers: 
+  magicResistance:
+    baseValue: 0
+    modifiers: 
+  fireDamage:
+    baseValue: 5
+    modifiers: 
+  iceDamage:
+    baseValue: 0
+    modifiers: 
+  lightingDamage:
+    baseValue: 0
+    modifiers: 
+  isIgnited: 0
+  isChilled: 0
+  isShocked: 0
   currentHp: 0
 --- !u!4 &8891745647001238136
 Transform:

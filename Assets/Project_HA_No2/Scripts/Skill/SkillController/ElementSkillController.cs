@@ -17,10 +17,12 @@ namespace HA
 
 
         private VFXManager vfxManager;
+        private PlayerCharacter playerCharacter;
 
         private void Awake()
         {
             vfxManager = VFXManager.Instance;
+            playerCharacter = PlayerManager.Instance.playerCharacter;
         }
 
         private void Update()
@@ -72,7 +74,8 @@ namespace HA
             {
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    damagable.ApplyDamage();
+                    var target = collider.transform.GetComponent<CharacterStats>();
+                    damagable.ApplyDamageFrom(playerCharacter.characterStats);
                 }
             }
         }

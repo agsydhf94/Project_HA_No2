@@ -6,17 +6,24 @@ namespace HA
 {
     public class CharacterStats : MonoBehaviour
     {
+        public Stat strength;
         public Stat damage;
         public Stat maxHp;
 
         [SerializeField] private int currentHp;
 
-        private void Start()
+        protected virtual void Start()
         {
             currentHp = maxHp.GetValue();
         }
 
-        public void TakeDamage(int _damage)
+        public virtual void DoDamage(CharacterStats targetStats)
+        {
+            int totalDamage = damage.GetValue() + strength.GetValue();
+            targetStats.TakeDamage(totalDamage);
+        }
+
+        public virtual void TakeDamage(int _damage)
         {
             currentHp -= _damage;
 
@@ -26,7 +33,7 @@ namespace HA
             }
         }
 
-        private void Die()
+        protected virtual void Die()
         {
 
         }

@@ -26,7 +26,9 @@ namespace HA
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
                     entityVFX.SwordHitVFX();
-                    damagable.ApplyDamage();
+
+                    var target = collider.transform.GetComponent<EnemyStat>();
+                    damagable.ApplyDamageFrom(playerCharacter.characterStats);
                 }
             }
         }

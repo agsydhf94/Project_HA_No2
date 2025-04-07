@@ -69,10 +69,10 @@ namespace HA
         }
 
 
-        public void ApplyDamage()
+        public void ApplyDamageFrom(CharacterStats attackerStats)
         {
             Debug.Log(gameObject.name + "Damaged");
-            characterStats.TakeDamage(characterStats.damage.GetValue());
+            attackerStats.DoDamage(characterStats);
 
             HitKnockback().Forget();
         }

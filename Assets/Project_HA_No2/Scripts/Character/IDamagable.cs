@@ -6,6 +6,6 @@ namespace HA
 {
     public interface IDamagable
     {
-        public void ApplyDamage();
+        public void ApplyDamageFrom(CharacterStats target);
     }
 }

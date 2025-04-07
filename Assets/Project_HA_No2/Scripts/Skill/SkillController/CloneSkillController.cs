@@ -10,6 +10,7 @@ namespace HA
         private float cloneTimer;
 
         private Animator animator;
+        private PlayerCharacter playerCharacter;
 
         [SerializeField] private Transform attackCheck;
         [SerializeField] private float attackCheckRadius;
@@ -25,6 +26,7 @@ namespace HA
         private void Awake()
         {
             animator = GetComponent<Animator>();
+            playerCharacter = PlayerManager.Instance.playerCharacter;
 
             SetTransparentAllMaterials(transform, smr_Face);
             SetTransparentAllMaterials(transform, smr_Body);
@@ -93,7 +95,8 @@ namespace HA
             {
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    damagable.ApplyDamage();
+                    var target = collider.transform.GetComponent<CharacterStats>();
+                    damagable.ApplyDamageFrom(playerCharacter.characterStats);
                 }
             }
         }

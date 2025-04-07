@@ -69,11 +69,8 @@ namespace HA
         }
 
 
-        public void ApplyDamageFrom(CharacterStats attackerStats)
+        public void DamageEffect()
         {
-            Debug.Log(gameObject.name + "Damaged");
-            attackerStats.DoDamage(characterStats);
-
             HitKnockback().Forget();
         }
 

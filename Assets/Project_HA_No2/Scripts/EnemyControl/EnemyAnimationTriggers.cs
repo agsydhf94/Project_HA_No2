@@ -21,7 +21,7 @@ namespace HA
                 if(collider.TryGetComponent(out IDamagable damagable))
                 {
                     var target = collider.transform.GetComponent<PlayerStat>();
-                    damagable.ApplyDamageFrom(enemyBear.characterStats);
+                    enemyBear.characterStats.DoDamage(target);
                 }
             }
         }

@@ -74,8 +74,8 @@ namespace HA
             {
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    var target = collider.transform.GetComponent<CharacterStats>();
-                    damagable.ApplyDamageFrom(playerCharacter.characterStats);
+                    var target = collider.transform.GetComponent<EnemyStat>();
+                    playerCharacter.characterStats.DoDamage(target);
                 }
             }
         }

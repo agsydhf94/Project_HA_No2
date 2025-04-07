@@ -26,12 +26,14 @@ namespace HA
 
         public virtual void DoDamage(CharacterStats targetStats)
         {
-            if(TargetCanAvoidAttack(targetStats))
-            {
+            if (TargetCanAvoidAttack(targetStats))
                 return;
-            }
-
+            
             int totalDamage = damage.GetValue() + strength.GetValue();
+
+
+
+            totalDamage = CheckTargetArmor(targetStats, totalDamage);
             targetStats.TakeDamage(totalDamage);
         }
 
@@ -61,6 +63,12 @@ namespace HA
                 return true;
             }
             return false;
+        }
+        private int CheckTargetArmor(CharacterStats targetStats, int totalDamage)
+        {
+            totalDamage -= targetStats.armor.GetValue();
+            totalDamage = Mathf.Clamp(totalDamage, 0, int.MaxValue);
+            return totalDamage;
         }
     }
 }

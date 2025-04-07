@@ -1370,7 +1370,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   maxHp:
-    baseValue: 20
+    baseValue: 500
     modifiers: 
   armor:
     baseValue: 0
@@ -1382,10 +1382,10 @@ MonoBehaviour:
     baseValue: 1
     modifiers: 
   fireDamage:
-    baseValue: 0
+    baseValue: 12
     modifiers: 
   iceDamage:
-    baseValue: 0
+    baseValue: 4
     modifiers: 
   lightingDamage:
     baseValue: 0
@@ -13859,7 +13859,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   fireDamage:
-    baseValue: 5
+    baseValue: 0
     modifiers: 
   iceDamage:
     baseValue: 0

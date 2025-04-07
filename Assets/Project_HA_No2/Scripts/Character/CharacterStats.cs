@@ -31,6 +31,14 @@ namespace HA
         public bool isChilled;  // armor를 20% 줄인다
         public bool isShocked;  // accuracy를 20% 줄인다
 
+        private float ignitedTimer;
+        private float chillTimer;
+        private float shockTimer;
+
+        private float igniteDamageCooldown = 0.3f;
+        private float igniteDamageTimer;
+        private int igniteDamage;
+
 
         [SerializeField] private int currentHp;
 
@@ -38,6 +46,35 @@ namespace HA
         {
             criticalPower.SetDefaultValue(150);
             currentHp = maxHp.GetValue();
+        }
+
+        protected virtual void Update()
+        {
+            ignitedTimer -= Time.deltaTime;
+            chillTimer -= Time.deltaTime;
+            shockTimer -= Time.deltaTime;
+
+            igniteDamageTimer -= Time.deltaTime;
+
+            if(ignitedTimer < 0)
+                isIgnited = false;
+
+            if(chillTimer < 0)
+                isChilled = false;
+
+            if(shockTimer < 0)
+                isShocked = false;
+
+            if(igniteDamageTimer < 0 && isIgnited)
+            {
+                Debug.Log("Take burn Damage" + igniteDamage);
+                currentHp -= igniteDamage;
+
+                if (currentHp < 0)
+                    Die();
+
+                igniteDamageTimer = igniteDamageCooldown;
+            }
         }
 
         public virtual void DoDamage(CharacterStats targetStats)
@@ -55,7 +92,8 @@ namespace HA
 
 
             totalDamage = CheckTargetArmor(targetStats, totalDamage);
-            targetStats.TakeDamage(totalDamage);
+            // targetStats.TakeDamage(totalDamage);
+            DoMagicalDamage(targetStats);
         }
 
         public virtual void DoMagicalDamage(CharacterStats targetStats)
@@ -103,6 +141,9 @@ namespace HA
                 }
             }
 
+            if (canApplyIgnite)
+                targetStats.SetupIgniteDamage(Mathf.RoundToInt(_fireDamage * 0.2f));
+
             targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
 
         }
@@ -119,10 +160,28 @@ namespace HA
             if (isIgnited || isChilled || isShocked)
                 return;
 
-            isIgnited = ignite;
-            isChilled = chill;
-            isShocked = shock;
+            if(ignite)
+            {
+                isIgnited = ignite;
+                ignitedTimer = 5;
+            }
+
+            if (chill)
+            {
+                isChilled = chill;
+                chillTimer = 3;
+            }
+
+            if (shock)
+            {
+                isShocked = shock;
+                shockTimer = 2;
+            }
+
+
         }
+
+        public void SetupIgniteDamage(int damage) => igniteDamage = damage;
 
 
         public virtual void TakeDamage(int _damage)
@@ -144,6 +203,10 @@ namespace HA
         {
             int totalEvasion = targetStats.evasion.GetValue() + targetStats.agility.GetValue();
 
+            // 내가 shock에 빠지면 상대의 회피가 증가 (플레이어가 불리해지는 상황 연출)
+            if (isShocked)
+                totalEvasion += 20;
+
             if (UnityEngine.Random.Range(1, 100) < totalEvasion)
             {
                 Debug.Log("Attack Avoided");
@@ -153,7 +216,12 @@ namespace HA
         }
         private int CheckTargetArmor(CharacterStats targetStats, int totalDamage)
         {
-            totalDamage -= targetStats.armor.GetValue();
+            // 타겟이 얼면 타겟의 armor 성능이 20% 저하
+            if(targetStats.isChilled)
+                totalDamage -= Mathf.RoundToInt(targetStats.armor.GetValue() * 0.8f);
+            else
+                totalDamage -= targetStats.armor.GetValue();
+
             totalDamage = Mathf.Clamp(totalDamage, 0, int.MaxValue);
             return totalDamage;
         }

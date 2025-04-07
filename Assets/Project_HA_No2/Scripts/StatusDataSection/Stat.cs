@@ -9,9 +9,26 @@ namespace HA
     {
         [SerializeField] private int baseValue;
 
+        public List<int> modifiers;
         public int GetValue()
         {
-            return baseValue;
+            int finalValue = baseValue;
+            foreach(int modifier in modifiers)
+            {
+                finalValue += modifier;
+            }
+
+            return finalValue;
+        }
+
+        public void AddModifier(int _mod)
+        {
+            modifiers.Add(_mod);
+        }
+
+        public void RemoveModifier(int _mod)
+        {
+            modifiers.RemoveAt(_mod);
         }
     }
 }

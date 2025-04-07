@@ -22,5 +22,12 @@ namespace HA
 
             
         }
+
+        protected override void Die()
+        {
+            base.Die();
+
+            playerCharacter.Die();
+        }
     }
 }

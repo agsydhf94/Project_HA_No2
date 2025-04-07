@@ -13,6 +13,7 @@ namespace HA
         public EnemyChaseState chaseState { get; private set; }
         public EnemyAttackState attackState { get; private set; }
         public EnemyStunnedState stunnedState { get; private set; }
+        public EnemyDeadState deadState { get; private set; }
         #endregion
 
         
@@ -26,6 +27,7 @@ namespace HA
             chaseState = new EnemyChaseState(this, stateMachine, "Chase", this);
             attackState = new EnemyAttackState(this, stateMachine, "Attack", this);
             stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned", this);
+            deadState = new EnemyDeadState(this, stateMachine, "Dead", this);
         }
         protected override void Start()
         {
@@ -49,6 +51,11 @@ namespace HA
             return false;
         }
 
+        public override void Die()
+        {
+            base.Die();
+            stateMachine.ChangeState(deadState);
+        }
 
     }
 }

@@ -68,11 +68,17 @@ namespace HA
             
         }
 
-
+        #region Life Related
         public void DamageEffect()
         {
             HitKnockback().Forget();
         }
+
+        public virtual void Die()
+        {
+
+        }       
+        #endregion
 
         #region Object Detection
         public static List<Collider> ObjectDetection<T>(Transform center, float radius, LayerMask layerMask = default) where T : class

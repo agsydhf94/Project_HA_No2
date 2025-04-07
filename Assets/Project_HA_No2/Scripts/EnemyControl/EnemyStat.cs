@@ -11,6 +11,7 @@ namespace HA
         protected override void Start()
         {
             base.Start();
+            enemy = GetComponent<Enemy>();
         }
 
         public override void TakeDamage(int _damage)
@@ -18,6 +19,12 @@ namespace HA
             base.TakeDamage(_damage);
 
             enemy.DamageEffect();
+        }
+
+        protected override void Die()
+        {
+            base.Die();
+            enemy.Die();
         }
     }
 }

@@ -24,6 +24,7 @@ namespace HA
         public PlayerAimBallState aimBallState { get; private set; }
         public PlayerThrowState throwBallState { get; private set; }
         public PlayerBlackHoleState blackHoleState { get; private set; }
+        public PlayerDeadState deadState { get; private set; }
         #endregion
 
 
@@ -105,6 +106,7 @@ namespace HA
             aimBallState = new PlayerAimBallState(this, stateMachine, "AimBall");
             throwBallState = new PlayerThrowState(this, stateMachine, "ThrowBall");
             blackHoleState = new PlayerBlackHoleState(this, stateMachine, "BlackHole");
+            deadState = new PlayerDeadState(this, stateMachine, "Dead");
         }
 
         protected override void Start()
@@ -275,6 +277,15 @@ namespace HA
         {
             stateMachine.SubState_Off();
             characterAnimator.SetTrigger("UnArmedTrigger");
+        }
+        #endregion
+
+        #region Character Life Related
+        public override void Die()
+        {
+            base.Die();
+
+            stateMachine.ChangeState(deadState);
         }
         #endregion
 

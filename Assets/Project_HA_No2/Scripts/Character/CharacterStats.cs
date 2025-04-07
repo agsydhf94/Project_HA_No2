@@ -26,17 +26,15 @@ namespace HA
 
         public virtual void DoDamage(CharacterStats targetStats)
         {
-            int totalEvasion = targetStats.evasion.GetValue() + targetStats.agility.GetValue();
-
-            if(Random.Range(1, 100) < totalEvasion)
+            if(TargetCanAvoidAttack(targetStats))
             {
-                Debug.Log("Attack Avoided");
                 return;
             }
 
             int totalDamage = damage.GetValue() + strength.GetValue();
             targetStats.TakeDamage(totalDamage);
         }
+
 
         public virtual void TakeDamage(int _damage)
         {
@@ -53,5 +51,16 @@ namespace HA
 
         }
 
+        private bool TargetCanAvoidAttack(CharacterStats targetStats)
+        {
+            int totalEvasion = targetStats.evasion.GetValue() + targetStats.agility.GetValue();
+
+            if (Random.Range(1, 100) < totalEvasion)
+            {
+                Debug.Log("Attack Avoided");
+                return true;
+            }
+            return false;
+        }
     }
 }

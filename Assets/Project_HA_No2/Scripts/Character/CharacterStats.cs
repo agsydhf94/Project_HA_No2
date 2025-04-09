@@ -42,6 +42,8 @@ namespace HA
 
         public int currentHp;
 
+        public System.Action onHealthChanged;
+
         protected virtual void Start()
         {
             criticalPower.SetDefaultValue(150);
@@ -68,7 +70,8 @@ namespace HA
             if(igniteDamageTimer < 0 && isIgnited)
             {
                 Debug.Log("Take burn Damage" + igniteDamage);
-                currentHp -= igniteDamage;
+
+                DecreaseHealth(igniteDamage);
 
                 if (currentHp < 0)
                     Die();
@@ -184,13 +187,23 @@ namespace HA
         public void SetupIgniteDamage(int damage) => igniteDamage = damage;
 
 
-        public virtual void TakeDamage(int _damage)
+        public virtual void TakeDamage(int damage)
         {
-            currentHp -= _damage;
+            DecreaseHealth(damage);
 
             if(currentHp < 0)
             {
                 Die();
+            }
+        }
+
+        protected virtual void DecreaseHealth(int damage)
+        {
+            currentHp -= damage;
+
+            if(onHealthChanged != null)
+            {
+                onHealthChanged();
             }
         }
 
@@ -246,7 +259,7 @@ namespace HA
 
         public int GetMaxHealthValue()
         {
-            return maxHp.GetValue() + vitality.GetValue() * 5;
+            return maxHp.GetValue();
         }
     }
 }

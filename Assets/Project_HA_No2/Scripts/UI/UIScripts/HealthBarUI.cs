@@ -16,19 +16,21 @@ namespace HA
         {
             rectTransform = GetComponent<RectTransform>();
             characterBase = GetComponentInParent<CharacterBase>();
-            characterStats = GetComponentInParent<CharacterStats>();
             slider = GetComponentInChildren<Slider>();
-        }
-
-        private void Update()
-        {
-            UpdateHealthUI();
+            
+            characterStats = GetComponentInParent<CharacterStats>();
+            characterStats.onHealthChanged += UpdateHealthUI;
         }
 
         private void UpdateHealthUI()
         {
             slider.maxValue = characterStats.GetMaxHealthValue();
             slider.value = characterStats.currentHp;
+        }
+
+        private void OnDisable()
+        {
+            characterStats.onHealthChanged -= UpdateHealthUI;
         }
     }
 }

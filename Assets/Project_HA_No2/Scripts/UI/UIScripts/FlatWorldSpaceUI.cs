@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class EnemyHealthBarUI : MonoBehaviour
+    public class FlatWorldSpaceUI : MonoBehaviour
     {
         private Transform mainCamera;
         private Vector3 originalScale;

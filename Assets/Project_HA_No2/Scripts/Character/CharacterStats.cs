@@ -40,12 +40,12 @@ namespace HA
         private int igniteDamage;
 
 
-        [SerializeField] private int currentHp;
+        public int currentHp;
 
         protected virtual void Start()
         {
             criticalPower.SetDefaultValue(150);
-            currentHp = maxHp.GetValue();
+            currentHp = GetMaxHealthValue();
         }
 
         protected virtual void Update()
@@ -242,6 +242,11 @@ namespace HA
             float criticalDamage = damage * totalCriticalPower;
 
             return Mathf.RoundToInt(criticalDamage);
+        }
+
+        public int GetMaxHealthValue()
+        {
+            return maxHp.GetValue() + vitality.GetValue() * 5;
         }
     }
 }

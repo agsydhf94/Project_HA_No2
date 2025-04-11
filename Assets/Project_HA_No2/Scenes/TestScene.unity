@@ -1562,7 +1562,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   evasion:
-    baseValue: 70
+    baseValue: 0
     modifiers: 
   magicResistance:
     baseValue: 1
@@ -1721,6 +1721,7 @@ GameObject:
   - component: {fileID: 1712529574}
   - component: {fileID: 1712529573}
   - component: {fileID: 1712529576}
+  - component: {fileID: 1712529577}
   m_Layer: 5
   m_Name: HA.EnemyHPBar
   m_TagString: Untagged
@@ -1826,6 +1827,18 @@ MonoBehaviour:
   minScale: 1
   maxScale: 1.5
   scaleDistanceFactor: 5
+--- !u!114 &1712529577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712529571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e66e5c294e9c0f443b5780bc13b63823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1725274329
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14241,7 +14254,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   maxHp:
-    baseValue: 5
+    baseValue: 100
     modifiers: 
   armor:
     baseValue: 0

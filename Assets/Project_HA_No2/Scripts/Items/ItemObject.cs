@@ -8,11 +8,16 @@ namespace HA
     {
         [SerializeField] private ItemDataSO itemDataSO;
 
+        private void OnValidate()
+        {
+            gameObject.name = "Item Object : " +itemDataSO.itemName;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if(other.GetComponent<PlayerCharacter>() != null)
             {
-                Debug.Log("æ∆¿Ã≈€ »πµÊ");
+                Inventory.Instance.AddItem(itemDataSO);
                 Destroy(gameObject);
             }
         }

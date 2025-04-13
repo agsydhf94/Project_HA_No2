@@ -42,11 +42,21 @@ namespace HA
             }
         }
 
+        public void CleanUpSlot()
+        {
+            item = null;
+
+            itemImage.sprite = null;
+            itemImage.color = Color.clear;
+
+            itemText.text = "";
+        }
+
         public void OnPointerDown(PointerEventData eventData)
         {
             if(item.itemDataSO.itemType == ItemType.Equipment)
             {
-                inventory.EquipItem(item.itemDataSO);
+                inventory.EquipEquipment(item.itemDataSO);
             }
         }
         

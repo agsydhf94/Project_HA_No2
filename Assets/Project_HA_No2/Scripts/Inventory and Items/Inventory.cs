@@ -38,31 +38,41 @@ namespace HA
             stashItemSlot = stashSlotParent.GetComponentsInChildren<ItemSlotUI>();
         }
 
-        public void EquipItem(ItemDataSO item)
+        public void EquipEquipment(ItemDataSO item)
         {
             EquipmentDataSO newEquipment = item as EquipmentDataSO;
             InventoryItem newItem = new InventoryItem(newEquipment);
 
-            EquipmentDataSO itemToRemove = null;
+            EquipmentDataSO oldEquipment = null;
 
             foreach (KeyValuePair<EquipmentDataSO, InventoryItem> _item in equipmentDictionary)
             {
                 if (_item.Key.equipmentType == newEquipment.equipmentType)
                 {
-                    itemToRemove = _item.Key;
+                    oldEquipment = _item.Key;
                 }
             }
 
-            if(itemToRemove != null)
+            if(oldEquipment != null)
             {
-                UnEquipItem(itemToRemove);
+                // 이미 장착된 장비(oldEquipment)가 있으면 Equipment 창에선 사라져야하고
+                UnEquipEquipment(oldEquipment);
+
+                // 해당 장비는 새로 장착될 무기에 의해 다시 인벤토리로 돌아가야 한다.
+                AddItem(oldEquipment);
             }
 
+            // 이미 장착된 장비(oldEquipment)가 없다면
+            // 현재 장착된 장비를 관리하는 곳(equipment, equipmentDictionary)에 정보를 넣고
+            // 인벤토리에선 지운다
             equipment.Add(newItem);
             equipmentDictionary.Add(newEquipment, newItem);
+            RemoveItem(item);
+
+            UpdateSlotUI();
         }
 
-        private void UnEquipItem(EquipmentDataSO itemToRemove)
+        private void UnEquipEquipment(EquipmentDataSO itemToRemove)
         {
             if (equipmentDictionary.TryGetValue(itemToRemove, out InventoryItem value))
             {
@@ -74,6 +84,16 @@ namespace HA
         // 아이템 픽업이나 추가할 때 이 메서드를 호출
         private void UpdateSlotUI()
         {
+            for(int i = 0; i < inventoryItemSlots.Length; i++)
+            {
+                inventoryItemSlots[i].CleanUpSlot();
+            }
+            for(int i = 0; i < stashItemSlot.Length; i++)
+            {
+                stashItemSlot[i].CleanUpSlot();
+            }
+
+
             for(int i = 0; i < inventory.Count; i++)
             {
                 inventoryItemSlots[i].UpdateSlot(inventory[i]);

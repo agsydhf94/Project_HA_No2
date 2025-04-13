@@ -19,9 +19,11 @@ namespace HA
         [Header("InventoryUI")]
         [SerializeField] private Transform inventorySlotParent;
         [SerializeField] private Transform stashSlotParent;
+        [SerializeField] private Transform equipmentSlotParent;
 
         private ItemSlotUI[] inventoryItemSlots;
-        private ItemSlotUI[] stashItemSlot;
+        private ItemSlotUI[] stashItemSlots;
+        private EquipmentSlotUI[] equipmentSlots;
 
         private void Start()
         {
@@ -35,7 +37,8 @@ namespace HA
             equipmentDictionary = new Dictionary<EquipmentDataSO, InventoryItem>();
 
             inventoryItemSlots = inventorySlotParent.GetComponentsInChildren<ItemSlotUI>();
-            stashItemSlot = stashSlotParent.GetComponentsInChildren<ItemSlotUI>();
+            stashItemSlots = stashSlotParent.GetComponentsInChildren<ItemSlotUI>();
+            equipmentSlots = equipmentSlotParent.GetComponentsInChildren<EquipmentSlotUI>();
         }
 
         public void EquipEquipment(ItemDataSO item)
@@ -84,13 +87,24 @@ namespace HA
         // 아이템 픽업이나 추가할 때 이 메서드를 호출
         private void UpdateSlotUI()
         {
+            for(int i = 0; i < equipmentSlots.Length; i++)
+            {
+                foreach (KeyValuePair<EquipmentDataSO, InventoryItem> _item in equipmentDictionary)
+                {
+                    if (_item.Key.equipmentType == equipmentSlots[i].equipmentSlotType)
+                    {
+                        equipmentSlots[i].UpdateSlot(_item.Value);
+                    }
+                }
+            }
+
             for(int i = 0; i < inventoryItemSlots.Length; i++)
             {
                 inventoryItemSlots[i].CleanUpSlot();
             }
-            for(int i = 0; i < stashItemSlot.Length; i++)
+            for(int i = 0; i < stashItemSlots.Length; i++)
             {
-                stashItemSlot[i].CleanUpSlot();
+                stashItemSlots[i].CleanUpSlot();
             }
 
 
@@ -101,7 +115,7 @@ namespace HA
 
             for(int i = 0; i < stash.Count; i++)
             {
-                stashItemSlot[i].UpdateSlot(stash[i]);
+                stashItemSlots[i].UpdateSlot(stash[i]);
             }
         }
 

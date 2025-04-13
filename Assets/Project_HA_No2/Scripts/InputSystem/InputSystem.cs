@@ -13,7 +13,7 @@ namespace HA
         private Vector2 movement;
         private Vector2 look;
         private bool isRunKey;
-        private bool isShowCursor = false;
+        private bool isShowCursor = true;
 
         public System.Action OnClickSpace;
         public System.Action OnClickLeftMouseButtonDown;
@@ -26,9 +26,6 @@ namespace HA
         public override void Awake()
         {
             base.Awake();
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
 
 

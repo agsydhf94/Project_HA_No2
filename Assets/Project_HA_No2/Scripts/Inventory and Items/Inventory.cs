@@ -6,6 +6,9 @@ namespace HA
 {
     public class Inventory : SingletonBase<Inventory>
     {
+        public List<InventoryItem> equipment;
+        public Dictionary<EquipmentDataSO, InventoryItem> equipmentDictionary;
+
         [Header("Inventory Items")]
         public List<InventoryItem> inventory;
         public Dictionary<ItemDataSO, InventoryItem> inventoryDictionary;
@@ -28,8 +31,44 @@ namespace HA
             stash = new List<InventoryItem>();
             stashDictionary = new Dictionary<ItemDataSO, InventoryItem>();
 
+            equipment = new List<InventoryItem>();
+            equipmentDictionary = new Dictionary<EquipmentDataSO, InventoryItem>();
+
             inventoryItemSlots = inventorySlotParent.GetComponentsInChildren<ItemSlotUI>();
             stashItemSlot = stashSlotParent.GetComponentsInChildren<ItemSlotUI>();
+        }
+
+        public void EquipItem(ItemDataSO item)
+        {
+            EquipmentDataSO newEquipment = item as EquipmentDataSO;
+            InventoryItem newItem = new InventoryItem(newEquipment);
+
+            EquipmentDataSO itemToRemove = null;
+
+            foreach (KeyValuePair<EquipmentDataSO, InventoryItem> _item in equipmentDictionary)
+            {
+                if (_item.Key.equipmentType == newEquipment.equipmentType)
+                {
+                    itemToRemove = _item.Key;
+                }
+            }
+
+            if(itemToRemove != null)
+            {
+                UnEquipItem(itemToRemove);
+            }
+
+            equipment.Add(newItem);
+            equipmentDictionary.Add(newEquipment, newItem);
+        }
+
+        private void UnEquipItem(EquipmentDataSO itemToRemove)
+        {
+            if (equipmentDictionary.TryGetValue(itemToRemove, out InventoryItem value))
+            {
+                equipment.Remove(value);
+                equipmentDictionary.Remove(itemToRemove);
+            }
         }
 
         // 아이템 픽업이나 추가할 때 이 메서드를 호출

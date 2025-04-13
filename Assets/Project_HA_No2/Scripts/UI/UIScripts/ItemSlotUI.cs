@@ -4,15 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 namespace HA
 {
-    public class ItemSlotUI : MonoBehaviour
+    public class ItemSlotUI : MonoBehaviour, IPointerDownHandler
     {
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text itemText;
 
         public InventoryItem item;
+        private Inventory inventory;
+
+        private void Awake()
+        {
+            inventory = Inventory.Instance;
+        }
 
         public void UpdateSlot(InventoryItem newItem)
         {
@@ -34,5 +41,15 @@ namespace HA
                 }
             }
         }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if(item.itemDataSO.itemType == ItemType.Equipment)
+            {
+                inventory.EquipItem(item.itemDataSO);
+            }
+        }
+        
+
     }
 }

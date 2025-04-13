@@ -70,6 +70,8 @@ namespace HA
             // 인벤토리에선 지운다
             equipment.Add(newItem);
             equipmentDictionary.Add(newEquipment, newItem);
+            newEquipment.AddModifiers();
+
             RemoveItem(item);
 
             UpdateSlotUI();
@@ -81,6 +83,7 @@ namespace HA
             {
                 equipment.Remove(value);
                 equipmentDictionary.Remove(itemToRemove);
+                itemToRemove.RemoveModifiers();
             }
         }
 

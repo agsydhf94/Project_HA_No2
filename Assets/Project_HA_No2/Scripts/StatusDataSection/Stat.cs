@@ -33,7 +33,7 @@ namespace HA
 
         public void RemoveModifier(int _mod)
         {
-            modifiers.RemoveAt(_mod);
+            modifiers.Remove(_mod);
         }
     }
 }

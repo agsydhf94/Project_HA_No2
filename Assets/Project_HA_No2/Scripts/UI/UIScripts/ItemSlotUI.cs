@@ -14,7 +14,7 @@ namespace HA
         [SerializeField] private TMP_Text itemText;
 
         public InventoryItem item;
-        private Inventory inventory;
+        protected Inventory inventory;
 
         private void Awake()
         {
@@ -52,7 +52,7 @@ namespace HA
             itemText.text = "";
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public virtual void OnPointerDown(PointerEventData eventData)
         {
             if(item.itemDataSO.itemType == ItemType.Equipment)
             {

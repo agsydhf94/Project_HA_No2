@@ -61,8 +61,7 @@ namespace HA
                 // 이미 장착된 장비(oldEquipment)가 있으면 Equipment 창에선 사라져야하고
                 UnEquipEquipment(oldEquipment);
 
-                // 해당 장비는 새로 장착될 무기에 의해 다시 인벤토리로 돌아가야 한다.
-                AddItem(oldEquipment);
+                
             }
 
             // 이미 장착된 장비(oldEquipment)가 없다면
@@ -77,10 +76,13 @@ namespace HA
             UpdateSlotUI();
         }
 
-        private void UnEquipEquipment(EquipmentDataSO itemToRemove)
+        public void UnEquipEquipment(EquipmentDataSO itemToRemove)
         {
             if (equipmentDictionary.TryGetValue(itemToRemove, out InventoryItem value))
             {
+                // 해당 장비는 새로 장착될 무기에 의해 다시 인벤토리로 돌아가야 한다.
+                AddItem(itemToRemove);
+
                 equipment.Remove(value);
                 equipmentDictionary.Remove(itemToRemove);
                 itemToRemove.RemoveModifiers();

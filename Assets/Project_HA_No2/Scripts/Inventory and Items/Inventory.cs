@@ -61,7 +61,8 @@ namespace HA
                 // 이미 장착된 장비(oldEquipment)가 있으면 Equipment 창에선 사라져야하고
                 UnEquipEquipment(oldEquipment);
 
-                
+                // 해당 장비는 새로 장착될 무기에 의해 다시 인벤토리로 돌아가야 한다.
+                AddItem(oldEquipment);
             }
 
             // 이미 장착된 장비(oldEquipment)가 없다면
@@ -80,9 +81,6 @@ namespace HA
         {
             if (equipmentDictionary.TryGetValue(itemToRemove, out InventoryItem value))
             {
-                // 해당 장비는 새로 장착될 무기에 의해 다시 인벤토리로 돌아가야 한다.
-                AddItem(itemToRemove);
-
                 equipment.Remove(value);
                 equipmentDictionary.Remove(itemToRemove);
                 itemToRemove.RemoveModifiers();
@@ -192,6 +190,45 @@ namespace HA
             }
 
             UpdateSlotUI();
+        }
+
+        public bool CanCraft(EquipmentDataSO equipmentToCraft, List<InventoryItem> requiredMaterials)
+        {
+            List<InventoryItem> materialsToUse = new List<InventoryItem>();
+
+            for(int i = 0; i < requiredMaterials.Count; i++)
+            {
+                if (stashDictionary.TryGetValue(requiredMaterials[i].itemDataSO, out InventoryItem stashValue))
+                {
+                    if(stashValue.stackSize >= requiredMaterials[i].stackSize)
+                    {
+                        // 생성에 충분한 아이템을 stash에 가지고 있다면
+                        // 사용해서 없앨 재료 목록인 materialToUse 에 추가
+                        materialsToUse.Add(stashValue);
+                    }
+                    else
+                    {
+                        // 생성에 필요한 재료가 stash에 있지만 
+                        // 그 개수가 부족
+                        return false;
+                    }
+                    
+                }
+                else
+                {
+                    // 생성에 필요한 재료가 stash에 없음
+                    return false;
+                }
+            }
+
+            for(int i = 0; i < materialsToUse.Count; i++)
+            {
+                RemoveItem(materialsToUse[i].itemDataSO);
+            }
+
+            // 생성한 장비를 인벤토리에 추가
+            AddItem(equipmentToCraft);
+            return true;
         }
     }
 }

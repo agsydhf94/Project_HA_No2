@@ -39,6 +39,9 @@ namespace HA
         public int iceDamage;
         public int lightingDamage;
 
+        [Header("Craft Requirements")]
+        public List<InventoryItem> requirementsForCraft;
+
         public void AddModifiers()
         {
             PlayerStat playerStats = PlayerManager.Instance.playerCharacter.GetComponent<PlayerStat>();

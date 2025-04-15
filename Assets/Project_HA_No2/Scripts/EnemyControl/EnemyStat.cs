@@ -7,6 +7,7 @@ namespace HA
     public class EnemyStat : CharacterStats
     {
         private Enemy enemy;
+        private ItemDrop itemDrop;
 
         [Header("Level information")]
         [SerializeField] private int level;
@@ -20,6 +21,7 @@ namespace HA
 
             base.Start();
             enemy = GetComponent<Enemy>();
+            itemDrop = GetComponent<ItemDrop>();
         }
 
         private void ApplyModifiers()
@@ -59,6 +61,7 @@ namespace HA
         {
             base.Die();
             enemy.Die();
+            itemDrop.GenerateDropItem();
         }
     }
 }

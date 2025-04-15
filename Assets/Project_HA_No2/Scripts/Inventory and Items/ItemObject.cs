@@ -6,20 +6,30 @@ namespace HA
 {
     public class ItemObject : MonoBehaviour
     {
+        [SerializeField] private Rigidbody rb;
         [SerializeField] private ItemDataSO itemDataSO;
 
-        private void OnValidate()
+
+        private void SetUpItemName()
         {
-            gameObject.name = "Item Object : " +itemDataSO.itemName;
+            if (itemDataSO != null)
+            {
+                return;
+            }
+
+            gameObject.name = "Item Object : " + itemDataSO.itemName;
         }
 
-        private void OnTriggerEnter(Collider other)
+        public void SetUpItem(ItemDataSO _itemDataSO, Vector3 _velocity)
         {
-            if(other.GetComponent<PlayerCharacter>() != null)
-            {
-                Inventory.Instance.AddItem(itemDataSO);
-                Destroy(gameObject);
-            }
+            itemDataSO = _itemDataSO;
+            rb.velocity = _velocity;
+        }
+
+        public void PickUpItem()
+        {
+            Inventory.Instance.AddItem(itemDataSO);
+            Destroy(gameObject);
         }
     }   
 }

@@ -7,11 +7,13 @@ namespace HA
     public class PlayerStat : CharacterStats
     {
         private PlayerCharacter playerCharacter;
+        private PlayerItemDrop playerItemDrop;
 
         protected override void Start()
         {
             base.Start();
             playerCharacter = GetComponent<PlayerCharacter>();
+            playerItemDrop = GetComponent<PlayerItemDrop>();
         }
 
         public override void TakeDamage(int _damage)
@@ -28,6 +30,8 @@ namespace HA
             base.Die();
 
             playerCharacter.Die();
+            playerItemDrop.GenerateDropItem();
+            
         }
     }
 }

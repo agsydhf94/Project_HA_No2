@@ -54,6 +54,12 @@ namespace HA
 
         public virtual void OnPointerDown(PointerEventData eventData)
         {
+            if(Input.GetKey(KeyCode.LeftControl))
+            {
+                inventory.RemoveItem(item.itemDataSO);
+                return;
+            }
+
             if(item.itemDataSO.itemType == ItemType.Equipment)
             {
                 inventory.EquipEquipment(item.itemDataSO);

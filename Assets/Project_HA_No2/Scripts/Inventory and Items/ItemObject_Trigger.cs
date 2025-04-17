@@ -12,6 +12,10 @@ namespace HA
         {
             if (other.GetComponent<PlayerCharacter>() != null)
             {
+                if (other.GetComponent<PlayerStat>().isDead)
+                    return;
+
+                Debug.Log("æ∆¿Ã≈€ »πµÊ");
                 itemObject.PickUpItem();
             }
         }

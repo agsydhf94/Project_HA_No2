@@ -6,6 +6,8 @@ namespace HA
 {
     public class Inventory : SingletonBase<Inventory>
     {
+        public List<ItemDataSO> initialEquipment;
+
         public List<InventoryItem> equipment;
         public Dictionary<EquipmentDataSO, InventoryItem> equipmentDictionary;
 
@@ -26,7 +28,7 @@ namespace HA
         private EquipmentSlotUI[] equipmentSlots;
 
         private void Start()
-        {
+        {            
             inventory = new List<InventoryItem>();
             inventoryDictionary = new Dictionary<ItemDataSO, InventoryItem>();
 
@@ -39,6 +41,16 @@ namespace HA
             inventoryItemSlots = inventorySlotParent.GetComponentsInChildren<ItemSlotUI>();
             stashItemSlots = stashSlotParent.GetComponentsInChildren<ItemSlotUI>();
             equipmentSlots = equipmentSlotParent.GetComponentsInChildren<EquipmentSlotUI>();
+
+            InitializeItems();
+        }
+
+        private void InitializeItems()
+        {
+            for (int i = 0; i < initialEquipment.Count; i++)
+            {
+                AddItem(initialEquipment[i]);
+            }
         }
 
         public void EquipEquipment(ItemDataSO item)
@@ -230,5 +242,8 @@ namespace HA
             AddItem(equipmentToCraft);
             return true;
         }
+
+        public List<InventoryItem> GetEquipmentList() => equipment;
+        public List<InventoryItem> GetStashList() => stash;
     }
 }

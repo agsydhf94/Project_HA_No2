@@ -13,6 +13,7 @@ namespace HA
         public override void EnterState()
         {
             base.EnterState();
+            playerCharacter.characterStats.isDead = true;
         }
 
         public override void ExitState()

@@ -43,11 +43,14 @@ namespace HA
         public int currentHp;
 
         public System.Action onHealthChanged;
+        public bool isDead { get; set; }
 
         protected virtual void Start()
         {
             criticalPower.SetDefaultValue(150);
             currentHp = GetMaxHealthValue();
+
+            Debug.Log("ƒ≥∏Ø≈Õ Ω∫≈» Start »£√‚µ ");
         }
 
         protected virtual void Update()
@@ -95,8 +98,8 @@ namespace HA
 
 
             totalDamage = CheckTargetArmor(targetStats, totalDamage);
-            // targetStats.TakeDamage(totalDamage);
-            DoMagicalDamage(targetStats);
+            targetStats.TakeDamage(totalDamage);
+            //DoMagicalDamage(targetStats);
         }
 
         public virtual void DoMagicalDamage(CharacterStats targetStats)
@@ -259,7 +262,7 @@ namespace HA
 
         public int GetMaxHealthValue()
         {
-            return maxHp.GetValue();
+            return maxHp.GetValue() + vitality.GetValue() * 5;
         }
     }
 }

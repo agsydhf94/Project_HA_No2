@@ -20,6 +20,7 @@ namespace HA
 
         public override void GenerateDropItem()
         {
+
             List<InventoryItem> equipmentsToUnequip = new List<InventoryItem>();
             List<InventoryItem> materialsToLose = new List<InventoryItem>();
 

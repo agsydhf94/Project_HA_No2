@@ -17,6 +17,8 @@ namespace HA
     {
         public EquipmentType equipmentType;
 
+        public ItemEffectSO[] effects;
+
         [Header("Main Stats")]
         public int strength;
         public int agility;
@@ -86,6 +88,14 @@ namespace HA
             playerStats.fireDamage.RemoveModifier(fireDamage);
             playerStats.iceDamage.RemoveModifier(iceDamage);
             playerStats.lightingDamage.RemoveModifier(lightingDamage);
+        }
+
+        public void PlayEffect(Transform targetTransform)
+        {
+            foreach(var vfx in effects)
+            {
+                vfx.ExecuteEffect(targetTransform);
+            }
         }
     }
 }

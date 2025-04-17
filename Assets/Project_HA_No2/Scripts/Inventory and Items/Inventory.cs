@@ -245,5 +245,20 @@ namespace HA
 
         public List<InventoryItem> GetEquipmentList() => equipment;
         public List<InventoryItem> GetStashList() => stash;
+
+        public EquipmentDataSO GetEquipment(EquipmentType type)
+        {
+            EquipmentDataSO equippedItem = null;
+
+            foreach (KeyValuePair<EquipmentDataSO, InventoryItem> _item in equipmentDictionary)
+            {
+                if (_item.Key.equipmentType == type)
+                {
+                    equippedItem = _item.Key;
+                }
+            }
+
+            return equippedItem;
+        }
     }
 }

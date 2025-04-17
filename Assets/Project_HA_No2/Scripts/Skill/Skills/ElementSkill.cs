@@ -19,6 +19,13 @@ namespace HA
         [SerializeField] private float explodeRadius;
         [SerializeField] private LayerMask explodeLayer;
 
+        [Header("Element Stacking Informations")]
+        [SerializeField] private bool canUseMultiStacks;
+        [SerializeField] private int amountOfStacks;
+        [SerializeField] private float multiStackCooldown;
+        [SerializeField] private float timeWindow;
+        [SerializeField] private List<GameObject> elementsLeft = new List<GameObject>();
+
         public override bool CanUseSkill()
         {
             return base.CanUseSkill();
@@ -27,6 +34,9 @@ namespace HA
         public override void UseSkill()
         {
             base.UseSkill();
+
+            if (CanUseMultiElements())
+                return;
 
             if(currentElement == null)
             {
@@ -52,6 +62,60 @@ namespace HA
                 playerCharacter.GetComponent<CharacterController>().enabled = true;
                 currentElement.GetComponent<ElementSkillController>().FinishElement();
             }
+        }
+
+        private void RestoreElement()
+        {
+            int amountToAdd = amountOfStacks - elementsLeft.Count;
+
+            for(int i = 0; i < amountToAdd; i++)
+            {
+                elementsLeft.Add(elementPrefab);
+            }
+        }
+
+        private bool CanUseMultiElements()
+        {
+            if(canUseMultiStacks)
+            {
+                if(elementsLeft.Count > 0)
+                {
+                    if(elementsLeft.Count == amountOfStacks)
+                    {
+                        Invoke("ResetAbility", timeWindow);
+                    }
+
+                    cooldown = 0f;
+                    GameObject elementToSpawn = elementsLeft[elementsLeft.Count - 1];
+                    GameObject newElement = Instantiate(elementToSpawn, playerCharacter.transform.position, Quaternion.identity);
+
+                    elementsLeft.Remove(elementToSpawn);
+                    newElement.GetComponent<ElementSkillController>().SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
+
+                    if(elementsLeft.Count <= 0)
+                    {
+                        // 쿨다운 후 다시 원소 스킬을 사용할 수 있게 채움
+                        cooldown = multiStackCooldown;
+                        RestoreElement();
+                    }
+                    
+                    return true;
+
+                }
+
+                
+            }
+            
+            return false;
+        }
+
+        private void ResetAbility()
+        {
+            if (cooldownTimer > 0)
+                return;
+
+            cooldownTimer = multiStackCooldown;
+            RestoreElement();
         }
 
         protected override void Start()

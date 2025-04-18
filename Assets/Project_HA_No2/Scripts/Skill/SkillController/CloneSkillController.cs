@@ -6,10 +6,9 @@ namespace HA
 {
     public class CloneSkillController : MonoBehaviour
     {
-        [SerializeField] private float cloneDuration;
-        private float cloneTimer;
+        
+        public float cloneTimer;
 
-        private Animator animator;
         private PlayerCharacter playerCharacter;
 
         [SerializeField] private Transform attackCheck;
@@ -20,12 +19,13 @@ namespace HA
         [SerializeField] private SkinnedMeshRenderer smr_Body;
         [SerializeField] private SkinnedMeshRenderer smr_Hair;
         [SerializeField] private float colorLoosingSpeed;
+        public bool duplicateBool;
+        public float chanceToDuplicate;
 
 
 
         private void Awake()
         {
-            animator = GetComponent<Animator>();
             playerCharacter = PlayerManager.Instance.playerCharacter;
 
             SetTransparentAllMaterials(transform, smr_Face);
@@ -37,12 +37,14 @@ namespace HA
         {
             cloneTimer -= Time.deltaTime;
 
+            /*
             if (cloneDuration <= 0)
             {
                 ReduceAlphaAllMaterials(smr_Face, colorLoosingSpeed);
                 ReduceAlphaAllMaterials(smr_Body, colorLoosingSpeed);
                 ReduceAlphaAllMaterials(smr_Hair, colorLoosingSpeed);
             }
+            */
         }
 
         void SetTransparentAllMaterials(Transform trasnform, SkinnedMeshRenderer smr)
@@ -74,14 +76,7 @@ namespace HA
         }
 
 
-        public void SetUpClone(Transform newTransform, bool canAttack, Vector3 offset)
-        {
-            if (canAttack)
-                animator.SetInteger("AttackNumber", Random.Range(1, 3));
-
-            transform.position = newTransform.position + offset;
-            cloneTimer = cloneDuration;
-        }
+        
 
         private void AnimationTrigger_On()
         {
@@ -97,6 +92,14 @@ namespace HA
                 {
                     var target = collider.transform.GetComponent<EnemyStat>();
                     playerCharacter.characterStats.DoDamage(target);
+
+                    if(duplicateBool)
+                    {
+                        if(Random.Range(0, 100) < chanceToDuplicate)
+                        {
+                            playerCharacter.skillManager.cloneSkill.CreateClone(collider.transform, new Vector3(4f, 0, 4f));                            
+                        }
+                    }
                 }
             }
         }

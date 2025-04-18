@@ -284,6 +284,9 @@ MonoBehaviour:
   clonePrefab: {fileID: 7376851358314968761, guid: 4b419cdbb7d40714f9707e0b093b7018,
     type: 3}
   canAttack: 1
+  createCloneDashStart: 0
+  createCloneOnDashOver: 0
+  canCreateCloneOnCounterAttack: 0
 --- !u!114 &88755533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,9 +344,10 @@ MonoBehaviour:
   elementPrefab: {fileID: 5482492701479079410, guid: 30cc61457a64e0d4491686318320a4f2,
     type: 3}
   elementDuration: 1.4
+  cloneInsteadOfElement: 1
   canMoveToEnemy: 0
   moveSpeed: 0
-  canExplode: 1
+  canExplode: 0
   explodeRadius: 10
   explodeLayer:
     serializedVersion: 2

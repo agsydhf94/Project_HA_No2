@@ -12,10 +12,12 @@ namespace HA
         protected float cooldownTimer;
 
         protected PlayerCharacter playerCharacter;
+        protected SkillManager skillManager;
 
         protected virtual void Start()
         {
             playerCharacter = PlayerManager.Instance.playerCharacter;
+            skillManager = SkillManager.Instance;
         }
 
         protected virtual void Update()

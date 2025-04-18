@@ -10,6 +10,9 @@ namespace HA
         [SerializeField] private float elementDuration;
         private GameObject currentElement;
 
+        [Header("Mirage Element")]
+        [SerializeField] private bool cloneInsteadOfElement;
+
         [Header("Moving Element")]
         [SerializeField] private bool canMoveToEnemy;
         [SerializeField] private float moveSpeed;
@@ -57,10 +60,23 @@ namespace HA
             }
             else
             {
+                
+                Vector3 playerPosition = playerCharacter.transform.position;
+                
                 playerCharacter.GetComponent<CharacterController>().enabled = false;
                 playerCharacter.transform.position = currentElement.transform.position - new Vector3(0f, 1f, 0f);
                 playerCharacter.GetComponent<CharacterController>().enabled = true;
-                currentElement.GetComponent<ElementSkillController>().FinishElement();
+                currentElement.transform.position = playerPosition;
+
+                if (cloneInsteadOfElement)
+                {
+                    skillManager.cloneSkill.CreateClone(currentElement.transform, Vector3.zero);
+                    Destroy(currentElement);
+                }
+                else
+                {
+                    currentElement.GetComponent<ElementSkillController>().FinishElement();
+                }
             }
         }
 

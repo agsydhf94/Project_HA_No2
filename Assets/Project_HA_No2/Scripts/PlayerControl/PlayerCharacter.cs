@@ -290,7 +290,7 @@ namespace HA
         #endregion
 
         #region Check Stunnable Enemies
-        public bool CheckStunnableEnemies()
+        public GameObject GetStunnableEnemies()
         {
             Collider[] colliders = Physics.OverlapSphere(attackCheck.position, attackCheckRadius);
 
@@ -298,10 +298,10 @@ namespace HA
             {
                 if(hit.TryGetComponent<Enemy>(out Enemy enemy) && enemy.CanBeStunned())
                 {
-                    return true;
+                    return hit.gameObject;
                 }
             }
-            return false;
+            return null;
         }
         #endregion
 

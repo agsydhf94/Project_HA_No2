@@ -9,6 +9,7 @@ namespace HA
         [SerializeField] private GameObject elementPrefab;
         [SerializeField] private float elementDuration;
         private GameObject currentElement;
+        private ElementSkillController currentController;
 
         [Header("Mirage Element")]
         [SerializeField] private bool cloneInsteadOfElement;
@@ -43,24 +44,21 @@ namespace HA
 
             if(currentElement == null)
             {
-                currentElement = Instantiate(elementPrefab);
-                currentElement.transform.position = playerCharacter.transform.position + new Vector3(0f, 1f, 0f);
+                CreateElement();
 
-                ElementSkillController currentElementController = currentElement.GetComponent<ElementSkillController>();
-                if(canExplode)
+                if (canExplode)
                 {
-                    currentElementController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
-                    currentElementController.SetupExplode(explodeRadius, explodeLayer);
+                    currentController.SetupExplode(explodeRadius, explodeLayer);
                 }
-                else
-                {
-                    currentElementController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
-                }
-                
+
             }
             else
-            {
-                
+            {                
+                if(canMoveToEnemy)
+                {
+                    return;
+                }
+
                 Vector3 playerPosition = playerCharacter.transform.position;
                 
                 playerCharacter.GetComponent<CharacterController>().enabled = false;
@@ -75,9 +73,26 @@ namespace HA
                 }
                 else
                 {
-                    currentElement.GetComponent<ElementSkillController>().FinishElement();
+                    currentController.FinishElement();
                 }
             }
+        }
+
+        public void CreateElement()
+        {
+            currentElement = Instantiate(elementPrefab);
+            currentElement.transform.position = playerCharacter.transform.position + new Vector3(0f, 1f, 0f);
+
+            currentController = currentElement.GetComponent<ElementSkillController>();
+            currentController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed, FindClosetEnemy(currentElement.transform));
+
+            
+            
+        }
+
+        public void CurrentElementChooseRandomTarget()
+        {
+            currentController.ChooseRandomEnemy();
         }
 
         private void RestoreElement()
@@ -106,7 +121,7 @@ namespace HA
                     GameObject newElement = Instantiate(elementToSpawn, playerCharacter.transform.position, Quaternion.identity);
 
                     elementsLeft.Remove(elementToSpawn);
-                    newElement.GetComponent<ElementSkillController>().SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed);
+                    newElement.GetComponent<ElementSkillController>().SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed, FindClosetEnemy(currentElement.transform));
 
                     if(elementsLeft.Count <= 0)
                     {

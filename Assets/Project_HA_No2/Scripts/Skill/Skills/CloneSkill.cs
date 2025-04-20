@@ -16,11 +16,20 @@ namespace HA
         [SerializeField] private bool canCreateCloneOnCounterAttack;
         [SerializeField] public bool canDuplicateClone;
         [SerializeField] private float chanceOfDuplicate;
+        [SerializeField] private bool canCreateElementInsteadOfClone;
  
         public void CreateClone(Transform targetTransform, Vector3 offset)
         {
+            if(canCreateElementInsteadOfClone)
+            {
+                skillManager.elementSkill.CreateElement();
+                skillManager.elementSkill.CurrentElementChooseRandomTarget();
+                return;
+            }
+
             GameObject newClone = Instantiate(clonePrefab);
-            SetUpClone(newClone, targetTransform, canAttack, offset, canDuplicateClone, chanceOfDuplicate);
+            CloneSkillController newController = newClone.GetComponent<CloneSkillController>();
+            newController.SetUpClone(newClone, targetTransform, FindClosetEnemy(newClone.transform), cloneDuration, canAttack, offset, canDuplicateClone, chanceOfDuplicate);
 
             Vector3 position = Random.onUnitSphere;
             position.y = 0;
@@ -33,20 +42,7 @@ namespace HA
 
         }
 
-        public void SetUpClone(GameObject newClone, Transform initialPosition, bool canAttack, Vector3 offset, bool canDuplicate, float chanceOfDuplicate)
-        {
-            if (canAttack)
-            {
-                newClone.GetComponent<Animator>().SetInteger("AttackNumber", Random.Range(1, 3));
-            }
-
-            transform.position = initialPosition.position + offset;
-
-            var newCloneController = newClone.GetComponent<CloneSkillController>();
-            newCloneController.duplicateBool = canDuplicate;
-            newCloneController.chanceToDuplicate = chanceOfDuplicate;
-            newCloneController.cloneTimer = cloneDuration;
-        }
+        
 
         public void CreateCloneOnDashStart()
         {

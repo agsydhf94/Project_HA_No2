@@ -12,8 +12,10 @@ namespace HA
         private bool canMove;
         private float moveSpeed;
 
+        private Transform closestTarget;
         private float explodeRadius;
-        private LayerMask explodeLayer;
+        [SerializeField] private LayerMask explodeLayer;
+        [SerializeField] private LayerMask enemyLayer;
 
 
         private VFXManager vfxManager;
@@ -34,14 +36,37 @@ namespace HA
             {
                 FinishElement();
             }
+
+            if(canMove)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, closestTarget.position, moveSpeed * Time.deltaTime);
+
+                if(Vector3.Distance(transform.position, closestTarget.position) < 1f)
+                {
+                    FinishElement();
+                    canMove = false;
+                }
+            }
         }
 
-        public void SetupElement(float _duration, bool _canExplode, bool _canMove, float _moveSpeed)
+        public void SetupElement(float _duration, bool _canExplode, bool _canMove, float _moveSpeed, Transform _closestTarget)
         {
             elementTimer = _duration;
             canExplode = _canExplode;
             canMove = _canMove;
             moveSpeed = _moveSpeed;            
+            closestTarget = _closestTarget;
+        }
+
+        public void ChooseRandomEnemy()
+        {
+            Collider[] colliders = Physics.OverlapSphere(transform.position, 10, enemyLayer);
+
+            if(colliders.Length > 0)
+            {
+                closestTarget = colliders[Random.Range(0, colliders.Length)].transform;
+            }
+            
         }
 
         public void SetupExplode(float _explodeRadius, LayerMask _layer)

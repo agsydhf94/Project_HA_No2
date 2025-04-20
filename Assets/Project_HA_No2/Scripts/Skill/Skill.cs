@@ -42,5 +42,24 @@ namespace HA
         {
 
         }
+
+        protected virtual Transform FindClosetEnemy(Transform _checkTransform)
+        {
+            List<Collider> coliiders = CharacterBase.ObjectDetection<Enemy>(_checkTransform, 25f);
+
+            float closestDistance = Mathf.Infinity;
+            Transform closestEnemy = null;
+
+            foreach (var collider in coliiders)
+            {
+                float distanceToEnemy = Vector3.Distance(_checkTransform.position, collider.transform.position);
+
+                if (distanceToEnemy < closestDistance)
+                    closestDistance = distanceToEnemy;
+                    closestEnemy = collider.transform;
+            }
+
+            return closestEnemy;
+        }
     }
 }

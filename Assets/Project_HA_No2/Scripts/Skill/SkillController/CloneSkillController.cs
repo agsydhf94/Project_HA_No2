@@ -47,6 +47,22 @@ namespace HA
             */
         }
 
+        public void SetUpClone(GameObject newClone, Transform initialPosition, Transform closestEnemy, float cloneDuration, bool canAttack, Vector3 offset, bool canDuplicate, float chanceOfDuplicate)
+        {
+            if (canAttack)
+            {
+                newClone.GetComponent<Animator>().SetInteger("AttackNumber", Random.Range(1, 3));
+            }
+
+            transform.position = initialPosition.position + offset;
+            this.closestEnemy = closestEnemy;
+            duplicateBool = canDuplicate;
+            chanceToDuplicate = chanceOfDuplicate;
+            cloneTimer = cloneDuration;
+            FaceClosestTarget();
+        }
+
+
         void SetTransparentAllMaterials(Transform trasnform, SkinnedMeshRenderer smr)
         {
             for (int i = 0; i < smr.materials.Length; i++)
@@ -106,21 +122,10 @@ namespace HA
 
         private void FaceClosestTarget()
         {
-            List<Collider> coliiders = CharacterBase.ObjectDetection<IDamagable>(transform, 25f);
-
-            float closestDistance = Mathf.Infinity;
-            
-            foreach(var collider in coliiders)
-            {
-                float distanceToEnemy = Vector3.Distance(transform.position, collider.transform.position);
-
-                if (distanceToEnemy < closestDistance)
-                    closestEnemy = collider.transform;
-            }
-
             if(closestEnemy != null)
             {
-                // To do : Face the clone towards the closest enemy
+                var direction = closestEnemy.transform.position - transform.position;
+                transform.forward = direction;    
             }
         }
     }

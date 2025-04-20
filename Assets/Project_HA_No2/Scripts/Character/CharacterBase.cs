@@ -9,6 +9,7 @@ namespace HA
 {
     public class CharacterBase : MonoBehaviour, IDamagable
     {
+
         #region Components
         [Header("Components")]
         public Animator characterAnimator;
@@ -66,6 +67,16 @@ namespace HA
         protected virtual void Update()
         {
             
+        }
+
+        public virtual void GetSlowBy(float percentage, float slowDuration)
+        {
+            
+        }
+
+        protected virtual void ReturnDefaultSpeed()
+        {
+            characterAnimator.speed = 1;
         }
 
         #region Life Related

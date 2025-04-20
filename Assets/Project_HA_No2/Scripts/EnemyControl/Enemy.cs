@@ -16,6 +16,11 @@ namespace HA
         public float viewAngle;
         #endregion
 
+        #region Multipliers
+        public float moveSpeedMultiplier;
+        private float defaultMoveSpeedMultiplier;
+        #endregion
+
         #region NavMesh Components
         private NavMeshAgent navMeshAgent;
         #endregion
@@ -53,6 +58,8 @@ namespace HA
             base.Awake();
             stateMachine = new EnemyStateMachine();
             navMeshAgent = GetComponent<NavMeshAgent>();
+
+            defaultMoveSpeedMultiplier = moveSpeedMultiplier;
         }
 
         protected override void Update()
@@ -60,6 +67,20 @@ namespace HA
             base.Update();
             stateMachine.currentState.UpdateState();       
         }
+        #region Enemy Slow Effect
+        public override void GetSlowBy(float percentage, float slowDuration)
+        {
+            moveSpeedMultiplier *= percentage;
+            characterAnimator.speed *= percentage;
+
+            Invoke("ReturnDefaultSpeed", slowDuration);
+        }
+
+        protected override void ReturnDefaultSpeed()
+        {
+            base.ReturnDefaultSpeed();
+        }
+        #endregion
 
         #region Enemy Patrol
         public void EnemyPatrol_RandomDirection()
@@ -76,7 +97,7 @@ namespace HA
             Vector3 targetDestination = transform.position + randomDirection * patrolRadius;
 
             navMeshAgent.isStopped = false;
-            navMeshAgent.speed = patrolSpeed;
+            navMeshAgent.speed = patrolSpeed * moveSpeedMultiplier;
             navMeshAgent.SetDestination(targetDestination);
         }
         #endregion
@@ -92,7 +113,7 @@ namespace HA
 
                 if (Vector3.Angle(directonToTarget, forwardDirection) < viewAngle * 0.5f)
                 {
-                    navMeshAgent.speed = chaseSpeed;
+                    navMeshAgent.speed = chaseSpeed * moveSpeedMultiplier;
                     navMeshAgent.SetDestination(collider.transform.position);
                 }
             }

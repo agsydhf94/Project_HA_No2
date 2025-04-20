@@ -31,6 +31,7 @@ namespace HA
         public bool isChilled;  // armor를 20% 줄인다
         public bool isShocked;  // accuracy를 20% 줄인다
 
+        [SerializeField] private float ailmentsDuration;
         private float ignitedTimer;
         private float chillTimer;
         private float shockTimer;
@@ -45,11 +46,14 @@ namespace HA
         public System.Action onHealthChanged;
         public bool isDead { get; set; }
 
+        private CharacterBase characterBase;
+
         protected virtual void Start()
         {
             criticalPower.SetDefaultValue(150);
             currentHp = GetMaxHealthValue();
 
+            characterBase = GetComponent<CharacterBase>();
             Debug.Log("캐릭터 스탯 Start 호출됨");
         }
 
@@ -99,7 +103,7 @@ namespace HA
 
             totalDamage = CheckTargetArmor(targetStats, totalDamage);
             targetStats.TakeDamage(totalDamage);
-            //DoMagicalDamage(targetStats);
+            DoMagicalDamage(targetStats);
         }
 
         public virtual void DoMagicalDamage(CharacterStats targetStats)
@@ -169,19 +173,22 @@ namespace HA
             if(ignite)
             {
                 isIgnited = ignite;
-                ignitedTimer = 5;
+                ignitedTimer = ailmentsDuration;
             }
 
             if (chill)
             {
                 isChilled = chill;
-                chillTimer = 3;
+                chillTimer = ailmentsDuration;
+
+                float slowPercentage = 0.4f;
+                characterBase.GetSlowBy(slowPercentage, ailmentsDuration);
             }
 
             if (shock)
             {
                 isShocked = shock;
-                shockTimer = 2;
+                shockTimer = ailmentsDuration;
             }
 
 

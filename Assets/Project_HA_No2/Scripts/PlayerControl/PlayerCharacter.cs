@@ -56,6 +56,17 @@ namespace HA
         public float currentRunningSpeedDelta;
         public float subWalkingSpeedDelta;
         public float subRunningSpeedDelta;
+
+        #endregion
+
+        #region Multipliers
+        [Header("Multipliers")]
+        public float moveSpeedMultiplier;
+        public float jumpForceMultiplier;
+        public float dashSpeedMultiplier;
+        private float defaultMoveSpeedMultiplier;
+        private float defaultJumpForceMultiplier;
+        private float defaultDashSpeedMultiplier;
         #endregion
 
         #region Player Attack
@@ -112,6 +123,10 @@ namespace HA
         protected override void Start()
         {
             stateMachine.Initialize(idleState);
+
+            defaultMoveSpeedMultiplier = moveSpeedMultiplier;
+            defaultJumpForceMultiplier = jumpForceMultiplier;
+            defaultDashSpeedMultiplier = dashSpeedMultiplier;
         }
 
         protected override void Update()
@@ -125,6 +140,29 @@ namespace HA
 
             CheckDashInput();
         }
+
+        #region Player Slow Effect
+
+        public override void GetSlowBy(float percentage, float slowDuration)
+        {
+            moveSpeedMultiplier *= percentage;
+            jumpForceMultiplier *= percentage;
+            dashSpeedMultiplier *= percentage;
+            characterAnimator.speed *= percentage;
+
+            Invoke("ReturnDefaultSpeed", slowDuration);
+        }
+        
+
+        protected override void ReturnDefaultSpeed()
+        {
+            base.ReturnDefaultSpeed();
+
+            moveSpeedMultiplier = defaultMoveSpeedMultiplier;
+            jumpForceMultiplier = defaultJumpForceMultiplier;
+            dashSpeedMultiplier = defaultDashSpeedMultiplier;
+        }
+        #endregion
 
         #region Character Move
         public void CharacterMove(Vector2 input, float yAxisAngle)
@@ -177,7 +215,7 @@ namespace HA
             characterAnimator.SetFloat("Vertical", vertical);
             characterAnimator.SetFloat("RunningBlend", runningBlend);
 
-            playerMovementVec = movement * Time.deltaTime * movingSpeed;
+            playerMovementVec = movement * Time.deltaTime * movingSpeed * moveSpeedMultiplier;
             characterController.Move(playerMovementVec);
         }
 
@@ -225,7 +263,7 @@ namespace HA
 
         public void CharacterJump()
         {
-            Vector3 jumpMove = new Vector3(0, verticalVelocity * Time.deltaTime, 0);
+            Vector3 jumpMove = new Vector3(0, verticalVelocity * Time.deltaTime, 0) * jumpForceMultiplier;
             characterController.Move(playerMovementVec + jumpMove);
         }
 
@@ -254,7 +292,7 @@ namespace HA
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 500f); // 속도 조절 가능
 
             // XZ 평면상에서 이동
-            characterController.Move(playerMovementVec + planeDirection_xz * dashSpeed);
+            characterController.Move(playerMovementVec + planeDirection_xz * dashSpeed * dashSpeedMultiplier);
         }
 
         public void CheckDashInput()

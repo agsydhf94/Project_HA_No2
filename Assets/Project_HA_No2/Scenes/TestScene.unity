@@ -348,14 +348,14 @@ MonoBehaviour:
   elementPrefab: {fileID: 5482492701479079410, guid: 30cc61457a64e0d4491686318320a4f2,
     type: 3}
   elementDuration: 1.4
-  cloneInsteadOfElement: 1
-  canMoveToEnemy: 0
-  moveSpeed: 0
-  canExplode: 0
-  explodeRadius: 10
+  cloneInsteadOfElement: 0
+  canMoveToEnemy: 1
+  moveSpeed: 10
+  canExplode: 1
+  explodeRadius: 5
   explodeLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4194304
   canUseMultiStacks: 0
   amountOfStacks: 3
   multiStackCooldown: 4
@@ -1839,7 +1839,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   maxHp:
-    baseValue: 20
+    baseValue: 500
     modifiers: 
   armor:
     baseValue: 0
@@ -1851,7 +1851,7 @@ MonoBehaviour:
     baseValue: 1
     modifiers: 
   fireDamage:
-    baseValue: 12
+    baseValue: 0
     modifiers: 
   iceDamage:
     baseValue: 4
@@ -1862,6 +1862,7 @@ MonoBehaviour:
   isIgnited: 0
   isChilled: 0
   isShocked: 0
+  ailmentsDuration: 4
   currentHp: 0
 --- !u!114 &792821866
 MonoBehaviour:
@@ -1915,6 +1916,9 @@ MonoBehaviour:
   currentRunningSpeedDelta: 0
   subWalkingSpeedDelta: 0
   subRunningSpeedDelta: 0
+  moveSpeedMultiplier: 1
+  jumpForceMultiplier: 1
+  dashSpeedMultiplier: 1
   counterAttackDuration: 0.2
   maxJumpHeight: 4
   maxJumpTime: 1
@@ -5028,6 +5032,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2097152
   viewAngle: 150
+  moveSpeedMultiplier: 1
   patrolSpeed: 1.7
   chaseSpeed: 3
   idleTime: 4
@@ -7369,7 +7374,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   maxHp:
-    baseValue: 50
+    baseValue: 500
     modifiers: 
   armor:
     baseValue: 0
@@ -7384,7 +7389,7 @@ MonoBehaviour:
     baseValue: 0
     modifiers: 
   iceDamage:
-    baseValue: 0
+    baseValue: 2
     modifiers: 
   lightingDamage:
     baseValue: 0
@@ -7392,6 +7397,7 @@ MonoBehaviour:
   isIgnited: 0
   isChilled: 0
   isShocked: 0
+  ailmentsDuration: 4
   currentHp: 0
   level: 1
   percentageModifier: 0

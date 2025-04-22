@@ -40,10 +40,13 @@ namespace HA
         private float igniteDamageTimer;
         private int igniteDamage;
 
+        [SerializeField] private GameObject shockStrikePrefab;
+        private int shockDamage;
 
         public int currentHp;
 
         public System.Action onHealthChanged;
+
         public bool isDead { get; set; }
 
         private CharacterBase characterBase;
@@ -154,6 +157,9 @@ namespace HA
             if (canApplyIgnite)
                 targetStats.SetupIgniteDamage(Mathf.RoundToInt(_fireDamage * 0.2f));
 
+            if (canApplyShock)
+                targetStats.SetupShockStrikeDamage(Mathf.RoundToInt(_lightingDamage * 0.2f));
+
             targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
 
         }
@@ -167,16 +173,17 @@ namespace HA
 
         public void ApplyAilments(bool ignite, bool chill, bool shock)
         {
-            if (isIgnited || isChilled || isShocked)
-                return;
+            bool canApplyIgnite = !isIgnited && !isChilled && !isShocked;
+            bool canApplyChill = !isIgnited && !isChilled && !isShocked;
+            bool canApplyShocked = !isIgnited && !isChilled;
 
-            if(ignite)
+            if (ignite && canApplyIgnite)
             {
                 isIgnited = ignite;
                 ignitedTimer = ailmentsDuration;
             }
 
-            if (chill)
+            if (chill && canApplyChill)
             {
                 isChilled = chill;
                 chillTimer = ailmentsDuration;
@@ -185,16 +192,46 @@ namespace HA
                 characterBase.GetSlowBy(slowPercentage, ailmentsDuration);
             }
 
-            if (shock)
+            if (shock && canApplyShocked)
             {
-                isShocked = shock;
-                shockTimer = ailmentsDuration;
+                if(!isShocked)
+                {
+                    ApplyShock(shock);
+                }
+                else
+                {
+                    HitClosestTargetWithShockStrike();
+                }
             }
+        }
 
+        public void ApplyShock(bool shock)
+        {
+            if (isShocked)
+                return;
 
+            isShocked = shock;
+            shockTimer = ailmentsDuration;
+        }
+
+        private void HitClosestTargetWithShockStrike()
+        {
+            bool skipSelf = true;
+            var closestEnemy = FindClosestEnemy.GetClosestEnemy(transform, skipSelf);
+
+            if (closestEnemy == null)
+                closestEnemy = transform;
+
+            var newShockStrike = Instantiate(shockStrikePrefab, transform.position, Quaternion.identity);
+            newShockStrike.transform.position += new Vector3(0f, 1f, 0f);
+
+            var newShockController = newShockStrike.GetComponent<ShockStrikeController>();
+            var target = closestEnemy.GetComponent<CharacterStats>();
+            newShockController.ThunderStrikeSetup(shockDamage, target);
         }
 
         public void SetupIgniteDamage(int damage) => igniteDamage = damage;
+        public void SetupShockStrikeDamage(int damage) => shockDamage = damage;
 
 
         public virtual void TakeDamage(int damage)

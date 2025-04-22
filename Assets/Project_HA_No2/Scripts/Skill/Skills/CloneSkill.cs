@@ -29,7 +29,8 @@ namespace HA
 
             GameObject newClone = Instantiate(clonePrefab);
             CloneSkillController newController = newClone.GetComponent<CloneSkillController>();
-            newController.SetUpClone(newClone, targetTransform, FindClosetEnemy(newClone.transform), cloneDuration, canAttack, offset, canDuplicateClone, chanceOfDuplicate);
+            var closestEnemy = FindClosestEnemy.GetClosestEnemy(newClone.transform);
+            newController.SetUpClone(newClone, targetTransform, closestEnemy, cloneDuration, canAttack, offset, canDuplicateClone, chanceOfDuplicate);
 
             Vector3 position = Random.onUnitSphere;
             position.y = 0;

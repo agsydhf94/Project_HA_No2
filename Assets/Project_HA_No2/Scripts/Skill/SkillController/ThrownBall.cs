@@ -9,6 +9,7 @@ namespace HA
 {
     public class ThrownBall : MonoBehaviour
     {
+        public PlayerCharacter playerCharacter;
         private new Rigidbody rigidbody;
 
         public LayerMask enemyLayer;
@@ -44,6 +45,9 @@ namespace HA
             if (((1 << other.gameObject.layer) & enemyLayer) != 0)
             {
                 crashCount++;
+
+                var target = other.transform.GetComponent<EnemyStat>();
+                playerCharacter.characterStats.DoDamage(target);
 
                 // ¿œπ› VFX
                 vfxManager.PlayEffect("mari_BallSkillHit", transform.position, Quaternion.identity, null, 0.5f);

@@ -84,7 +84,9 @@ namespace HA
             currentElement.transform.position = playerCharacter.transform.position + new Vector3(0f, 1f, 0f);
 
             currentController = currentElement.GetComponent<ElementSkillController>();
-            currentController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed, FindClosetEnemy(currentElement.transform));
+
+            var closestEnemy = FindClosestEnemy.GetClosestEnemy(currentElement.transform);
+            currentController.SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed, closestEnemy);
 
             
             
@@ -121,7 +123,8 @@ namespace HA
                     GameObject newElement = Instantiate(elementToSpawn, playerCharacter.transform.position, Quaternion.identity);
 
                     elementsLeft.Remove(elementToSpawn);
-                    newElement.GetComponent<ElementSkillController>().SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed, FindClosetEnemy(currentElement.transform));
+                    var closestEnemy = FindClosestEnemy.GetClosestEnemy(currentElement.transform);
+                    newElement.GetComponent<ElementSkillController>().SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed, closestEnemy);
 
                     if(elementsLeft.Count <= 0)
                     {

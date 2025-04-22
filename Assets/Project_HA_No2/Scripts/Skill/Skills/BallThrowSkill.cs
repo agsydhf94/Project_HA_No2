@@ -40,6 +40,7 @@ namespace HA
 
             var thrownBallComponent = createdBall.GetComponent<ThrownBall>();
             thrownBallComponent.Initialize(ObjectManager.Instance);
+            thrownBallComponent.playerCharacter = playerCharacter;
             thrownBallComponent.crashCount = 0;
 
         }

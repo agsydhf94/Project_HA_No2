@@ -18,11 +18,7 @@ namespace HA
 
         public override void TakeDamage(int _damage)
         {
-            base.TakeDamage(_damage);
-
-            playerCharacter.DamageEffect();
-
-            
+            base.TakeDamage(_damage);            
         }
 
         protected override void Die()

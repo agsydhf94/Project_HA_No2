@@ -80,10 +80,7 @@ namespace HA
         }
 
         #region Life Related
-        public void DamageEffect()
-        {
-            HitKnockback().Forget();
-        }
+        public void DamageImpact() => HitKnockback().Forget();
 
         public virtual void Die()
         {

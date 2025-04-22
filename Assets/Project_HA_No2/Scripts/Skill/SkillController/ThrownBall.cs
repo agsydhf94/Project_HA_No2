@@ -46,7 +46,7 @@ namespace HA
             {
                 crashCount++;
 
-                var target = other.transform.GetComponent<EnemyStat>();
+                var target = other.transform.GetComponent<CharacterStats>();
                 playerCharacter.characterStats.DoDamage(target);
 
                 // ¿œπ› VFX

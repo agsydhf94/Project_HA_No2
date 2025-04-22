@@ -99,7 +99,7 @@ namespace HA
             {
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    var target = collider.transform.GetComponent<EnemyStat>();
+                    var target = collider.transform.GetComponent<CharacterStats>();
                     playerCharacter.characterStats.DoDamage(target);
                 }
             }

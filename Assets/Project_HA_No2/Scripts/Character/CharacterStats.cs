@@ -68,27 +68,20 @@ namespace HA
 
             igniteDamageTimer -= Time.deltaTime;
 
-            if(ignitedTimer < 0)
+            if (ignitedTimer < 0)
                 isIgnited = false;
 
-            if(chillTimer < 0)
+            if (chillTimer < 0)
                 isChilled = false;
 
-            if(shockTimer < 0)
+            if (shockTimer < 0)
                 isShocked = false;
 
-            if(igniteDamageTimer < 0 && isIgnited)
-            {
-                Debug.Log("Take burn Damage" + igniteDamage);
-
-                DecreaseHealth(igniteDamage);
-
-                if (currentHp < 0)
-                    Die();
-
-                igniteDamageTimer = igniteDamageCooldown;
-            }
+            if(isIgnited)
+                ApplyIgniteDamage();
         }
+
+        
 
         public virtual void DoDamage(CharacterStats targetStats)
         {
@@ -106,9 +99,12 @@ namespace HA
 
             totalDamage = CheckTargetArmor(targetStats, totalDamage);
             targetStats.TakeDamage(totalDamage);
-            DoMagicalDamage(targetStats);
+
+            // 인벤토리에서 현재 장착중인 무기가 마법 공격이 있을 때만 마법 데미지 가하기
+            //DoMagicalDamage(targetStats);
         }
 
+        #region Magical Damage and Ailments
         public virtual void DoMagicalDamage(CharacterStats targetStats)
         {
             int _fireDamage = fireDamage.GetValue();
@@ -125,21 +121,26 @@ namespace HA
             if (Mathf.Max(_fireDamage, _iceDamage, _lightingDamage) <= 0)
                 return;
 
+            AttemptToApplyAilments(targetStats, _fireDamage, _iceDamage, _lightingDamage);
+
+        }
+        private void AttemptToApplyAilments(CharacterStats targetStats, int _fireDamage, int _iceDamage, int _lightingDamage)
+        {
             bool canApplyIgnite = _fireDamage > _iceDamage && _fireDamage > _lightingDamage;
             bool canApplyChill = _iceDamage > _fireDamage && _iceDamage > _lightingDamage;
             bool canApplyShock = _lightingDamage > _fireDamage && _lightingDamage > _iceDamage;
 
 
-            while(!canApplyIgnite && !canApplyChill && !canApplyShock)
+            while (!canApplyIgnite && !canApplyChill && !canApplyShock)
             {
-                if(UnityEngine.Random.value < 0.5f && _fireDamage > 0)
+                if (UnityEngine.Random.value < 0.5f && _fireDamage > 0)
                 {
                     canApplyIgnite = true;
                     targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
                     return;
                 }
 
-                if(UnityEngine.Random.value < 0.5f && _iceDamage > 0)
+                if (UnityEngine.Random.value < 0.5f && _iceDamage > 0)
                 {
                     canApplyChill = true;
                     targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
@@ -161,16 +162,7 @@ namespace HA
                 targetStats.SetupShockStrikeDamage(Mathf.RoundToInt(_lightingDamage * 0.2f));
 
             targetStats.ApplyAilments(canApplyIgnite, canApplyChill, canApplyShock);
-
-        }
-
-        private int CheckTargetResistance(CharacterStats targetStats, int totalMagicalDamage)
-        {
-            totalMagicalDamage -= targetStats.magicResistance.GetValue() + (targetStats.inteligence.GetValue() * 3);
-            totalMagicalDamage = Mathf.Clamp(totalMagicalDamage, 0, int.MaxValue);
-            return totalMagicalDamage;
-        }
-
+        }       
         public void ApplyAilments(bool ignite, bool chill, bool shock)
         {
             bool canApplyIgnite = !isIgnited && !isChilled && !isShocked;
@@ -204,7 +196,6 @@ namespace HA
                 }
             }
         }
-
         public void ApplyShock(bool shock)
         {
             if (isShocked)
@@ -213,7 +204,6 @@ namespace HA
             isShocked = shock;
             shockTimer = ailmentsDuration;
         }
-
         private void HitClosestTargetWithShockStrike()
         {
             bool skipSelf = true;
@@ -229,35 +219,24 @@ namespace HA
             var target = closestEnemy.GetComponent<CharacterStats>();
             newShockController.ThunderStrikeSetup(shockDamage, target);
         }
+        private void ApplyIgniteDamage()
+        {
+            if (igniteDamageTimer < 0)
+            {
+                DecreaseHealth(igniteDamage);
 
+                if (currentHp < 0 && !isDead)
+                    Die();
+
+                igniteDamageTimer = igniteDamageCooldown;
+            }
+        }
         public void SetupIgniteDamage(int damage) => igniteDamage = damage;
         public void SetupShockStrikeDamage(int damage) => shockDamage = damage;
 
+        #endregion
 
-        public virtual void TakeDamage(int damage)
-        {
-            DecreaseHealth(damage);
-
-            if(currentHp < 0)
-            {
-                Die();
-            }
-        }
-
-        protected virtual void DecreaseHealth(int damage)
-        {
-            currentHp -= damage;
-
-            if(onHealthChanged != null)
-            {
-                onHealthChanged();
-            }
-        }
-
-        protected virtual void Die()
-        {
-
-        }
+        #region Stat Calculation
 
         private bool TargetCanAvoidAttack(CharacterStats targetStats)
         {
@@ -285,6 +264,14 @@ namespace HA
             totalDamage = Mathf.Clamp(totalDamage, 0, int.MaxValue);
             return totalDamage;
         }
+
+        private int CheckTargetResistance(CharacterStats targetStats, int totalMagicalDamage)
+        {
+            totalMagicalDamage -= targetStats.magicResistance.GetValue() + (targetStats.inteligence.GetValue() * 3);
+            totalMagicalDamage = Mathf.Clamp(totalMagicalDamage, 0, int.MaxValue);
+            return totalMagicalDamage;
+        }
+
         private bool CanCritical()
         {
             int totalCriticalChance = criticalChance.GetValue() + agility.GetValue();
@@ -307,6 +294,37 @@ namespace HA
         public int GetMaxHealthValue()
         {
             return maxHp.GetValue() + vitality.GetValue() * 5;
+        }
+
+        #endregion
+
+        public virtual void TakeDamage(int damage)
+        {
+            DecreaseHealth(damage);
+
+            GetComponent<CharacterBase>().DamageImpact();
+
+            // 이곳에서 vfx도 재생
+
+            if (currentHp < 0 && isDead)
+            {
+                Die();
+            }
+        }
+
+        protected virtual void DecreaseHealth(int damage)
+        {
+            currentHp -= damage;
+
+            if (onHealthChanged != null)
+            {
+                onHealthChanged();
+            }
+        }
+
+        protected virtual void Die()
+        {
+            isDead = true;
         }
     }
 }

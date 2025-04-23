@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace HA
         [Header("Magic Stats")]
         public Stat fireDamage;
         public Stat iceDamage;
-        public Stat lightingDamage;
+        public Stat ShockDamage;
 
         public bool isIgnited;  // 시간이 지남에 따라 데미지 
         public bool isChilled;  // armor를 20% 줄인다
@@ -81,7 +82,17 @@ namespace HA
                 ApplyIgniteDamage();
         }
 
-        
+        public virtual void IncreaseStatBy(int modifier, float duration, Stat statToModify)
+        {
+            StartCoroutine(StatModify(modifier, duration, statToModify));
+        }
+
+        private IEnumerator StatModify(int modifier, float duration, Stat statToModify)
+        {
+            statToModify.AddModifier(modifier);
+
+            yield return new WaitForSeconds(duration);
+        }
 
         public virtual void DoDamage(CharacterStats targetStats)
         {
@@ -101,7 +112,7 @@ namespace HA
             targetStats.TakeDamage(totalDamage);
 
             // 인벤토리에서 현재 장착중인 무기가 마법 공격이 있을 때만 마법 데미지 가하기
-            //DoMagicalDamage(targetStats);
+            DoMagicalDamage(targetStats);
         }
 
         #region Magical Damage and Ailments
@@ -109,7 +120,7 @@ namespace HA
         {
             int _fireDamage = fireDamage.GetValue();
             int _iceDamage = iceDamage.GetValue();
-            int _lightingDamage = lightingDamage.GetValue();
+            int _lightingDamage = ShockDamage.GetValue();
 
             int totalMagicalDamage = _fireDamage + _iceDamage + _lightingDamage + inteligence.GetValue();
             totalMagicalDamage = CheckTargetResistance(targetStats, totalMagicalDamage);

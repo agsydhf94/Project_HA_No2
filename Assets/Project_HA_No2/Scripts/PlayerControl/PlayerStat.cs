@@ -29,5 +29,14 @@ namespace HA
             playerItemDrop.GenerateDropItem();
             
         }
+
+        protected override void DecreaseHealth(int damage)
+        {
+            base.DecreaseHealth(damage);
+
+            EquipmentDataSO armor = Inventory.Instance.GetEquipment(EquipmentType.Armor);
+            armor?.PlayEffect(playerCharacter.transform);
+
+        }
     }
 }

@@ -29,6 +29,9 @@ namespace HA
 
         [Header("Items information")]
         private float lastTimeUsedPotion;
+        private float lastTimeUsedArmor;
+        private float potionCooldown;
+        private float armorCooldown;
 
         private void Start()
         {            
@@ -46,6 +49,11 @@ namespace HA
             equipmentSlots = equipmentSlotParent.GetComponentsInChildren<EquipmentSlotUI>();
 
             InitializeItems();
+        }
+
+        private void Update()
+        {
+            
         }
 
         private void InitializeItems()
@@ -271,9 +279,10 @@ namespace HA
             if (potion == null)
                 return;
 
-            bool canUsePotion = Time.time > lastTimeUsedPotion + potion.itemCoolDown;
+            bool canUsePotion = Time.time > lastTimeUsedPotion + potionCooldown;
             if(canUsePotion)
             {
+                potionCooldown = potion.itemCoolDown;
                 potion.PlayEffect(null);
                 lastTimeUsedPotion = Time.time;
             }
@@ -282,5 +291,24 @@ namespace HA
                 Debug.Log("포션 쿨다운 중 사용할 수 없어요");
             }
         }
-    }
+
+        public bool CanUseArmor()
+        {
+            EquipmentDataSO armor = GetEquipment(EquipmentType.Armor);
+
+            if (armor == null)
+                return false;
+
+            bool canUseArmor = Time.time > lastTimeUsedArmor + armorCooldown;
+            if (canUseArmor)
+            {
+                armorCooldown = armor.itemCoolDown;
+                lastTimeUsedArmor = Time.time;
+                return true;
+            }
+
+            Debug.Log("아머 쿨다운 중");
+            return false;
+        }
+    }   
 }

@@ -208,6 +208,8 @@ namespace HA
             }
         }
 
+        public virtual void FreezeTimeFor(float duration) => FreezeTimer_ForTime(duration).Forget();
+
         protected virtual async UniTask FreezeTimer_ForTime(float seconds)
         {
             FreezeTime(true);

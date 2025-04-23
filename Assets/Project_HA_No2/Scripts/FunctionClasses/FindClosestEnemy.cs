@@ -8,7 +8,7 @@ namespace HA
     {
         public static Transform GetClosestEnemy(Transform self, bool excludeSelf = false)
         {
-            List<Collider> coliiders = CharacterBase.ObjectDetection<Enemy>(self, 5f);
+            List<Collider> coliiders = ObjectDetection.GetObjectsBy<Enemy>(self, 5f);
 
             float closestDistance = Mathf.Infinity;
             Transform closestEnemy = null;

@@ -101,7 +101,7 @@ namespace HA
 
         private void AttackTrigger()
         {
-            List<Collider> colliders = CharacterBase.ObjectDetection<IDamagable>(attackCheck, attackCheckRadius);
+            List<Collider> colliders = ObjectDetection.GetObjectsBy<IDamagable>(attackCheck, attackCheckRadius);
             foreach (var collider in colliders)
             {
                 if (collider.TryGetComponent(out IDamagable damagable))

@@ -100,7 +100,14 @@ namespace HA
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
                     var target = collider.transform.GetComponent<CharacterStats>();
-                    playerCharacter.characterStats.DoDamage(target);
+                    // playerCharacter.characterStats.DoDamage(target);
+
+                    EquipmentDataSO equippedMagic = Inventory.Instance.GetEquipment(EquipmentType.Magic);
+                    if(equippedMagic != null)
+                    {
+                        equippedMagic.PlayEffect(collider.transform);
+                        playerCharacter.characterStats.DoMagicalDamage(target);
+                    }
                 }
             }
         }

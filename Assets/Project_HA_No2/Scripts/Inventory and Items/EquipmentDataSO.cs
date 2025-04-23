@@ -8,7 +8,7 @@ namespace HA
     {
         Weapon,
         Armor,
-        Amulet,
+        Magic,
         Flask
     }
 

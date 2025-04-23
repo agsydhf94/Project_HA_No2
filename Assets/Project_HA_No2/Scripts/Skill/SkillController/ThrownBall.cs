@@ -45,9 +45,7 @@ namespace HA
             if (((1 << other.gameObject.layer) & enemyLayer) != 0)
             {
                 crashCount++;
-
-                var target = other.transform.GetComponent<CharacterStats>();
-                playerCharacter.characterStats.DoDamage(target);
+                ApplyBallSkillDamage(other);
 
                 // ¿œπ› VFX
                 vfxManager.PlayEffect("mari_BallSkillHit", transform.position, Quaternion.identity, null, 0.5f);
@@ -75,6 +73,19 @@ namespace HA
                     }
                 }
             }
+        }
+
+        private void ApplyBallSkillDamage(Collider other)
+        {
+            var target = other.transform.GetComponent<CharacterStats>();
+
+            EquipmentDataSO equippedMagic = Inventory.Instance.GetEquipment(EquipmentType.Magic);
+            if (equippedMagic != null)
+            {
+                equippedMagic.PlayEffect(other.transform);
+                playerCharacter.characterStats.DoMagicalDamage(target);
+            }
+            
         }
 
         #region Chain Attack

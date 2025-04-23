@@ -9,7 +9,7 @@ namespace HA
         Weapon,
         Armor,
         Magic,
-        Flask
+        Potion
     }
 
     [CreateAssetMenu(fileName = "EquipmentData", menuName = "DataSO/Equipment")]
@@ -17,6 +17,7 @@ namespace HA
     {
         public EquipmentType equipmentType;
 
+        public float itemCoolDown;
         public ItemEffectSO[] effects;
 
         [Header("Main Stats")]

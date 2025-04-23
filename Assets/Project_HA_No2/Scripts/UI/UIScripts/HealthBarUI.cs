@@ -20,6 +20,9 @@ namespace HA
             
             characterStats = GetComponentInParent<CharacterStats>();
             characterStats.onHealthChanged += UpdateHealthUI;
+            UpdateHealthUI();
+
+            Debug.Log("Ã¼·Â HP UI Start È£ÃâµÊ");
         }
 
         private void UpdateHealthUI()

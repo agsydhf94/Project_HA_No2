@@ -27,6 +27,9 @@ namespace HA
         private ItemSlotUI[] stashItemSlots;
         private EquipmentSlotUI[] equipmentSlots;
 
+        [Header("Items information")]
+        private float lastTimeUsedPotion;
+
         private void Start()
         {            
             inventory = new List<InventoryItem>();
@@ -259,6 +262,25 @@ namespace HA
             }
 
             return equippedItem;
+        }
+
+        public void UsePotion()
+        {
+            EquipmentDataSO potion = GetEquipment(EquipmentType.Potion);
+
+            if (potion == null)
+                return;
+
+            bool canUsePotion = Time.time > lastTimeUsedPotion + potion.itemCoolDown;
+            if(canUsePotion)
+            {
+                potion.PlayEffect(null);
+                lastTimeUsedPotion = Time.time;
+            }
+            else
+            {
+                Debug.Log("포션 쿨다운 중 사용할 수 없어요");
+            }
         }
     }
 }

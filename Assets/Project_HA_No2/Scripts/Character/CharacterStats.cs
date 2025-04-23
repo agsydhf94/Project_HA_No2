@@ -225,7 +225,7 @@ namespace HA
             {
                 DecreaseHealth(igniteDamage);
 
-                if (currentHp < 0 && !isDead)
+                if (currentHp <= 0 && !isDead)
                     Die();
 
                 igniteDamageTimer = igniteDamageCooldown;
@@ -306,9 +306,24 @@ namespace HA
 
             // 이곳에서 vfx도 재생
 
-            if (currentHp < 0 && isDead)
+            if (currentHp <= 0 && !isDead)
             {
                 Die();
+            }
+        }
+
+        public virtual void IncreaseHealthBy(int amount)
+        {
+            currentHp += amount;
+
+            if (currentHp > GetMaxHealthValue())
+            {
+                currentHp = GetMaxHealthValue();
+            }
+
+            if(onHealthChanged != null)
+            {
+                onHealthChanged();
             }
         }
 

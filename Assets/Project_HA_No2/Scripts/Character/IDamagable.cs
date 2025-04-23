@@ -6,6 +6,6 @@ namespace HA
 {
     public interface IDamagable
     {
-        public void DamageEffect();
+        public void DamageImpact();
     }
 }

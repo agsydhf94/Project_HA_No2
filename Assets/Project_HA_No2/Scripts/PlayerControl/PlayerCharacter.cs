@@ -139,6 +139,11 @@ namespace HA
                 stateMachine.subState.UpdateState();
 
             CheckDashInput();
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                Inventory.Instance.UsePotion();
+            }
         }
 
         #region Player Slow Effect

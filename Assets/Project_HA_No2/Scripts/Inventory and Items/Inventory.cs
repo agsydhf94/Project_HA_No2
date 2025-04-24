@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace HA
@@ -22,10 +23,12 @@ namespace HA
         [SerializeField] private Transform inventorySlotParent;
         [SerializeField] private Transform stashSlotParent;
         [SerializeField] private Transform equipmentSlotParent;
+        [SerializeField] private Transform statSlotParent;
 
         private ItemSlotUI[] inventoryItemSlots;
         private ItemSlotUI[] stashItemSlots;
         private EquipmentSlotUI[] equipmentSlots;
+        private StatSlotUI[] statSlots;
 
         [Header("Items information")]
         private float lastTimeUsedPotion;
@@ -47,6 +50,7 @@ namespace HA
             inventoryItemSlots = inventorySlotParent.GetComponentsInChildren<ItemSlotUI>();
             stashItemSlots = stashSlotParent.GetComponentsInChildren<ItemSlotUI>();
             equipmentSlots = equipmentSlotParent.GetComponentsInChildren<EquipmentSlotUI>();
+            statSlots = statSlotParent.GetComponentsInChildren<StatSlotUI>();
 
             InitializeItems();
         }
@@ -143,11 +147,16 @@ namespace HA
             {
                 stashItemSlots[i].UpdateSlot(stash[i]);
             }
+
+            for(int i = 0; i < statSlots.Length; i++)
+            {
+                statSlots[i].UpdateStatValueUI();
+            }
         }
 
         public void AddItem(ItemDataSO item)
         {
-            if (item.itemType == ItemType.Equipment)
+            if (item.itemType == ItemType.Equipment && CanAddItemToInventory())
                 AddToInventory(item);
 
             else if(item.itemType == ItemType.Material)
@@ -213,6 +222,16 @@ namespace HA
             }
 
             UpdateSlotUI();
+        }
+
+        public bool CanAddItemToInventory()
+        {
+            if(inventory.Count >= inventoryItemSlots.Length)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public bool CanCraft(EquipmentDataSO equipmentToCraft, List<InventoryItem> requiredMaterials)

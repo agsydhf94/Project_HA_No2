@@ -16,6 +16,9 @@ namespace HA
 
         public override void OnPointerDown(PointerEventData eventData)
         {
+            if(item == null || item.itemDataSO == null)
+                return;
+
             inventory.UnEquipEquipment(item.itemDataSO as EquipmentDataSO);
 
             // inventory 클래스에 있는 AddItem 부분만으로는 장비를 바꿔치기할 때만

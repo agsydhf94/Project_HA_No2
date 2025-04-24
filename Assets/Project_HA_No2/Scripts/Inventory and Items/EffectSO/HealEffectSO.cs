@@ -6,7 +6,7 @@ using UnityEngine;
 namespace HA
 {
 
-    [CreateAssetMenu(fileName = "Heal effect", menuName = "DataSO/ItemEffect/Heal VFX")]
+    [CreateAssetMenu(fileName = "Heal effect", menuName = "DataSO/ItemEffect/Heal")]
     public class HealEffectSO : ItemEffectSO
     {
         [Range(0f, 1f)]

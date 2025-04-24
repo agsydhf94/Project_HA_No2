@@ -8,7 +8,12 @@ namespace HA
     {
         [SerializeField] private Rigidbody rb;
         [SerializeField] private ItemDataSO itemDataSO;
+        private Inventory inventory;
 
+        private void Awake()
+        {
+            inventory = Inventory.Instance;
+        }
 
         private void SetUpItemName()
         {
@@ -28,7 +33,13 @@ namespace HA
 
         public void PickUpItem()
         {
-            Inventory.Instance.AddItem(itemDataSO);
+            if (!inventory.CanAddItemToInventory() && itemDataSO.itemType == ItemType.Equipment)
+            {
+                rb.velocity = new Vector3(0, 2, 0);
+                return;                
+            }
+
+            inventory.AddItem(itemDataSO);
             Destroy(gameObject);
         }
     }   

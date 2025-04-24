@@ -1,9 +1,28 @@
 using System.Collections;
 using Unity.Mathematics;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace HA
 {
+    public enum StatType
+    {
+        Strength,
+        Agility,
+        Inteligence,
+        Vitality,
+        Damage,
+        CriticalChance,
+        CriticalPower,
+        Health,
+        Armor,
+        Evasion,
+        MagicResistance,
+        FireDamage,
+        IceDamage,
+        ShockDamage
+    }
+
     public class CharacterStats : MonoBehaviour
     {
         [Header("Main Stats")]
@@ -351,6 +370,26 @@ namespace HA
         protected virtual void Die()
         {
             isDead = true;
+        }
+
+        public Stat GetStat(StatType statType)
+        {
+            if (statType == StatType.Strength) return strength;
+            else if (statType == StatType.Agility) return agility;
+            else if (statType == StatType.Inteligence) return inteligence;
+            else if (statType == StatType.Vitality) return vitality;
+            else if (statType == StatType.Damage) return damage;
+            else if (statType == StatType.CriticalChance) return criticalChance;
+            else if (statType == StatType.CriticalPower) return criticalPower;
+            else if (statType == StatType.Health) return maxHp;
+            else if (statType == StatType.Armor) return armor;
+            else if (statType == StatType.Evasion) return evasion;
+            else if (statType == StatType.MagicResistance) return magicResistance;
+            else if (statType == StatType.FireDamage) return fireDamage;
+            else if (statType == StatType.IceDamage) return iceDamage;
+            else if (statType == StatType.ShockDamage) return ShockDamage;
+
+            return null;
         }
     }
 }

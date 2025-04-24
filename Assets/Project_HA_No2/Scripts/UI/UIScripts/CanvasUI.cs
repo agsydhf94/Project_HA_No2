@@ -7,6 +7,7 @@ namespace HA
     public class CanvasUI : MonoBehaviour
     {
         public ItemToolTipUI itemToolTipUI;
+        public StatToolTipUI statToolTipUI;
 
         public void SwitchUI(GameObject menu)
         {

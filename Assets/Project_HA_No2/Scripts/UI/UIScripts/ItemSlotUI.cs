@@ -8,17 +8,19 @@ using UnityEngine.EventSystems;
 
 namespace HA
 {
-    public class ItemSlotUI : MonoBehaviour, IPointerDownHandler
+    public class ItemSlotUI : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text itemText;
 
+        private CanvasUI canvasUI;
         public InventoryItem item;
         protected Inventory inventory;
 
         private void Awake()
         {
             inventory = Inventory.Instance;
+            canvasUI = GetComponentInParent<CanvasUI>();
         }
 
         public void UpdateSlot(InventoryItem newItem)
@@ -68,7 +70,21 @@ namespace HA
                 inventory.EquipEquipment(item.itemDataSO);
             }
         }
-        
 
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (item == null)
+                return;
+
+            canvasUI.itemToolTipUI.ShowToolTip(item.itemDataSO as EquipmentDataSO);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (item == null)
+                return;
+
+            canvasUI.itemToolTipUI.HideToolTip();
+        }
     }
 }

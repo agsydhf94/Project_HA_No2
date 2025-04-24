@@ -6,6 +6,8 @@ namespace HA
 {
     public class CanvasUI : MonoBehaviour
     {
+        public ItemToolTipUI itemToolTipUI;
+
         public void SwitchUI(GameObject menu)
         {
             for(int i = 0; i < transform.childCount; i++)

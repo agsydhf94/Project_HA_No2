@@ -40,10 +40,13 @@ namespace HA
         [Header("Magic Stats")]
         public int fireDamage;
         public int iceDamage;
-        public int lightingDamage;
+        public int shockDamage;
 
         [Header("Craft Requirements")]
         public List<InventoryItem> requirementsForCraft;
+
+        [Header("ToolTip UI Information")]
+        private int descriptionLength;
 
         public void AddModifiers()
         {
@@ -65,7 +68,7 @@ namespace HA
 
             playerStats.fireDamage.AddModifier(fireDamage);
             playerStats.iceDamage.AddModifier(iceDamage);
-            playerStats.lightingDamage.AddModifier(lightingDamage);
+            playerStats.ShockDamage.AddModifier(shockDamage);
         }
 
         public void RemoveModifiers()
@@ -88,7 +91,7 @@ namespace HA
 
             playerStats.fireDamage.RemoveModifier(fireDamage);
             playerStats.iceDamage.RemoveModifier(iceDamage);
-            playerStats.lightingDamage.RemoveModifier(lightingDamage);
+            playerStats.ShockDamage.RemoveModifier(shockDamage);
         }
 
         public void PlayEffect(Transform targetTransform)
@@ -96,6 +99,58 @@ namespace HA
             foreach(var vfx in effects)
             {
                 vfx.ExecuteEffect(targetTransform);
+            }
+        }
+
+        public override string GetDescription()
+        {
+            sb.Length = 0;
+            descriptionLength = 0;
+
+            AddItemDescription(strength, "Strength");
+            AddItemDescription(agility, "Agility");
+            AddItemDescription(intelligence, "Inteligence");
+            AddItemDescription(vitality, "Vitality");
+
+            AddItemDescription(damage, "Damage");
+            AddItemDescription(criticalChance, "Critical Chance");
+            AddItemDescription(criticalPower, "Critical Power");
+
+            AddItemDescription(maxHp, "MaxHP");
+            AddItemDescription(evasion, "Evasion");
+            AddItemDescription(armor, "Armor");
+            AddItemDescription(magicResistance, "Magic Resist");
+
+            AddItemDescription(fireDamage, "Fire Damage");
+            AddItemDescription(iceDamage, "Ice Damage");
+            AddItemDescription(shockDamage, "Shock Damage");
+
+            if(descriptionLength < 5)
+            {
+                for(int i = 0; i < 5 - descriptionLength; i++)
+                {
+                    sb.AppendLine();
+                    sb.Append("");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private void AddItemDescription(int value, string name)
+        {
+            if(value != 0)
+            {
+                if(sb.Length > 0)
+                {
+                    sb.AppendLine();
+                }
+                if(value > 0)
+                {
+                    sb.Append("+ " + value + " " + name);
+                }
+
+                descriptionLength++;
             }
         }
     }

@@ -10,14 +10,14 @@ namespace HA
 {
     public class ItemSlotUI : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField] private Image itemImage;
-        [SerializeField] private TMP_Text itemText;
+        [SerializeField] protected Image itemImage;
+        [SerializeField] protected TMP_Text itemText;
 
-        private CanvasUI canvasUI;
+        protected CanvasUI canvasUI;
         public InventoryItem item;
         protected Inventory inventory;
 
-        private void Awake()
+        protected virtual void Start()
         {
             inventory = Inventory.Instance;
             canvasUI = GetComponentInParent<CanvasUI>();

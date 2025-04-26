@@ -7,9 +7,20 @@ namespace HA
 {
     public class CraftSlotUI : ItemSlotUI
     {
-        private void OnEnable()
+        protected override void Start()
         {
-            UpdateSlot(item);
+            base.Start();
+        }
+
+        public void SetUpCraftSlot(EquipmentDataSO data)
+        {
+            if (data == null)
+                return;
+
+            item.itemDataSO = data;
+
+            itemImage.sprite = data.icon;
+            itemText.text = data.itemName;
         }
 
         public override void OnPointerDown(PointerEventData eventData)

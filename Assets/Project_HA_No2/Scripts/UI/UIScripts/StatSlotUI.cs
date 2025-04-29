@@ -11,7 +11,7 @@ namespace HA
         private CanvasUI canvasUI;
 
         [SerializeField] private string statName;
-        private PlayerStat playerStat;
+        [SerializeField] private PlayerStat playerStat;
 
         [SerializeField] private StatType statType;
         [SerializeField] private TMP_Text statValueText;
@@ -32,7 +32,6 @@ namespace HA
 
         private void Start()
         {
-            playerStat = PlayerManager.Instance.playerCharacter.GetComponent<PlayerStat>();
             canvasUI = GetComponentInParent<CanvasUI>();
             UpdateStatValueUI();
         }

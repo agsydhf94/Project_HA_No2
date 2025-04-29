@@ -19,20 +19,23 @@ namespace HA
 
             item.itemDataSO = data;
 
+            itemImage.preserveAspect = true;
             itemImage.sprite = data.icon;
             itemText.text = data.itemName;
+
+            if(itemText.text.Length > 12)
+            {
+                itemText.fontSize *= 0.7f;
+            }
+            else
+            {
+                itemText.fontSize = 24f;
+            }
         }
 
         public override void OnPointerDown(PointerEventData eventData)
         {
-            // 인벤토리 craft 아이템 정보
-            EquipmentDataSO craftData = item.itemDataSO as EquipmentDataSO;
-
-            if(inventory.CanCraft(craftData, craftData.requirementsForCraft))
-            {
-                // 장비 생성됨
-                Debug.Log("장비 생성됨");
-            }
+            canvasUI.craftWindowUI.SetUpCraftWindow(item.itemDataSO as EquipmentDataSO);
         }
     }
 }

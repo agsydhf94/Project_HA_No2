@@ -26,6 +26,8 @@ namespace HA
             // 이 부분 덕분에 현재 장착중인 장비에서 바로 탈착하여 바꿔치기할 필요 없이 인벤토리로 복귀 가능
             inventory.AddItem(item.itemDataSO as EquipmentDataSO);
 
+            canvasUI.itemToolTipUI.HideToolTip();
+
             CleanUpSlot();
         }
     }

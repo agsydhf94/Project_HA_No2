@@ -69,6 +69,8 @@ namespace HA
             {
                 inventory.EquipEquipment(item.itemDataSO);
             }
+
+            canvasUI.itemToolTipUI.HideToolTip();
         }
 
         public void OnPointerEnter(PointerEventData eventData)

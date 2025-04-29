@@ -11,34 +11,36 @@ namespace HA
         [SerializeField] private GameObject craftSlotPrefab;
 
         [SerializeField] private List<EquipmentDataSO> craftEquipment;
-        [SerializeField] private List<CraftSlotUI> craftSlots;
 
         private void Start()
         {
-            AssignCraftSlots();
+            transform.parent.GetChild(0).GetComponent<CraftListUI>().SetupCraftList();
+            SetUpDefaultCraftWindow();
         }
 
-        private void AssignCraftSlots()
-        {
-            for (int i = 0; i < craftSlotParent.childCount; i++)
-            {
-                craftSlots.Add(craftSlotParent.GetChild(i).GetComponent<CraftSlotUI>());
-            }
-        }
+        
 
         public void SetupCraftList()
         {
-            for(int i = 0; i < craftSlots.Count; i++)
+            for(int i = 0; i < craftSlotParent.childCount; i++)
             {
-                Destroy(craftSlots[i].gameObject);
+                Destroy(craftSlotParent.GetChild(i).gameObject);
             }
 
-            craftSlots = new List<CraftSlotUI>();
+            
 
             for(int i = 0; i < craftEquipment.Count; i++)
             {
                 GameObject newSlot = Instantiate(craftSlotPrefab, craftSlotParent);
                 newSlot.GetComponent<CraftSlotUI>().SetUpCraftSlot(craftEquipment[i]);
+            }
+        }
+
+        public void SetUpDefaultCraftWindow()
+        {
+            if (craftEquipment[0] != null)
+            {
+                GetComponentInParent<CanvasUI>().craftWindowUI.SetUpCraftWindow(craftEquipment[0]);
             }
         }
 

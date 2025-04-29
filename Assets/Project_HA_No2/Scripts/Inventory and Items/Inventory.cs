@@ -64,7 +64,10 @@ namespace HA
         {
             for (int i = 0; i < initialEquipment.Count; i++)
             {
-                AddItem(initialEquipment[i]);
+                if (initialEquipment[i] != null)
+                {
+                    AddItem(initialEquipment[i]);
+                }                
             }
         }
 

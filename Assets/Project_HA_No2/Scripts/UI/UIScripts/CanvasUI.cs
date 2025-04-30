@@ -14,6 +14,7 @@ namespace HA
         public ItemToolTipUI itemToolTipUI;
         public StatToolTipUI statToolTipUI;
         public CraftWindowUI craftWindowUI;
+        public SkillToolTipUI skillToolTipUI;
 
         private void Start()
         {

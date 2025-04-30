@@ -17,8 +17,11 @@ namespace HA
     {
         public EquipmentType equipmentType;
 
+        [Header("Unique Effect")]
         public float itemCoolDown;
         public ItemEffectSO[] effects;
+        [TextArea]
+        public string itemEffectDescription;
 
         [Header("Main Stats")]
         public int strength;
@@ -132,6 +135,13 @@ namespace HA
                     sb.AppendLine();
                     sb.Append("");
                 }
+            }
+
+            if(itemEffectDescription.Length > 0)
+            {
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.Append(itemEffectDescription);
             }
 
             return sb.ToString();

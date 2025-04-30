@@ -78,7 +78,23 @@ namespace HA
             if (item == null)
                 return;
 
+            Vector2 mousePosition = Input.mousePosition;
+
+            float xOffset = 0f;
+            float yOffset = 0f;
+
+            if (mousePosition.x > 600f)
+                xOffset = -100f;
+            else
+                xOffset = 100f;
+
+            if (mousePosition.y > 600f)
+                yOffset = -60f;
+            else
+                yOffset = 60f;
+
             canvasUI.itemToolTipUI.ShowToolTip(item.itemDataSO as EquipmentDataSO);
+            canvasUI.itemToolTipUI.transform.position = new Vector2(mousePosition.x + xOffset, mousePosition.y + yOffset);
         }
 
         public void OnPointerExit(PointerEventData eventData)

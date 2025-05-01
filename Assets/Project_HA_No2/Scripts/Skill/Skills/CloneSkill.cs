@@ -45,21 +45,7 @@ namespace HA
 
         
 
-        public void CreateCloneOnDashStart()
-        {
-            if(createCloneDashStart)
-            {
-                CreateClone(playerCharacter.transform, Vector3.zero);
-            }
-        }
-
-        public void CreateCloneOnDashOver()
-        {
-            if(createCloneOnDashOver)
-            {
-                CreateClone(playerCharacter.transform, Vector3.zero);
-            }
-        }
+        
 
         public void CreateCloneOnCounterAttack(Transform enemyTransform)
         {

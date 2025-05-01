@@ -13,6 +13,7 @@ namespace HA
         private CanvasUI canvasUI;
 
         [SerializeField] private string skillName;
+        [SerializeField] private int skillPrice;
         [TextArea]
         [SerializeField] private string skillDescription;
 
@@ -27,22 +28,36 @@ namespace HA
             gameObject.name = "SkillTreeUI + " + skillName;
         }
 
+        private void Awake()
+        {
+            GetComponent<Button>().onClick.AddListener(() => UnlockSkillSlot());
+        }
+
         private void Start()
         {
             canvasUI = GetComponentInParent<CanvasUI>();
 
             skillImage = GetComponent<Image>();
-
-            skillImage.color = lockedSkillColor;
-
-            GetComponent<Button>().onClick.AddListener(() => UnlockSkillSlot());
+            skillImage.color = lockedSkillColor;    
         }
 
         public void UnlockSkillSlot()
         {
+            if (PlayerManager.Instance.CheckEnoughMoney(skillPrice) == false)
+                return;
+
             for(int i = 0; i < shouldBeUnlocked.Length; i++)
             {
                 if (shouldBeUnlocked[i].unlocked == false)
+                {
+                    Debug.Log("스킬을 해금할 수 없습니다/");
+                    return;
+                }
+            }
+
+            for (int i = 0; i < shouldBeLocked.Length; i++)
+            {
+                if (shouldBeLocked[i].unlocked == false)
                 {
                     Debug.Log("스킬을 해금할 수 없습니다/");
                     return;

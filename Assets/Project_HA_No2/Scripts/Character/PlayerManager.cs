@@ -7,10 +7,19 @@ namespace HA
     public class PlayerManager : SingletonBase<PlayerManager>
     {
         public PlayerCharacter playerCharacter;
+        public int currency;
 
-        public override void Awake()
+        public bool CheckEnoughMoney(int price)
         {
-            playerCharacter = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerCharacter>();
+            if(price > currency)
+            {
+                Debug.Log("돈이 부족합니다");
+                return false;
+            }
+
+            currency -= price;
+            return true;
         }
+
     }
 }

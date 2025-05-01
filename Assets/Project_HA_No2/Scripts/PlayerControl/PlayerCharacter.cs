@@ -302,6 +302,9 @@ namespace HA
 
         public void CheckDashInput()
         {
+            if (skillManager.dashSkill.dashUnlocked == false)
+                return;
+
             if(Input.GetKeyDown(KeyCode.C) && skillManager.dashSkill.CanUseSkill())
             {
                 stateMachine.ChangeState(dashState);

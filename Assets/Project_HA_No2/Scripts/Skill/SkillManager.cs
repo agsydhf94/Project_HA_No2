@@ -6,27 +6,19 @@ namespace HA
 {
     public class SkillManager : SingletonBase<SkillManager>
     {
-        public DashSkill dashSkill { get; private set; }
-        public CloneSkill cloneSkill { get; private set; }
-        public BallThrowSkill ballThrowSkill { get; private set; }
-        public BlackHoleSkill blackHoleSkill { get; private set; }
-        public ElementSkill elementSkill { get; private set; }
-        public CounterAttackSkill counterAttackSkill { get; private set; }
-        public DodgeSkill dodgeSkill { get; private set; }
+        public DashSkill dashSkill;
+        public CloneSkill cloneSkill;
+        public BallThrowSkill ballThrowSkill;
+        public BlackHoleSkill blackHoleSkill;
+        public ElementSkill elementSkill;
+        public CounterAttackSkill counterAttackSkill;
+        public DodgeSkill dodgeSkill;
 
 
 
 
         private void Start()
         {
-            dashSkill = GetComponent<DashSkill>();
-            cloneSkill = GetComponent<CloneSkill>();
-            ballThrowSkill = GetComponent<BallThrowSkill>();
-            blackHoleSkill = GetComponent<BlackHoleSkill>();
-            elementSkill = GetComponent<ElementSkill>();
-            counterAttackSkill = GetComponent<CounterAttackSkill>();
-            dodgeSkill = GetComponent<DodgeSkill>();
-
             Initialize_BallthrowSkill();
         }
 

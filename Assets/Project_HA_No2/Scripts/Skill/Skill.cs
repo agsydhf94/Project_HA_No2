@@ -8,7 +8,7 @@ namespace HA
 {
     public class Skill : MonoBehaviour
     {
-        [SerializeField] protected float cooldown;
+        public float cooldown;
         protected float cooldownTimer;
 
         protected PlayerCharacter playerCharacter;

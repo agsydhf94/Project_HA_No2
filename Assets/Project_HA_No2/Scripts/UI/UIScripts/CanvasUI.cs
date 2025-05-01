@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HA
@@ -10,15 +8,23 @@ namespace HA
         [SerializeField] private GameObject skillTreeUI;
         [SerializeField] private GameObject craftUI;
         [SerializeField] private GameObject optionsUI;
+        [SerializeField] private GameObject inGameUI;
 
         public ItemToolTipUI itemToolTipUI;
         public StatToolTipUI statToolTipUI;
         public CraftWindowUI craftWindowUI;
         public SkillToolTipUI skillToolTipUI;
 
+        private void Awake()
+        {
+            // 스킬트리 슬롯에 이벤트를 등록하기 위해 존재
+            SwitchUITo(skillTreeUI);
+        }
+
         private void Start()
         {
             SwitchUI(null);
+            SwitchUITo(inGameUI);
 
             itemToolTipUI.gameObject.SetActive(false);
             statToolTipUI.gameObject.SetActive(false);
@@ -62,10 +68,23 @@ namespace HA
             if(menuUI != null && menuUI.activeSelf)
             {
                 menuUI.SetActive(false);
+                CheckForInGameUI();
+
                 return;
             }
 
             SwitchUI(menuUI);
+        }
+
+        private void CheckForInGameUI()
+        {
+            for(int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).gameObject.activeSelf)
+                    return;
+            }
+
+            SwitchUITo(inGameUI);
         }
     }
 }

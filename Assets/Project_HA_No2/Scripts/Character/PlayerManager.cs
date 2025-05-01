@@ -21,5 +21,7 @@ namespace HA
             return true;
         }
 
+        public int GetCurrentMoney() => currency;
+
     }
 }

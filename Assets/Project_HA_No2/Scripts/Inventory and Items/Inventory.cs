@@ -33,7 +33,7 @@ namespace HA
         [Header("Items information")]
         private float lastTimeUsedPotion;
         private float lastTimeUsedArmor;
-        private float potionCooldown;
+        public float potionCooldown;
         private float armorCooldown;
 
         private void Start()

@@ -94,6 +94,8 @@ namespace HA
         public TrailRenderer trailRenderer;
         #endregion
 
+        private Inventory inventory;
+
 
         protected override void Awake()
         {
@@ -103,6 +105,7 @@ namespace HA
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
             skillManager = SkillManager.Instance;
+            inventory = Inventory.Instance;
             detectTargetOnScreen = DetectTargetOnScreen.Instance;
             characterController = GetComponent<CharacterController>();
 
@@ -140,9 +143,9 @@ namespace HA
 
             CheckDashInput();
 
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Alpha8) && inventory.GetEquipment(EquipmentType.Potion) != null)
             {
-                Inventory.Instance.UsePotion();
+                inventory.UsePotion();
             }
         }
 

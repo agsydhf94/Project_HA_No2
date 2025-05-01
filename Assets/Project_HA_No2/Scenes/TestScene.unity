@@ -1318,7 +1318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 2
   dash_Unlock: {fileID: 148552181}
-  cloneAttack_Unlock: {fileID: 0}
+  cloneAttack_Unlock: {fileID: 888958564}
 --- !u!114 &88755530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1425,15 +1425,16 @@ MonoBehaviour:
   elementPrefab: {fileID: 5482492701479079410, guid: 30cc61457a64e0d4491686318320a4f2,
     type: 3}
   elementDuration: 1.4
-  cloneInsteadOfElement: 0
-  canMoveToEnemy: 0
-  moveSpeed: 10
-  canExplode: 0
+  element_Unlock: {fileID: 384462171}
+  cloneInstead_Unlock: {fileID: 572377147}
+  explodeElement_Unlock: {fileID: 1722828927}
   explodeRadius: 5
   explodeLayer:
     serializedVersion: 2
     m_Bits: 4194304
-  canUseMultiStacks: 0
+  movingElement_Unlock: {fileID: 1658405227}
+  moveSpeed: 10
+  stackingElement_Unlock: {fileID: 1189626042}
   amountOfStacks: 3
   multiStackCooldown: 4
   timeWindow: 2
@@ -5941,11 +5942,8 @@ MonoBehaviour:
   skillName: Element
   skillPrice: 0
   skillDescription: 
-  shouldBeUnlocked:
-  - {fileID: 1481593311}
-  shouldBeLocked:
-  - {fileID: 1537377188}
-  - {fileID: 1365929179}
+  shouldBeUnlocked: []
+  shouldBeLocked: []
   lockedSkillColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.79607844}
 --- !u!114 &384462172
 MonoBehaviour:
@@ -8544,7 +8542,7 @@ GameObject:
   - component: {fileID: 572377147}
   - component: {fileID: 572377146}
   m_Layer: 5
-  m_Name: SkillTreeUI + Element-Mirage
+  m_Name: SkillTreeUI + Element - Clone Instead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8625,15 +8623,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cdbac93a16a1e746995e8c4f530e0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocked: 0
-  skillName: Element-Mirage
+  unlocked: 1
+  skillName: Element - Clone Instead
   skillPrice: 0
   skillDescription: 
   shouldBeUnlocked:
-  - {fileID: 1481593311}
-  shouldBeLocked:
-  - {fileID: 1537377188}
-  - {fileID: 1365929179}
+  - {fileID: 384462171}
+  shouldBeLocked: []
   lockedSkillColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.79607844}
 --- !u!114 &572377148
 MonoBehaviour:
@@ -13959,7 +13955,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1066494530
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16040,7 +16036,7 @@ GameObject:
   - component: {fileID: 1189626042}
   - component: {fileID: 1189626041}
   m_Layer: 5
-  m_Name: SkillTreeUI + Element - Multiple Destruction
+  m_Name: SkillTreeUI + Element - Multiple Stacks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16122,14 +16118,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlocked: 0
-  skillName: Element - Multiple Destruction
+  skillName: Element - Multiple Stacks
   skillPrice: 0
   skillDescription: 
   shouldBeUnlocked:
-  - {fileID: 1481593311}
-  shouldBeLocked:
-  - {fileID: 1537377188}
-  - {fileID: 1365929179}
+  - {fileID: 1658405227}
+  shouldBeLocked: []
   lockedSkillColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.79607844}
 --- !u!114 &1189626043
 MonoBehaviour:
@@ -21579,7 +21573,7 @@ GameObject:
   - component: {fileID: 1658405227}
   - component: {fileID: 1658405226}
   m_Layer: 5
-  m_Name: SkillTreeUI + Element - Controlled Destruction
+  m_Name: SkillTreeUI + Element - Moving Element
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21661,14 +21655,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlocked: 0
-  skillName: Element - Controlled Destruction
+  skillName: Element - Moving Element
   skillPrice: 0
   skillDescription: 
   shouldBeUnlocked:
-  - {fileID: 1481593311}
-  shouldBeLocked:
-  - {fileID: 1537377188}
-  - {fileID: 1365929179}
+  - {fileID: 1722828927}
+  shouldBeLocked: []
   lockedSkillColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.79607844}
 --- !u!114 &1658405228
 MonoBehaviour:
@@ -22645,10 +22637,8 @@ MonoBehaviour:
   skillPrice: 0
   skillDescription: 
   shouldBeUnlocked:
-  - {fileID: 1481593311}
-  shouldBeLocked:
-  - {fileID: 1537377188}
-  - {fileID: 1365929179}
+  - {fileID: 384462171}
+  shouldBeLocked: []
   lockedSkillColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.79607844}
 --- !u!114 &1722828928
 MonoBehaviour:
@@ -25440,7 +25430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1913052664
 RectTransform:
   m_ObjectHideFlags: 0

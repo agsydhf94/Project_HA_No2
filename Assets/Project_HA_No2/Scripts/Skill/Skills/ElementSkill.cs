@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HA
 {
@@ -11,24 +13,88 @@ namespace HA
         private GameObject currentElement;
         private ElementSkillController currentController;
 
-        [Header("Mirage Element")]
-        [SerializeField] private bool cloneInsteadOfElement;
+        [Header("Element Simple")]
+        [SerializeField] private SkillTreeSlotUI element_Unlock;
+        public bool elementUnlocked { get; private set; }
 
-        [Header("Moving Element")]
-        [SerializeField] private bool canMoveToEnemy;
-        [SerializeField] private float moveSpeed;
+        [Header("Clone Instead Element")]
+        [SerializeField] private SkillTreeSlotUI cloneInstead_Unlock;
+        [SerializeField] public bool cloneInsteadUnlocked { get; private set; }
 
         [Header("Explosive Element")]
-        [SerializeField] private bool canExplode;
+        [SerializeField] private SkillTreeSlotUI explodeElement_Unlock;
+        [SerializeField] public bool canExplode { get; private set; }
         [SerializeField] private float explodeRadius;
         [SerializeField] private LayerMask explodeLayer;
 
+        [Header("Moving Element")]
+        [SerializeField] private SkillTreeSlotUI movingElement_Unlock;
+        [SerializeField] public bool canMoveToEnemy { get; private set; }
+        [SerializeField] private float moveSpeed;
+
         [Header("Element Stacking Informations")]
-        [SerializeField] private bool canUseMultiStacks;
+        [SerializeField] private SkillTreeSlotUI stackingElement_Unlock;
+        [SerializeField] public bool canUseMultiStacks { get; private set; }
         [SerializeField] private int amountOfStacks;
         [SerializeField] private float multiStackCooldown;
         [SerializeField] private float timeWindow;
         [SerializeField] private List<GameObject> elementsLeft = new List<GameObject>();
+
+
+        protected override void Start()
+        {
+            base.Start();
+
+            element_Unlock.GetComponent<Button>().onClick.AddListener(UnlockElement);
+            cloneInstead_Unlock.GetComponent<Button>().onClick.AddListener(UnlockCloneInsteadOfElement);
+            explodeElement_Unlock.GetComponent<Button>().onClick.AddListener(UnlockExplodeElement);
+            movingElement_Unlock.GetComponent<Button>().onClick.AddListener(UnlockMovingElement);
+            stackingElement_Unlock.GetComponent<Button>().onClick.AddListener(UnlockMultiStack);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            if (Input.GetKeyDown(KeyCode.E) && elementUnlocked)
+            {
+                CanUseSkill();
+            }
+        }
+
+        #region Unlock Skill
+        private void UnlockElement()
+        {
+            if (element_Unlock.unlocked)
+                elementUnlocked = true;
+        }
+
+        private void UnlockCloneInsteadOfElement()
+        {
+            if(cloneInstead_Unlock.unlocked)
+                cloneInsteadUnlocked = true;
+        }
+
+        private void UnlockExplodeElement()
+        {
+            if(explodeElement_Unlock.unlocked)
+                canExplode = true;
+        }
+
+        private void UnlockMovingElement()
+        {
+            if(movingElement_Unlock.unlocked)
+                canMoveToEnemy = true;
+        }
+
+        private void UnlockMultiStack()
+        {
+            if(stackingElement_Unlock.unlocked)
+                canUseMultiStacks = true;
+        }
+
+        #endregion
+
 
         public override bool CanUseSkill()
         {
@@ -66,7 +132,7 @@ namespace HA
                 playerCharacter.GetComponent<CharacterController>().enabled = true;
                 currentElement.transform.position = playerPosition;
 
-                if (cloneInsteadOfElement)
+                if (cloneInsteadUnlocked)
                 {
                     skillManager.cloneSkill.CreateClone(currentElement.transform, Vector3.zero);
                     Destroy(currentElement);
@@ -123,7 +189,7 @@ namespace HA
                     GameObject newElement = Instantiate(elementToSpawn, playerCharacter.transform.position, Quaternion.identity);
 
                     elementsLeft.Remove(elementToSpawn);
-                    var closestEnemy = FindClosestEnemy.GetClosestEnemy(currentElement.transform);
+                    var closestEnemy = FindClosestEnemy.GetClosestEnemy(newElement.transform);
                     newElement.GetComponent<ElementSkillController>().SetupElement(elementDuration, canExplode, canMoveToEnemy, moveSpeed, closestEnemy);
 
                     if(elementsLeft.Count <= 0)
@@ -152,19 +218,6 @@ namespace HA
             RestoreElement();
         }
 
-        protected override void Start()
-        {
-            base.Start();
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-
-            if(Input.GetKeyDown(KeyCode.E))
-            {
-                CanUseSkill(); 
-            }
-        }
+        
     }
 }

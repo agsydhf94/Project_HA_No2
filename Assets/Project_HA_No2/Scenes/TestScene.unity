@@ -1297,6 +1297,7 @@ GameObject:
   - component: {fileID: 88755534}
   - component: {fileID: 88755535}
   - component: {fileID: 88755536}
+  - component: {fileID: 88755537}
   m_Layer: 0
   m_Name: HA.SkillManager
   m_TagString: Untagged
@@ -1381,6 +1382,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
+  ballThrow_Unlock: {fileID: 1481593311}
+  ballThrowUnlocked: 0
   ballPrefab: {fileID: 926460389482130754, guid: 009d4883ba464484286b08854e7f61b6,
     type: 3}
   ballPosition: {fileID: 0}
@@ -1459,6 +1462,22 @@ MonoBehaviour:
   restore_Unlock: {fileID: 841011013}
   restoreHealthPercent: 0.345
   attackWithClones_Unlock: {fileID: 1612819921}
+--- !u!114 &88755537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88755528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed6b44a42e3b8e844b32d5c49915501b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  dodge_Unlock: {fileID: 1066494532}
+  evastionAmount: 0
+  clonedodge_Unlock: {fileID: 1913052666}
 --- !u!1 &99340463
 GameObject:
   m_ObjectHideFlags: 0
@@ -4435,7 +4454,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &255277934
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6721,7 +6740,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &454693910
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8331,7 +8350,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1168053006}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 30.00394
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -8623,7 +8642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cdbac93a16a1e746995e8c4f530e0ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlocked: 1
+  unlocked: 0
   skillName: Element - Clone Instead
   skillPrice: 0
   skillDescription: 
@@ -13950,12 +13969,12 @@ GameObject:
   - component: {fileID: 1066494532}
   - component: {fileID: 1066494531}
   m_Layer: 5
-  m_Name: SkillTreeUI + Element - Dodge
+  m_Name: SkillTreeUI + Dodge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1066494530
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14032,14 +14051,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlocked: 0
-  skillName: Element - Dodge
+  skillName: Dodge
   skillPrice: 0
   skillDescription: 
-  shouldBeUnlocked:
-  - {fileID: 1481593311}
-  shouldBeLocked:
-  - {fileID: 1537377188}
-  - {fileID: 1365929179}
+  shouldBeUnlocked: []
+  shouldBeLocked: []
   lockedSkillColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.79607844}
 --- !u!114 &1066494533
 MonoBehaviour:
@@ -15281,7 +15297,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1153838115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17015,7 +17031,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1365929179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19555,7 +19571,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1537377188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24392,7 +24408,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 30.00394
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -25425,12 +25441,12 @@ GameObject:
   - component: {fileID: 1913052666}
   - component: {fileID: 1913052665}
   m_Layer: 5
-  m_Name: SkillTreeUI + Element - Dodge Mirage
+  m_Name: SkillTreeUI + Dodge - Clone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1913052664
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25507,14 +25523,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlocked: 0
-  skillName: Element - Dodge Mirage
+  skillName: Dodge - Clone
   skillPrice: 0
   skillDescription: 
   shouldBeUnlocked:
-  - {fileID: 1481593311}
-  shouldBeLocked:
-  - {fileID: 1537377188}
-  - {fileID: 1365929179}
+  - {fileID: 1066494532}
+  shouldBeLocked: []
   lockedSkillColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 0.79607844}
 --- !u!114 &1913052667
 MonoBehaviour:

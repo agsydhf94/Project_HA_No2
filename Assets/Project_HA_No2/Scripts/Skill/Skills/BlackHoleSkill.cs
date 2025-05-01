@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HA
 {
     public class BlackHoleSkill : Skill
     {
+        [SerializeField] private SkillTreeSlotUI blackHole_Unlock;
+        public bool blackHoleUnlocked;
+
         [SerializeField] private int amountOfAttacks;
         [SerializeField] private float cloneCoolTime;
         [SerializeField] private float blackHoleDuration;
@@ -36,11 +40,21 @@ namespace HA
         protected override void Start()
         {
             base.Start();
+
+            blackHole_Unlock.GetComponent<Button>().onClick.AddListener(UnlockBlackHole);
         }
 
         protected override void Update()
         {
             base.Update();
+        }
+
+        private void UnlockBlackHole()
+        {
+            if(blackHole_Unlock.unlocked)
+            {
+                blackHoleUnlocked = true;
+            }
         }
 
         public bool BlackHoleFinished()

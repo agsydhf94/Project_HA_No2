@@ -19,6 +19,8 @@ namespace HA
         [SerializeField] private SkinnedMeshRenderer smr_Body;
         [SerializeField] private SkinnedMeshRenderer smr_Hair;
         [SerializeField] private float colorLoosingSpeed;
+
+        private float attackMultiplier;
         public bool duplicateBool;
         public float chanceToDuplicate;
 
@@ -47,7 +49,7 @@ namespace HA
             */
         }
 
-        public void SetUpClone(GameObject newClone, Transform initialPosition, Transform closestEnemy, float cloneDuration, bool canAttack, Vector3 offset, bool canDuplicate, float chanceOfDuplicate)
+        public void SetUpClone(GameObject newClone, Transform initialPosition, Transform closestEnemy, float cloneDuration, bool canAttack, Vector3 offset, bool canDuplicate, float chanceOfDuplicate, float _attackMultiplier)
         {
             if (canAttack)
             {
@@ -59,6 +61,7 @@ namespace HA
             duplicateBool = canDuplicate;
             chanceToDuplicate = chanceOfDuplicate;
             cloneTimer = cloneDuration;
+            attackMultiplier = _attackMultiplier;
             FaceClosestTarget();
         }
 
@@ -106,8 +109,16 @@ namespace HA
             {
                 if (collider.TryGetComponent(out IDamagable damagable))
                 {
-                    var target = collider.transform.GetComponent<CharacterStats>();
-                    playerCharacter.characterStats.DoDamage(target);
+                    var targetStat = collider.transform.GetComponent<CharacterStats>();
+                    var playerStat = playerCharacter.GetComponent<PlayerStat>();
+
+                    playerStat.CloneDoDamage(targetStat, attackMultiplier);
+
+                    if(playerCharacter.skillManager.cloneSkill.canApplyOnHitEffect)
+                    {
+                        EquipmentDataSO weaponDataSO = Inventory.Instance.GetEquipment(EquipmentType.Weapon);
+                        weaponDataSO?.PlayEffect(collider.transform);
+                    }
 
                     if(duplicateBool)
                     {

@@ -268,7 +268,12 @@ namespace HA
 
         #region Stat Calculation
 
-        private bool TargetCanAvoidAttack(CharacterStats targetStats)
+        public virtual void OnEvasion()
+        {
+
+        }
+
+        protected bool TargetCanAvoidAttack(CharacterStats targetStats)
         {
             int totalEvasion = targetStats.evasion.GetValue() + targetStats.agility.GetValue();
 
@@ -278,12 +283,13 @@ namespace HA
 
             if (UnityEngine.Random.Range(1, 100) < totalEvasion)
             {
-                Debug.Log("Attack Avoided");
+                // 공격 회피됨
+                targetStats.OnEvasion();
                 return true;
             }
             return false;
         }
-        private int CheckTargetArmor(CharacterStats targetStats, int totalDamage)
+        protected int CheckTargetArmor(CharacterStats targetStats, int totalDamage)
         {
             // 타겟이 얼면 타겟의 armor 성능이 20% 저하
             if(targetStats.isChilled)
@@ -302,7 +308,7 @@ namespace HA
             return totalMagicalDamage;
         }
 
-        private bool CanCritical()
+        protected bool CanCritical()
         {
             int totalCriticalChance = criticalChance.GetValue() + agility.GetValue();
 
@@ -312,7 +318,7 @@ namespace HA
             }
             return false;
         }
-        private int CalculateCriticalDamage(int damage)
+        protected int CalculateCriticalDamage(int damage)
         {
             float totalCriticalPower = (criticalPower.GetValue() + strength.GetValue()) * 0.01f;
 

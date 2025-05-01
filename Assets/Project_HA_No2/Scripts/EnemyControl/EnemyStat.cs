@@ -37,7 +37,7 @@ namespace HA
 
             Modify(fireDamage);
             Modify(iceDamage);
-            Modify(lightingDamage);
+            Modify(ShockDamage);
         }
 
         private void Modify(Stat stat)

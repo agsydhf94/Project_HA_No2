@@ -120,7 +120,7 @@ namespace HA
         // 아이템 픽업이나 추가할 때 이 메서드를 호출
         private void UpdateSlotUI()
         {
-            for(int i = 0; i < equipmentSlots.Length; i++)
+            for (int i = 0; i < equipmentSlots.Length; i++)
             {
                 foreach (KeyValuePair<EquipmentDataSO, InventoryItem> _item in equipmentDictionary)
                 {
@@ -131,27 +131,32 @@ namespace HA
                 }
             }
 
-            for(int i = 0; i < inventoryItemSlots.Length; i++)
+            for (int i = 0; i < inventoryItemSlots.Length; i++)
             {
                 inventoryItemSlots[i].CleanUpSlot();
             }
-            for(int i = 0; i < stashItemSlots.Length; i++)
+            for (int i = 0; i < stashItemSlots.Length; i++)
             {
                 stashItemSlots[i].CleanUpSlot();
             }
 
 
-            for(int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inventory.Count; i++)
             {
                 inventoryItemSlots[i].UpdateSlot(inventory[i]);
             }
 
-            for(int i = 0; i < stash.Count; i++)
+            for (int i = 0; i < stash.Count; i++)
             {
                 stashItemSlots[i].UpdateSlot(stash[i]);
             }
 
-            for(int i = 0; i < statSlots.Length; i++)
+            UptateStatUI();
+        }
+
+        public void UptateStatUI()
+        {
+            for (int i = 0; i < statSlots.Length; i++)
             {
                 statSlots[i].UpdateStatValueUI();
             }

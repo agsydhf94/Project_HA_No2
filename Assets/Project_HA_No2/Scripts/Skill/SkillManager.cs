@@ -12,6 +12,7 @@ namespace HA
         public BlackHoleSkill blackHoleSkill { get; private set; }
         public ElementSkill elementSkill { get; private set; }
         public CounterAttackSkill counterAttackSkill { get; private set; }
+        public DodgeSkill dodgeSkill { get; private set; }
 
 
 
@@ -24,6 +25,7 @@ namespace HA
             blackHoleSkill = GetComponent<BlackHoleSkill>();
             elementSkill = GetComponent<ElementSkill>();
             counterAttackSkill = GetComponent<CounterAttackSkill>();
+            dodgeSkill = GetComponent<DodgeSkill>();
 
             Initialize_BallthrowSkill();
         }

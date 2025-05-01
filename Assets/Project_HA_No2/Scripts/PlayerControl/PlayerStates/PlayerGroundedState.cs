@@ -21,12 +21,12 @@ namespace HA
         {
             base.UpdateState();
 
-            if(Input.GetKeyDown(KeyCode.Z))
+            if(Input.GetKeyDown(KeyCode.Z) && playerCharacter.skillManager.blackHoleSkill.blackHoleUnlocked)
             {
                 stateMachine.ChangeState(playerCharacter.blackHoleState);
             }
 
-            if(Input.GetKeyDown(KeyCode.Mouse1))
+            if(Input.GetKeyDown(KeyCode.Mouse1) && playerCharacter.skillManager.ballThrowSkill.ballThrowUnlocked)
             {
                 stateMachine.ChangeState(playerCharacter.aimBallState);
             }

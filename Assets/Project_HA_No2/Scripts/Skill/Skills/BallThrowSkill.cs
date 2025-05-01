@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace HA
@@ -11,6 +12,8 @@ namespace HA
     public class BallThrowSkill : Skill
     {
         [Header("Skill Information")]
+        [SerializeField] private SkillTreeSlotUI ballThrow_Unlock;
+        public bool ballThrowUnlocked;
         [SerializeField] private GameObject ballPrefab;
         [SerializeField] private Transform ballPosition;
         [SerializeField] private float throwSpeed = 15f; // 던지는 기본 속도
@@ -22,12 +25,25 @@ namespace HA
 
         private void Awake()
         {
-            ballPosition = GameObject.FindWithTag("BallPosition").transform;
+            ballPosition = GameObject.FindWithTag("BallPosition").transform;            
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            ballThrow_Unlock.GetComponent<Button>().onClick.AddListener(UnlockThrowBall);
         }
 
         public void InitializeSpawner(IObjectSpawner spawner)
         {
             this.objectSpawner = spawner;
+        }
+
+        public void UnlockThrowBall()
+        {
+            if (ballThrow_Unlock.unlocked)
+                ballThrowUnlocked = true;
         }
 
         public void CreateBall()

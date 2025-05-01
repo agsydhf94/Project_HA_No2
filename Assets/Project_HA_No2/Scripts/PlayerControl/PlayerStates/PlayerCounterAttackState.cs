@@ -30,10 +30,13 @@ namespace HA
                 stateTimer = 10f;
                 playerCharacter.characterAnimator.SetBool("SuccessfulCounterAttack", true);
 
+                // 체력 회복 부분
+                playerCharacter.skillManager.counterAttackSkill.RestoreHealth();
+
                 if(canCreateClone)
                 {
                     canCreateClone = false;
-                    playerCharacter.skillManager.cloneSkill.CreateCloneOnCounterAttack(stunnableEnemy.transform);
+                    playerCharacter.skillManager.counterAttackSkill.MakeCloneOnCounterAttack(stunnableEnemy.transform);
                 }
                 
             }

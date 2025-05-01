@@ -8,12 +8,12 @@ namespace HA
     public class DashSkill : Skill
     {
         [Header("Dash")]
-        public bool dashUnlocked;
         [SerializeField] private SkillTreeSlotUI dash_Unlock;
+        public bool dashUnlocked { get; private set; }
 
         [Header("Clone Dash")]
-        public bool cloneAttackUnlocked;
         [SerializeField] private SkillTreeSlotUI cloneAttack_Unlock;
+        public bool cloneAttackUnlocked { get; private set; }
 
         
 

@@ -11,6 +11,7 @@ namespace HA
         public BallThrowSkill ballThrowSkill { get; private set; }
         public BlackHoleSkill blackHoleSkill { get; private set; }
         public ElementSkill elementSkill { get; private set; }
+        public CounterAttackSkill counterAttackSkill { get; private set; }
 
 
 
@@ -22,6 +23,7 @@ namespace HA
             ballThrowSkill = GetComponent<BallThrowSkill>();
             blackHoleSkill = GetComponent<BlackHoleSkill>();
             elementSkill = GetComponent<ElementSkill>();
+            counterAttackSkill = GetComponent<CounterAttackSkill>();
 
             Initialize_BallthrowSkill();
         }

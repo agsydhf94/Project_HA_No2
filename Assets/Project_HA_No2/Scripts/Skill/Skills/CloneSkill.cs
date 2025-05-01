@@ -13,7 +13,6 @@ namespace HA
 
         [SerializeField] private bool createCloneDashStart;
         [SerializeField] private bool createCloneOnDashOver;
-        [SerializeField] private bool canCreateCloneOnCounterAttack;
         [SerializeField] public bool canDuplicateClone;
         [SerializeField] private float chanceOfDuplicate;
         [SerializeField] private bool canCreateElementInsteadOfClone;
@@ -47,15 +46,12 @@ namespace HA
 
         
 
-        public void CreateCloneOnCounterAttack(Transform enemyTransform)
+        public void CreateCloneWithDelay(Transform enemyTransform)
         {
-            if (canCreateCloneOnCounterAttack)
-            {
-                CreateCloneWithDelay(enemyTransform, new Vector3(0f, 0f, 4f)).Forget(); // 비동기 호출
-            }
+            CreateCloneWithDelay_Task(enemyTransform, new Vector3(0f, 0f, 4f)).Forget(); // 비동기 호출
         }
 
-        private async UniTask CreateCloneWithDelay(Transform transform, Vector3 offset)
+        private async UniTask CreateCloneWithDelay_Task(Transform transform, Vector3 offset)
         {
             await UniTask.Delay(400); // 밀리초 단위: 0.4초
             CreateClone(transform, offset);

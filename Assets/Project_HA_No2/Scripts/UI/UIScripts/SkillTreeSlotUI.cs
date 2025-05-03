@@ -13,7 +13,7 @@ namespace HA
         private CanvasUI canvasUI;
 
         [SerializeField] private string skillName;
-        [SerializeField] private int skillPrice;
+        [SerializeField] private int skillCost;
         [TextArea]
         [SerializeField] private string skillDescription;
 
@@ -43,7 +43,7 @@ namespace HA
 
         public void UnlockSkillSlot()
         {
-            if (PlayerManager.Instance.CheckEnoughMoney(skillPrice) == false)
+            if (PlayerManager.Instance.CheckEnoughMoney(skillCost) == false)
                 return;
 
             for(int i = 0; i < shouldBeUnlocked.Length; i++)
@@ -70,24 +70,7 @@ namespace HA
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            canvasUI.skillToolTipUI.ShowToolTip(skillDescription, skillName);
-
-            Vector2 mousePosition = Input.mousePosition;
-
-            float xOffset = 0f;
-            float yOffset = 0f;
-
-            if(mousePosition.x > 600f)
-                xOffset = -100f;
-            else
-                xOffset = 100f;
-
-            if (mousePosition.y > 600f)
-                yOffset = -60f;
-            else
-                yOffset = 60f;
-
-            canvasUI.skillToolTipUI.transform.position = new Vector2(mousePosition.x + xOffset, mousePosition.y + yOffset);
+            canvasUI.skillToolTipUI.ShowToolTip(skillDescription, skillName, skillCost);          
         }
 
         public void OnPointerExit(PointerEventData eventData)

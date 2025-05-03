@@ -5,13 +5,14 @@ using UnityEngine;
 
 namespace HA
 {
-    public class StatToolTipUI : MonoBehaviour
+    public class StatToolTipUI : ToolTipUI
     {
         [SerializeField] private TMP_Text statDescription;
 
         public void ShowStatToolTip(string _text)
         {
             statDescription.text = _text;
+            AdjustPosition();
 
             gameObject.SetActive(true);
         }

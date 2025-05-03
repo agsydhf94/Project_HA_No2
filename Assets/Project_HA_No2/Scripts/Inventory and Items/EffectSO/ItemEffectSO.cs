@@ -6,6 +6,9 @@ namespace HA
 {
     public class ItemEffectSO : ScriptableObject
     {
+        [TextArea]
+        public string effectDescription;
+
         public virtual void ExecuteEffect(Transform targetTransform)
         {
             Debug.Log("ÀÌÆåÆ® Àç»ýµÊ");

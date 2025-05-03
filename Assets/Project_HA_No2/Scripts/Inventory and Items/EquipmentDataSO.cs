@@ -19,9 +19,8 @@ namespace HA
 
         [Header("Unique Effect")]
         public float itemCoolDown;
-        public ItemEffectSO[] effects;
-        [TextArea]
-        public string itemEffectDescription;
+        public ItemEffectSO[] itemEffects;
+
 
         [Header("Main Stats")]
         public int strength;
@@ -99,7 +98,7 @@ namespace HA
 
         public void PlayEffect(Transform targetTransform)
         {
-            foreach(var vfx in effects)
+            foreach(var vfx in itemEffects)
             {
                 vfx.ExecuteEffect(targetTransform);
             }
@@ -128,6 +127,18 @@ namespace HA
             AddItemDescription(iceDamage, "Ice Damage");
             AddItemDescription(shockDamage, "Shock Damage");
 
+            sb.AppendLine();
+            sb.AppendLine();
+            for (int i = 0; i < itemEffects.Length; i++)
+            {
+                if (itemEffects[i].effectDescription.Length > 0)
+                {
+                    sb.AppendLine();
+                    sb.AppendLine("* " + itemEffects[i].effectDescription);
+                    sb.Append("");
+                }
+            }
+
             if(descriptionLength < 5)
             {
                 for(int i = 0; i < 5 - descriptionLength; i++)
@@ -137,12 +148,7 @@ namespace HA
                 }
             }
 
-            if(itemEffectDescription.Length > 0)
-            {
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.Append(itemEffectDescription);
-            }
+            
 
             return sb.ToString();
         }

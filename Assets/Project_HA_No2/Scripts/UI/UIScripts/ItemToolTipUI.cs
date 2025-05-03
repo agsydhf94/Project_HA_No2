@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 
 namespace HA
 {
-    public class ItemToolTipUI : MonoBehaviour
+    public class ItemToolTipUI : ToolTipUI
     {
         [SerializeField] private TMP_Text itemNameText;
         [SerializeField] private TMP_Text itemTypeText;
@@ -23,14 +23,8 @@ namespace HA
             itemTypeText.text = item.equipmentType.ToString();
             itemDescription.text = item.GetDescription();
 
-            if (itemNameText.text.Length > 12)
-            {
-                itemNameText.fontSize *= 0.7f;
-            }
-            else
-            {
-                itemNameText.fontSize = defaultFontSize;
-            }
+            AdjustFontSize(itemTypeText);
+            AdjustPosition();
 
             gameObject.SetActive(true);
         }

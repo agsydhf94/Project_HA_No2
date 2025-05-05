@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HA
 {
-    public class PlayerManager : SingletonBase<PlayerManager>
+    public class PlayerManager : SingletonBase<PlayerManager>, ISaveManager
     {
         public PlayerCharacter playerCharacter;
         public int currency;
@@ -23,5 +23,15 @@ namespace HA
 
         public int GetCurrentMoney() => currency;
 
+
+        public void LoadData(GameData _data)
+        {
+            this.currency = _data.currency;
+        }
+
+        public void SaveData(ref GameData _data)
+        {
+            _data.currency = this.currency;
+        }
     }
 }

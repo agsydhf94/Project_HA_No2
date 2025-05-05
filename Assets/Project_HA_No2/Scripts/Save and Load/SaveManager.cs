@@ -7,11 +7,15 @@ namespace HA
 {
     public class SaveManager : SingletonBase<SaveManager>
     {
+        [SerializeField] private string fileName;
+
         private GameData gameData;
         private List<ISaveManager> saveManagers;
+        private FileDataHandler dataHandler;
 
         private void Start()
         {
+            dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
             saveManagers = FindAllSaveManagers();
 
             LoadGame();
@@ -24,16 +28,17 @@ namespace HA
 
         public void LoadGame()
         {
+            gameData = dataHandler.Load();
+
             if(this.gameData == null)
             {
-                Debug.Log("No Game Data Found");
+                Debug.Log("No Data Found");
                 NewGame();
             }
 
             foreach(var saveManager in saveManagers)
             {
                 saveManager.LoadData(gameData);
-                Debug.Log("Game Data Loaded");
             }
         }
 
@@ -42,8 +47,9 @@ namespace HA
             foreach(var saveManager in saveManagers)
             {
                 saveManager.SaveData(ref gameData);
-                Debug.Log("Game Data Saved");
             }
+
+            dataHandler.Save(gameData);
         }
 
         private List<ISaveManager> FindAllSaveManagers()

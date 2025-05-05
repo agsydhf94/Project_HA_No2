@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HA
 {
     [System.Serializable]
-    public class GameData : MonoBehaviour
+    public class GameData
     {
         public int currency;
 

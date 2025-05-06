@@ -61,8 +61,17 @@ namespace HA
                 CanUseSkill();
             }
         }
-
         #region Unlock Skill
+
+        protected override void CheckUnlock()
+        {
+            UnlockElement();
+            UnlockCloneInsteadOfElement();
+            UnlockExplodeElement();
+            UnlockMovingElement();
+            UnlockMultiStack();
+        }
+
         private void UnlockElement()
         {
             if (element_Unlock.unlocked)

@@ -35,6 +35,11 @@ namespace HA
             ballThrow_Unlock.GetComponent<Button>().onClick.AddListener(UnlockThrowBall);
         }
 
+        protected override void CheckUnlock()
+        {
+            UnlockThrowBall();
+        }
+
         public void InitializeSpawner(IObjectSpawner spawner)
         {
             this.objectSpawner = spawner;
@@ -48,8 +53,6 @@ namespace HA
 
         public void CreateBall()
         {
-            //GameObject ball = Instantiate(ballPrefab, ballPosition.position, Quaternion.identity);
-
             var ball = objectSpawner.Spawn("skillBall", ballPosition.position, Quaternion.identity);
             ball.transform.SetParent(ballPosition);
             createdBall = ball.gameObject;

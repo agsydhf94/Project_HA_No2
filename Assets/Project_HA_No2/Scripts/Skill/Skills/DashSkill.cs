@@ -25,6 +25,13 @@ namespace HA
             cloneAttack_Unlock.GetComponent<Button>().onClick.AddListener(UnlockCloneAttack);            
         }
 
+        protected override void CheckUnlock()
+        {
+            UnlockDash();
+            UnlockCloneAttack();
+            CloneAttack();
+        }
+
         public override void UseSkill()
         {
             base.UseSkill();

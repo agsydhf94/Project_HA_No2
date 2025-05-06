@@ -24,9 +24,15 @@ namespace HA
             clonedodge_Unlock.GetComponent<Button>().onClick.AddListener(UnlockCloneDodge);
         }
 
+        protected override void CheckUnlock()
+        {
+            UnlockDodge();
+            UnlockCloneDodge();
+        }   
+
         private void UnlockDodge()
         {
-            if(dodge_Unlock.unlocked)
+            if(dodge_Unlock.unlocked && !dodgeUnlocked)
             {
                 playerCharacter.characterStats.evasion.AddModifier(evastionAmount);
                 Inventory.Instance.UptateStatUI();

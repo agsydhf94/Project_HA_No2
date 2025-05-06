@@ -35,6 +35,13 @@ namespace HA
             attackWithClones_Unlock.GetComponent<Button>().onClick.AddListener(UnlockAttackWithClones);
         }
 
+        protected override void CheckUnlock()
+        {
+            UnlockCounterAttack();
+            UnlockRestore();
+            UnlockAttackWithClones();
+        }
+
         private void UnlockCounterAttack()
         {
             if(counterAttack_Unlock.unlocked)

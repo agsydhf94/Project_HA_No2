@@ -49,6 +49,11 @@ namespace HA
             base.Update();
         }
 
+        protected override void CheckUnlock()
+        {
+            UnlockBlackHole();
+        }
+
         private void UnlockBlackHole()
         {
             if(blackHole_Unlock.unlocked)

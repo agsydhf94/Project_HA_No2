@@ -47,6 +47,14 @@ namespace HA
 
         #region Unlock Skill
 
+        protected override void CheckUnlock()
+        {
+            UnlockCloneAttack();
+            UnlockAggressiveClone();
+            UnlockMultiClone();
+            UnlockElementInsteadClone();
+        }
+
         private void UnlockCloneAttack()
         {
             if (cloneAttack_Unlock.unlocked)

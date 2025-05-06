@@ -18,11 +18,18 @@ namespace HA
         {
             playerCharacter = PlayerManager.Instance.playerCharacter;
             skillManager = SkillManager.Instance;
+
+            CheckUnlock();
         }
 
         protected virtual void Update()
         {
             cooldownTimer -= Time.deltaTime;
+        }
+
+        protected virtual void CheckUnlock()
+        {
+
         }
 
         public virtual bool CanUseSkill()

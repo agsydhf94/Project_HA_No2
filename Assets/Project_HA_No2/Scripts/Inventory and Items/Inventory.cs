@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 namespace HA
 {
-    public class Inventory : SingletonBase<Inventory>
+    public class Inventory : SingletonBase<Inventory>, ISaveManager
     {
-        public List<ItemDataSO> initialEquipment;
+        public List<ItemDataSO> initialItems;
 
         public List<InventoryItem> equipment;
         public Dictionary<EquipmentDataSO, InventoryItem> equipmentDictionary;
@@ -36,6 +37,10 @@ namespace HA
         public float potionCooldown;
         private float armorCooldown;
 
+        [Header("Data Base")]
+        public List<InventoryItem> loadedItems;
+        public List<EquipmentDataSO> loadedEquipments;
+
         private void Start()
         {            
             inventory = new List<InventoryItem>();
@@ -62,11 +67,29 @@ namespace HA
 
         private void InitializeItems()
         {
-            for (int i = 0; i < initialEquipment.Count; i++)
+            foreach (EquipmentDataSO equipment in loadedEquipments)
             {
-                if (initialEquipment[i] != null)
+                EquipEquipment(equipment);
+            }
+
+            if (loadedItems.Count > 0)
+            {
+                foreach(InventoryItem item in loadedItems)
                 {
-                    AddItem(initialEquipment[i]);
+                    for(int i = 0; i < item.stackSize; i++)
+                    {
+                        AddItem(item.itemDataSO);
+                    }
+                }
+
+                return;
+            }
+
+            for (int i = 0; i < initialItems.Count; i++)
+            {
+                if (initialItems[i] != null)
+                {
+                    AddItem(initialItems[i]);
                 }                
             }
         }
@@ -336,6 +359,70 @@ namespace HA
 
             Debug.Log("아머 쿨다운 중");
             return false;
+        }
+
+        public void LoadData(GameData _data)
+        {
+            foreach (KeyValuePair<string, int> pair in _data.inventory)
+            {
+                foreach(var item in GetItemDataBase())
+                {
+                    if(item != null && item.itemId == pair.Key)
+                    {
+                        InventoryItem itemToLoad = new InventoryItem(item);
+                        itemToLoad.stackSize = pair.Value;
+
+                        loadedItems.Add(itemToLoad);
+                    }
+                }
+            }
+
+            foreach(string loadedItemId in _data.equipmentId)
+            {
+                foreach(var item in GetItemDataBase())
+                {
+                    if(item != null && loadedItemId == item.itemId)
+                    {
+                        loadedEquipments.Add(item as EquipmentDataSO);
+                    }
+                }
+            }
+        }
+
+        public void SaveData(ref GameData _data)
+        {
+            _data.inventory.Clear();
+            _data.equipmentId.Clear();
+
+            foreach(KeyValuePair<ItemDataSO, InventoryItem> pair in inventoryDictionary)
+            {
+                _data.inventory.Add(pair.Key.itemId, pair.Value.stackSize);
+            }
+
+            foreach(KeyValuePair<ItemDataSO, InventoryItem> pair in stashDictionary)
+            {
+                _data.inventory.Add(pair.Key.itemId, pair.Value.stackSize);
+            }
+
+            foreach(KeyValuePair<EquipmentDataSO, InventoryItem> pair in equipmentDictionary)
+            {
+                _data.equipmentId.Add(pair.Key.itemId);
+            }
+        }
+
+        private List<ItemDataSO> GetItemDataBase()
+        {
+            List<ItemDataSO> itemDataBase = new List<ItemDataSO>();
+            string[] assetNames = AssetDatabase.FindAssets("", new[] { "Assets/Project_HA_No2/ScriptableObjects" });
+
+            foreach(string SOName in assetNames)
+            {
+                var SOPath = AssetDatabase.GUIDToAssetPath(SOName);
+                var itemData = AssetDatabase.LoadAssetAtPath<ItemDataSO>(SOPath);
+                itemDataBase.Add(itemData);
+            }
+
+            return itemDataBase;
         }
     }   
 }

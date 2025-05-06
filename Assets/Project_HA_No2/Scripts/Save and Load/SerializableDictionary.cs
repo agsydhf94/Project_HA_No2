@@ -15,27 +15,26 @@ namespace HA
             keys.Clear();
             values.Clear();
 
-           foreach(KeyValuePair<TKey, TValue> pair in this)
-           {
-               keys.Add(pair.Key);
-               values.Add(pair.Value);
-           }
+            foreach (KeyValuePair<TKey, TValue> pair in this)
+            {
+                keys.Add(pair.Key);
+                values.Add(pair.Value);
+            }
         }
 
         public void OnAfterDeserialize()
         {
             this.Clear();
 
-            if(keys.Count != values.Count)
+            if (keys.Count != values.Count)
             {
                 Debug.Log("keys and values are not equal size");
             }
 
-            for(int i = 0; i < keys.Count; i++)
+            for (int i = 0; i < keys.Count; i++)
             {
                 this.Add(keys[i], values[i]);
             }
         }
-        
     }
 }

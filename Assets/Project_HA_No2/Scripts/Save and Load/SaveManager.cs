@@ -58,6 +58,13 @@ namespace HA
             return new List<ISaveManager>(saveManagers);
         }
 
+        [ContextMenu("Delete Save File")]
+        private void DeleteSaveData()
+        {
+            dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+            dataHandler.DeleteData();
+        }
+
         private void OnApplicationQuit()
         {
             SaveGame();

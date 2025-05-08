@@ -1,9 +1,16 @@
+using System.Collections;
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace HA
 {
     public class CanvasUI : MonoBehaviour
     {
+        [Header("End Screen")]
+        [SerializeField] private FadeScreenUI fadeScreenUI;
+        [SerializeField] private GameObject endText;
+
+
         [SerializeField] private GameObject characterUI;
         [SerializeField] private GameObject skillTreeUI;
         [SerializeField] private GameObject craftUI;
@@ -24,7 +31,7 @@ namespace HA
         private void Start()
         {
             SwitchUI(null);
-            SwitchUITo(inGameUI);
+            //SwitchUITo(inGameUI);
 
             itemToolTipUI.gameObject.SetActive(false);
             statToolTipUI.gameObject.SetActive(false);
@@ -52,9 +59,13 @@ namespace HA
 
         public void SwitchUI(GameObject menu)
         {
+            
             for(int i = 0; i < transform.childCount; i++)
             {
-                transform.GetChild(i).gameObject.SetActive(false);
+                bool isFadeScreen = transform.GetChild(i).GetComponent<FadeScreenUI>() != null;
+
+                if (isFadeScreen == false)
+                    transform.GetChild(i).gameObject.SetActive(false);
             }
 
             if (menu != null)
@@ -68,7 +79,7 @@ namespace HA
             if(menuUI != null && menuUI.activeSelf)
             {
                 menuUI.SetActive(false);
-                CheckForInGameUI();
+                //CheckForInGameUI();
 
                 return;
             }
@@ -76,6 +87,20 @@ namespace HA
             SwitchUI(menuUI);
         }
 
+        public void SwitchOnEndScreen()
+        {
+            SwitchUITo(null);
+            fadeScreenUI.FadeOut();
+        }
+
+        IEnumerator EndScreenCorutine()
+        {
+            yield return new WaitForSeconds(1);
+
+            endText.SetActive(true);
+        }
+
+        /*
         private void CheckForInGameUI()
         {
             for(int i = 0; i < transform.childCount; i++)
@@ -86,5 +111,6 @@ namespace HA
 
             SwitchUITo(inGameUI);
         }
+        */
     }
 }

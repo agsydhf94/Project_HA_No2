@@ -86,7 +86,6 @@ namespace HA
         }
 
         
-
         public void RefreshSaveManagers()
         {
             saveManagers = FindAllSaveManagers();
@@ -97,6 +96,16 @@ namespace HA
         {
             dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
             dataHandler.DeleteData();
+        }
+
+        public bool HasSavedData()
+        {
+            if (dataHandler.Load() != null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void OnApplicationQuit()

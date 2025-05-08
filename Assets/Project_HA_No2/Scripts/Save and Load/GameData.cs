@@ -9,6 +9,9 @@ namespace HA
     {
         public int currency;
 
+        public List<string> passedCheckpointIDs;
+        public string lastCheckpointID;
+
         public SerializableDictionary<string, bool> skillTree;
         public SerializableDictionary<string, int> inventory;
         public List<string> equipmentId;
@@ -16,6 +19,10 @@ namespace HA
         public GameData()
         {
             this.currency = 0;
+
+            passedCheckpointIDs = new List<string>();
+            lastCheckpointID = null;
+
             skillTree = new SerializableDictionary<string, bool>();
             inventory = new SerializableDictionary<string, int>();
             equipmentId = new List<string>();

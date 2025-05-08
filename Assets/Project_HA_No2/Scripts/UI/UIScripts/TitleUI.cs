@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,11 @@ namespace HA
         {
             if(SaveManager.Instance.HasSavedData())
             {
-                StartCoroutine(LoadSceneWithFadeEffect(1.5f));
+                SaveManager.Instance.LoadGame();
+                GameData gameData = SaveManager.Instance.gameData;
+                string lastPassedCheckpointID = gameData.lastCheckpointID;
+
+                ContinueGameAsync(lastPassedCheckpointID).Forget();
             }
             else
             {
@@ -27,7 +32,8 @@ namespace HA
         public void NewGame()
         {
             SaveManager.Instance.DeleteSaveData();
-            StartCoroutine(LoadSceneWithFadeEffect(1.5f));
+            StartCoroutine(ChanceSceneWithFadeEffect(1.5f));
+            
         }
 
         public void ExitGame()
@@ -35,7 +41,7 @@ namespace HA
             Debug.Log("Exit Game");
         }
 
-        IEnumerator LoadSceneWithFadeEffect(float delay)
+        IEnumerator ChanceSceneWithFadeEffect(float delay)
         {
             fadeScreenUI.FadeOut();
 
@@ -43,5 +49,16 @@ namespace HA
 
             SceneManager.LoadScene(sceneName);
         }
+
+        private async UniTaskVoid ContinueGameAsync(string checkpointID)
+        {
+            // Fade-in or Loading UI 시작
+            fadeScreenUI.FadeOut(); // 예시
+
+            await UniTask.Delay(1);
+
+            await CheckPointLoader.PlacePlayerAtCheckpoint(checkpointID);
+        }
+
     }
 }

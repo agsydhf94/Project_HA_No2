@@ -20,6 +20,7 @@ namespace HA
         public PlayerDashState dashState { get; private set; }
         public PlayerArmedState armedState { get; private set; }
         public PlayerRifleArmedState rifleArmedState { get; private set; }
+        public PlayerRifleAimState rifleAimState { get; private set; }
         public PlayerPrimaryAttackState primaryAttackState { get; private set; }
         public PlayerCounterAttackState counterAttackState { get; private set; }
         public PlayerAimBallState aimBallState { get; private set; }
@@ -58,6 +59,12 @@ namespace HA
         public float subWalkingSpeedDelta;
         public float subRunningSpeedDelta;
 
+        #endregion
+
+        #region Player Shooting Values
+        [SerializeField] private LayerMask aimLayerMask;
+        public bool isAiming;
+        public GameObject debugObject;
         #endregion
 
         #region Multipliers
@@ -119,6 +126,7 @@ namespace HA
             dashState = new PlayerDashState(this, stateMachine, "Dash");
             armedState = new PlayerArmedState(this, stateMachine, "Armed");
             rifleArmedState = new PlayerRifleArmedState(this, stateMachine, "RifleArmed");
+            rifleAimState = new PlayerRifleAimState(this, stateMachine, "RifleAim");
             primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
             counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
             aimBallState = new PlayerAimBallState(this, stateMachine, "AimBall");
@@ -142,8 +150,8 @@ namespace HA
 
             stateMachine.currentState.UpdateState();
             
-            if(stateMachine.subState != null)
-                stateMachine.subState.UpdateState();
+            if(stateMachine.currentSubState != null)
+                stateMachine.currentSubState.UpdateState();
 
             CheckDashInput();
 
@@ -189,14 +197,14 @@ namespace HA
             {
                 movingSpeed += currentRunningSpeedDelta;
 
-                if (stateMachine.subState != null)
+                if (stateMachine.currentSubState != null)
                     movingSpeed += subRunningSpeedDelta;
             }
             else
             {
                 movingSpeed += currentWalkingSpeedDelta;
 
-                if (stateMachine.subState != null)
+                if (stateMachine.currentSubState != null)
                     movingSpeed += subWalkingSpeedDelta;
             }
             runningBlend = Mathf.Lerp(runningBlend, IsRun ? 1f : 0f, Time.deltaTime * 10f);
@@ -390,6 +398,28 @@ namespace HA
         {
             inputSystem.OnClickRightMouseButtonDown -= cameraSystem.ZoomInToAim;
             inputSystem.OnClickRightMouseButtonUp -= cameraSystem.ZoomOutToDefault;
+        }
+
+        public void SetShootingPosition()
+        {
+            Vector3 mouseWorldPosition = Vector3.zero;
+            Vector2 screenCenterPoint = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+            Ray ray = mainCamera.ScreenPointToRay(screenCenterPoint);
+            if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, aimLayerMask))
+            {
+                debugObject.transform.position = raycastHit.point;
+                mouseWorldPosition = raycastHit.point;
+            }
+
+            if(isAiming)
+            {
+                Vector3 worldAimTarget = mouseWorldPosition;
+                worldAimTarget.y = transform.position.y;
+                Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
+
+                transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 22f);
+            }
         }
 
         #endregion

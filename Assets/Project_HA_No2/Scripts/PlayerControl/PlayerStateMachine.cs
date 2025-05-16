@@ -7,13 +7,13 @@ namespace HA
     public class PlayerStateMachine
     {
         public PlayerState currentState { get; private set; }
-        public PlayerState subState { get; private set; }   
+        public PlayerState currentSubState { get; private set; }   
 
         public void Initialize(PlayerState startState)
         {
             currentState = startState;
             currentState.EnterState();
-            subState = null;
+            currentSubState = null;
         }
 
         public void ChangeState(PlayerState newState)
@@ -23,19 +23,26 @@ namespace HA
             currentState.EnterState();
         }
 
+        public void ChangeSubState(PlayerState newSubState)
+        {
+            currentSubState.ExitState();
+            currentSubState = newSubState;
+            currentSubState.EnterState();
+        }
+
         public void SubState_On(PlayerState state)
         {
-            if(subState != null)
-                subState.ExitState();
+            if(currentSubState != null)
+                currentSubState.ExitState();
 
-            subState = state;
-            subState.EnterState();
+            currentSubState = state;
+            currentSubState.EnterState();
         }
 
         public void SubState_Off()
         {
-            subState.ExitState();
-            subState = null;
+            currentSubState.ExitState();
+            currentSubState = null;
         }
     }
 }

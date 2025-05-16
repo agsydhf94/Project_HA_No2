@@ -12,10 +12,26 @@ namespace HA
         Potion
     }
 
+    
+
     [CreateAssetMenu(fileName = "EquipmentData", menuName = "DataSO/Equipment")]
     public class EquipmentDataSO : ItemDataSO
     {
         public EquipmentType equipmentType;
+
+        [System.Serializable]
+        public class PartEntry
+        {
+            public string partSlotName;
+            public GameObject partPrefab;
+            public string attachBoneName;
+
+            public Vector3 localPosition;
+            public Vector3 localRotation;
+            public Vector3 localScale;
+        }
+        // Equipment Prefab
+        public List<PartEntry> parts = new();
 
         [Header("Unique Effect")]
         public float itemCoolDown;

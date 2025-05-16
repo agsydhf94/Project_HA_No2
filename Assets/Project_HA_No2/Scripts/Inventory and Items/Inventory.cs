@@ -8,6 +8,8 @@ namespace HA
 {
     public class Inventory : SingletonBase<Inventory>, ISaveManager
     {
+        private EquipmentPrefabManager equipmentPrefabManager;
+
         public List<ItemDataSO> initialItems;
 
         public List<InventoryItem> equipment;
@@ -42,7 +44,9 @@ namespace HA
         public List<EquipmentDataSO> loadedEquipments;
 
         private void Start()
-        {            
+        {
+            equipmentPrefabManager = FindAnyObjectByType<EquipmentPrefabManager>();
+
             inventory = new List<InventoryItem>();
             inventoryDictionary = new Dictionary<ItemDataSO, InventoryItem>();
 
@@ -114,6 +118,12 @@ namespace HA
                 // 이미 장착된 장비(oldEquipment)가 있으면 Equipment 창에선 사라져야하고
                 UnEquipEquipment(oldEquipment);
 
+                // 그리고 들고 있던 프리팹도 없애야 한다
+                foreach(var part in oldEquipment.parts)
+                {
+                    equipmentPrefabManager.UnequipPart(part);
+                }
+
                 // 해당 장비는 새로 장착될 무기에 의해 다시 인벤토리로 돌아가야 한다.
                 AddItem(oldEquipment);
             }
@@ -125,6 +135,11 @@ namespace HA
             equipmentDictionary.Add(newEquipment, newItem);
             newEquipment.AddModifiers();
 
+            foreach(var part in newEquipment.parts)
+            {
+                equipmentPrefabManager.EquipPart(part);
+            }
+
             RemoveItem(item);
 
             UpdateSlotUI();
@@ -134,6 +149,11 @@ namespace HA
         {
             if (equipmentDictionary.TryGetValue(itemToRemove, out InventoryItem value))
             {
+                foreach (var part in itemToRemove.parts)
+                {
+                    equipmentPrefabManager.UnequipPart(part);
+                }
+
                 equipment.Remove(value);
                 equipmentDictionary.Remove(itemToRemove);
                 itemToRemove.RemoveModifiers();
@@ -393,9 +413,12 @@ namespace HA
         {
             _data.inventory.Clear();
             _data.equipmentId.Clear();
+            
 
             foreach(KeyValuePair<ItemDataSO, InventoryItem> pair in inventoryDictionary)
             {
+                Debug.Log("Saving inventory...");
+                Debug.Log($"Inventory count: {inventoryDictionary.Count}");
                 _data.inventory.Add(pair.Key.itemId, pair.Value.stackSize);
             }
 

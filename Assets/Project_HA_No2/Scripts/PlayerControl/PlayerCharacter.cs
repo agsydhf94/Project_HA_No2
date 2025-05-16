@@ -19,6 +19,7 @@ namespace HA
         public PlayerAirState airState { get; private set; }
         public PlayerDashState dashState { get; private set; }
         public PlayerArmedState armedState { get; private set; }
+        public PlayerRifleArmedState rifleArmedState { get; private set; }
         public PlayerPrimaryAttackState primaryAttackState { get; private set; }
         public PlayerCounterAttackState counterAttackState { get; private set; }
         public PlayerAimBallState aimBallState { get; private set; }
@@ -29,8 +30,8 @@ namespace HA
 
 
         #region Player Character Camera
-        [Header("Player Character Camera")]
-        public InputSystem inputSystem;
+        [Header("Player Character Camera")]       
+        public CameraSystem cameraSystem;
         public Camera mainCamera;
         public Transform cameraPivot;
         public float bottomClamp = -90f;
@@ -95,6 +96,7 @@ namespace HA
         #endregion
 
         private Inventory inventory;
+        public InputSystem inputSystem;
 
 
         protected override void Awake()
@@ -102,6 +104,7 @@ namespace HA
             base.Awake();
             trailRenderer = GetComponent<TrailRenderer>();
             inputSystem = InputSystem.Instance;
+            cameraSystem = CameraSystem.Instance;
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
             skillManager = SkillManager.Instance;
@@ -115,6 +118,7 @@ namespace HA
             airState = new PlayerAirState(this, stateMachine, "Air");
             dashState = new PlayerDashState(this, stateMachine, "Dash");
             armedState = new PlayerArmedState(this, stateMachine, "Armed");
+            rifleArmedState = new PlayerRifleArmedState(this, stateMachine, "RifleArmed");
             primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
             counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
             aimBallState = new PlayerAimBallState(this, stateMachine, "AimBall");
@@ -327,6 +331,16 @@ namespace HA
             stateMachine.SubState_Off();
             characterAnimator.SetTrigger("UnArmedTrigger");
         }
+
+        public void CharacterRifleArmed()
+        {
+            stateMachine.SubState_On(rifleArmedState);
+        }
+
+        public void CharacterRifleUnArmed()
+        {
+            stateMachine.SubState_Off();
+        }
         #endregion
 
         #region Character Life Related
@@ -363,6 +377,21 @@ namespace HA
         {
             stateMachine.ChangeState(idleState);
         }
+        #endregion
+
+        #region Character Shooting Logic
+        public void SetAimInput()
+        {
+            inputSystem.OnClickRightMouseButtonDown += cameraSystem.ZoomInToAim;
+            inputSystem.OnClickRightMouseButtonUp += cameraSystem.ZoomOutToDefault;
+        }
+
+        public void RemoveAimInput()
+        {
+            inputSystem.OnClickRightMouseButtonDown -= cameraSystem.ZoomInToAim;
+            inputSystem.OnClickRightMouseButtonUp -= cameraSystem.ZoomOutToDefault;
+        }
+
         #endregion
 
         #region Trail Renderer System

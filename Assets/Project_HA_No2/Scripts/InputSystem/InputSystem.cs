@@ -18,6 +18,8 @@ namespace HA
         public System.Action OnClickSpace;
         public System.Action OnClickLeftMouseButtonDown;
         public System.Action OnClickLeftMouseButtonUp;
+        public System.Action OnClickRightMouseButtonDown;
+        public System.Action OnClickRightMouseButtonUp;
 
         public System.Action OnClickInteract;
         public System.Action<float> OnMouseScrollWheel;
@@ -49,6 +51,16 @@ namespace HA
             if (Input.GetMouseButtonUp(0))
             {
                 OnClickLeftMouseButtonUp?.Invoke();
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                OnClickRightMouseButtonDown?.Invoke();
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                OnClickRightMouseButtonUp?.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Space))

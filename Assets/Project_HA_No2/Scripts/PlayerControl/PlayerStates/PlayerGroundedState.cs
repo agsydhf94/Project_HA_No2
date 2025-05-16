@@ -41,6 +41,11 @@ namespace HA
                 playerCharacter.CharacterArmed();
             }
 
+            if(Input.GetKeyDown(KeyCode.H))
+            {
+                playerCharacter.CharacterRifleArmed();
+            }
+
             if(Input.GetKeyDown(KeyCode.Q) && playerCharacter.skillManager.counterAttackSkill.counterAttackUnlocked)
             {
                 stateMachine.ChangeState(playerCharacter.counterAttackState);

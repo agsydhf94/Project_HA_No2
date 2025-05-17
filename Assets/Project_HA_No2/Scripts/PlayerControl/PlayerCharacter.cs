@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
+using UnityEngine.Animations.Rigging;
 
 namespace HA
 {
@@ -19,8 +14,8 @@ namespace HA
         public PlayerAirState airState { get; private set; }
         public PlayerDashState dashState { get; private set; }
         public PlayerArmedState armedState { get; private set; }
+        public PlayerReloadState reloadState { get; private set; }
         public PlayerRifleArmedState rifleArmedState { get; private set; }
-        public PlayerRifleAimState rifleAimState { get; private set; }
         public PlayerPrimaryAttackState primaryAttackState { get; private set; }
         public PlayerCounterAttackState counterAttackState { get; private set; }
         public PlayerAimBallState aimBallState { get; private set; }
@@ -67,6 +62,10 @@ namespace HA
         public GameObject debugObject;
         #endregion
 
+        #region Player Rigging
+        public RigBuilder rigBuilder;
+        #endregion
+
         #region Multipliers
         [Header("Multipliers")]
         public float moveSpeedMultiplier;
@@ -79,6 +78,7 @@ namespace HA
 
         #region Player Attack
         public float counterAttackDuration;
+        public Vector3 mouseWorldPosition;
         #endregion
 
         #region Player Jump
@@ -104,13 +104,16 @@ namespace HA
 
         private Inventory inventory;
         public InputSystem inputSystem;
+        public WeaponHandler weaponHandler;
 
 
         protected override void Awake()
         {
             base.Awake();
+            rigBuilder = GetComponent<RigBuilder>();
             trailRenderer = GetComponent<TrailRenderer>();
             inputSystem = InputSystem.Instance;
+            weaponHandler = GetComponent<WeaponHandler>();
             cameraSystem = CameraSystem.Instance;
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
@@ -125,8 +128,8 @@ namespace HA
             airState = new PlayerAirState(this, stateMachine, "Air");
             dashState = new PlayerDashState(this, stateMachine, "Dash");
             armedState = new PlayerArmedState(this, stateMachine, "Armed");
+            reloadState = new PlayerReloadState(this, stateMachine, "Reload");
             rifleArmedState = new PlayerRifleArmedState(this, stateMachine, "RifleArmed");
-            rifleAimState = new PlayerRifleAimState(this, stateMachine, "RifleAim");
             primaryAttackState = new PlayerPrimaryAttackState(this, stateMachine, "Attack");
             counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
             aimBallState = new PlayerAimBallState(this, stateMachine, "AimBall");
@@ -378,6 +381,7 @@ namespace HA
 
         #region Animation Control
         public void AnimationFinishTrigger() => stateMachine.currentState.AnimationFinishTrigger();
+        public void AnimationFinishTrigger_Sub() => stateMachine.currentSubState.AnimationFinishTrigger();
         #endregion
 
         #region Character State Control
@@ -420,6 +424,8 @@ namespace HA
 
                 transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 22f);
             }
+
+            this.mouseWorldPosition = mouseWorldPosition;
         }
 
         #endregion

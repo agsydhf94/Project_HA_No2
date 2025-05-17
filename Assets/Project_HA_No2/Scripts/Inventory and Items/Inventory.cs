@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -8,6 +7,7 @@ namespace HA
 {
     public class Inventory : SingletonBase<Inventory>, ISaveManager
     {
+        private PlayerManager playerManager;
         private EquipmentPrefabManager equipmentPrefabManager;
 
         public List<ItemDataSO> initialItems;
@@ -45,6 +45,7 @@ namespace HA
 
         private void Start()
         {
+            playerManager = PlayerManager.Instance;
             equipmentPrefabManager = FindAnyObjectByType<EquipmentPrefabManager>();
 
             inventory = new List<InventoryItem>();
@@ -118,11 +119,14 @@ namespace HA
                 // 이미 장착된 장비(oldEquipment)가 있으면 Equipment 창에선 사라져야하고
                 UnEquipEquipment(oldEquipment);
 
-                // 그리고 들고 있던 프리팹도 없애야 한다
-                foreach(var part in oldEquipment.parts)
+                if(oldEquipment.equipmentType == EquipmentType.Weapon)
                 {
-                    equipmentPrefabManager.UnequipPart(part);
-                }
+                    // 그리고 들고 있던 프리팹도 없애야 한다
+                    foreach (var part in oldEquipment.parts)
+                    {
+                        equipmentPrefabManager.UnequipPart(part);
+                    }
+                }                
 
                 // 해당 장비는 새로 장착될 무기에 의해 다시 인벤토리로 돌아가야 한다.
                 AddItem(oldEquipment);
@@ -135,10 +139,21 @@ namespace HA
             equipmentDictionary.Add(newEquipment, newItem);
             newEquipment.AddModifiers();
 
-            foreach(var part in newEquipment.parts)
+            if(newEquipment.equipmentType == EquipmentType.Weapon)
             {
-                equipmentPrefabManager.EquipPart(part);
+                foreach (var part in newEquipment.parts)
+                {
+                    equipmentPrefabManager.EquipPart(part);
+                }
+
+                // 무기 인터페이스 획득
+                IWeapon weapon = GameObject.FindGameObjectWithTag(newEquipment.weaponType.ToString()).GetComponent<IWeapon>();
+                weapon.InitializeWeaponData(newEquipment.TransferWeaponData());
+
+                // WeaponHandler에 등록
+                playerManager.playerCharacter.weaponHandler.SetWeapon(weapon);
             }
+            
 
             RemoveItem(item);
 
@@ -149,10 +164,14 @@ namespace HA
         {
             if (equipmentDictionary.TryGetValue(itemToRemove, out InventoryItem value))
             {
-                foreach (var part in itemToRemove.parts)
+
+                if(itemToRemove.equipmentType == EquipmentType.Weapon)
                 {
-                    equipmentPrefabManager.UnequipPart(part);
-                }
+                    foreach (var part in itemToRemove.parts)
+                    {
+                        equipmentPrefabManager.UnequipPart(part);
+                    }
+                }                
 
                 equipment.Remove(value);
                 equipmentDictionary.Remove(itemToRemove);

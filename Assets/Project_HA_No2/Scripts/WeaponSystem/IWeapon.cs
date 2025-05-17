@@ -6,8 +6,7 @@ namespace HA
 {
     public interface IWeapon
     {
-        void Equip(Transform hand);
-        void Use();
-        bool IsUsable();
+        public void InitializeWeaponData(WeaponData data);
+        public void Attack();
     }
 }

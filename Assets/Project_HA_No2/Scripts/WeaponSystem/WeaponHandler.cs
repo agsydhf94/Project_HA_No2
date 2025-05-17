@@ -1,20 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HA
 {
-    public abstract class WeaponHandler : MonoBehaviour
+    public class WeaponHandler : MonoBehaviour
     {
-        protected WeaponDataSO weaponData;
+        private IWeapon currentWeapon;
 
-        public virtual void SetWeapon(WeaponDataSO data)
+        public void SetWeapon(IWeapon weapon)
         {
-            weaponData = data;
+            currentWeapon = weapon;
         }
 
-        public abstract void Use();
-        public abstract void Reload();
+        public void TriggerAttack()
+        {
+            currentWeapon?.Attack();
+        }
+
+        public void TriggerReload()
+        {
+            if (currentWeapon is IReloadeable reloadable)
+                reloadable.Reload();
+        }
     }
 }
 

@@ -11,12 +11,19 @@ namespace HA
         {
         }
 
+        private float holdRifleTimer = 0.6f;
+        private bool isReload;
+
         public override void EnterState()
         {
             base.EnterState();
 
+            stateTimer = holdRifleTimer;
+            isReload = false;
+
+            playerCharacter.rigBuilder.layers[0].rig.weight = 1f;
+
             playerCharacter.characterAnimator.SetTrigger("RifleArmedTrigger");
-            playerCharacter.characterAnimator.SetBool("StillRifleArmed", true);
 
             playerCharacter.SetAimInput();
 
@@ -26,16 +33,35 @@ namespace HA
         public override void UpdateState()
         {
             playerCharacter.SetShootingPosition();
-            Debug.Log("ArmedState Ω««‡¡ﬂ");
 
-            if(Input.GetMouseButtonDown(1))
+
+            if (Input.GetMouseButton(1))
             {
-                stateMachine.ChangeSubState(playerCharacter.rifleAimState);
+                playerCharacter.characterAnimator.SetBool("RifleAim", true);
+                playerCharacter.isAiming = true;
+                Debug.Log("Rifle Aiming");
             }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                playerCharacter.characterAnimator.SetBool("RifleAim", false);
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                playerCharacter.weaponHandler.TriggerAttack();
+                stateTimer = holdRifleTimer;
+            }            
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                isReload = true;                
+                stateMachine.ChangeSubState(playerCharacter.reloadState);
+            }
+                
 
             if (Input.GetKeyDown(KeyCode.G))
             {
-                playerCharacter.characterAnimator.SetBool("StillRifleArmed", false);
                 playerCharacter.RemoveAimInput();
                 playerCharacter.CharacterUnArmed();
             }
@@ -43,7 +69,10 @@ namespace HA
 
         public override void ExitState()
         {
-            base.ExitState();     
+            if(isReload == false)
+                base.ExitState();
+
+            playerCharacter.rigBuilder.layers[0].rig.weight = 0f;
         }
 
     }

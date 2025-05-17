@@ -18,9 +18,14 @@ namespace HA
             inventory = Inventory.Instance;
         }
 
-        private void AnimationTrigger()
+        public void AnimationTrigger()
         {
             playerCharacter.AnimationFinishTrigger();
+        }
+
+        public void AnimationTrigger_Sub()
+        {
+            playerCharacter.AnimationFinishTrigger_Sub();
         }
 
         private void AttackTrigger()

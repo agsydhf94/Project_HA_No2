@@ -22,6 +22,8 @@ namespace HA
         public float unArmed_RunningDelta;
         public float armed_WalkingDelta;
         public float armed_RunningDelta;
+        public float rifleArmed_WalkingDelta;
+        public float rifleArmed_RunningDelta;
         [HideInInspector] public float unitSpeed;
         [HideInInspector] public float horizontal;
         [HideInInspector] public float vertical;

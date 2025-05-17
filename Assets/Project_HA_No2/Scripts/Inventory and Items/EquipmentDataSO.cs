@@ -12,12 +12,31 @@ namespace HA
         Potion
     }
 
-    
+    public enum WeaponType
+    {
+        Sword,
+        Rifle,
+        HandGun,
+        Grenade,
+        NonWeapon,
+    }
+
+    public struct WeaponData
+    {
+        // Rifle
+        public float _fireRate;
+        public int _magazineCurrent;
+        public int _magazineCapacity;
+
+        // Grenade
+        public float _explosionRadius;
+    }
 
     [CreateAssetMenu(fileName = "EquipmentData", menuName = "DataSO/Equipment")]
     public class EquipmentDataSO : ItemDataSO
     {
         public EquipmentType equipmentType;
+        public WeaponType weaponType;
 
         [System.Serializable]
         public class PartEntry
@@ -32,6 +51,16 @@ namespace HA
         }
         // Equipment Prefab
         public List<PartEntry> parts = new();
+
+        
+
+        [Header("WeaponData - Rifle")]
+        public float fireRate;
+        public int magazine_Current;
+        public int magazine_Capacity;
+
+        [Header("WeaponData - Grenade")]
+        public float explosionRadius;
 
         [Header("Unique Effect")]
         public float itemCoolDown;
@@ -184,6 +213,19 @@ namespace HA
 
                 descriptionLength++;
             }
+        }
+
+        public WeaponData TransferWeaponData()
+        {
+            WeaponData data = new WeaponData();
+
+            data._fireRate = fireRate;
+            data._magazineCurrent = magazine_Current;
+            data._magazineCapacity = magazine_Capacity;
+
+            data._explosionRadius = explosionRadius;
+
+            return data;
         }
     }
 }

@@ -4,28 +4,26 @@ using UnityEngine;
 
 namespace HA
 {
-    public class PlayerRifleAimState : PlayerState
+    public class PlayerReloadState : PlayerState
     {
-        public PlayerRifleAimState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName) : base(playerCharacter, stateMachine, animationBoolName)
+        public PlayerReloadState(PlayerCharacter playerCharacter, PlayerStateMachine stateMachine, string animationBoolName) : base(playerCharacter, stateMachine, animationBoolName)
         {
         }
 
         public override void EnterState()
         {
             base.EnterState();
-
-            playerCharacter.isAiming = true;
         }
 
         public override void UpdateState()
         {
             base.UpdateState();
 
-            playerCharacter.SetShootingPosition();
-            Debug.Log("AimState Ω««‡¡ﬂ");
+            Debug.Log("RELOADING");
 
-            if (Input.GetMouseButtonUp(1))
+            if(triggerCalled)
             {
+                playerCharacter.weaponHandler.TriggerReload();
                 stateMachine.ChangeSubState(playerCharacter.rifleArmedState);
             }
         }
@@ -33,10 +31,7 @@ namespace HA
         public override void ExitState()
         {
             base.ExitState();
-
-            playerCharacter.isAiming = false;
-        }
-
-        
+            Debug.Log("Reload Complete");
+        }        
     }
 }

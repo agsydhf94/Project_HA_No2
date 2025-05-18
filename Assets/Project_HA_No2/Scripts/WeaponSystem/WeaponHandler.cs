@@ -5,11 +5,20 @@ namespace HA
     public class WeaponHandler : MonoBehaviour
     {
         private IWeapon currentWeapon;
+        private GunViewModel gunViewModel = new GunViewModel();
 
-        public void SetWeapon(IWeapon weapon)
+        public void SetWeapon(IWeapon weapon, WeaponMetaData meta)
         {
             currentWeapon = weapon;
+
+            gunViewModel.SetMeta(meta);
+
+            if (weapon is RifleWeapon rifle)
+                gunViewModel.SetBullet(rifle.TransferBulletData());
         }
+
+        public GunViewModel GetViewModel() => gunViewModel;
+
 
         public void TriggerAttack()
         {
@@ -20,6 +29,11 @@ namespace HA
         {
             if (currentWeapon is IReloadeable reloadable)
                 reloadable.Reload();
+        }
+
+        public void NotifyAmmoChanged(RifleWeapon rifle)
+        {
+            gunViewModel.SetBullet(rifle.TransferBulletData());
         }
     }
 }

@@ -28,6 +28,9 @@ namespace HA
         [SerializeField] private Transform equipmentSlotParent;
         [SerializeField] private Transform statSlotParent;
 
+        [Header("Weapon Info UI")]
+        [SerializeField] private WeaponInfoUI weaponInfoUI;
+
         private ItemSlotUI[] inventoryItemSlots;
         private ItemSlotUI[] stashItemSlots;
         private EquipmentSlotUI[] equipmentSlots;
@@ -150,8 +153,14 @@ namespace HA
                 IWeapon weapon = GameObject.FindGameObjectWithTag(newEquipment.weaponType.ToString()).GetComponent<IWeapon>();
                 weapon.InitializeWeaponData(newEquipment.TransferWeaponData());
 
-                // WeaponHandler에 등록
-                playerManager.playerCharacter.weaponHandler.SetWeapon(weapon);
+                // WeaponMetaData 생성
+                WeaponMetaData meta = newEquipment.TransferWeaponMetaData();
+
+                // WeaponHandler에 등록 (weapon + meta)
+                var weaponHandler = playerManager.playerCharacter.weaponHandler;
+                weaponHandler.SetWeapon(weapon, meta);
+
+                weaponInfoUI.Bind(playerManager.playerCharacter.weaponHandler.GetViewModel());
             }
             
 

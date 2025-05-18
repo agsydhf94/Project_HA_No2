@@ -21,15 +21,29 @@ namespace HA
         NonWeapon,
     }
 
+    public struct WeaponMetaData
+    {
+        public string _weaponName;
+        public Sprite _weaponIcon;
+        public WeaponType _weaponType;
+    }
+
     public struct WeaponData
     {
+        public string _weaponName;
+
         // Rifle
         public float _fireRate;
-        public int _magazineCurrent;
         public int _magazineCapacity;
 
         // Grenade
         public float _explosionRadius;
+    }
+
+    public struct BulletData
+    {
+        public int _magazineCurrent;
+        public int _totalAmmo;
     }
 
     [CreateAssetMenu(fileName = "EquipmentData", menuName = "DataSO/Equipment")]
@@ -217,15 +231,22 @@ namespace HA
 
         public WeaponData TransferWeaponData()
         {
-            WeaponData data = new WeaponData();
+            return new WeaponData
+            {
+                _fireRate = fireRate,
+                _magazineCapacity = magazine_Capacity,
+                _explosionRadius = explosionRadius,
+            };            
+        }
 
-            data._fireRate = fireRate;
-            data._magazineCurrent = magazine_Current;
-            data._magazineCapacity = magazine_Capacity;
-
-            data._explosionRadius = explosionRadius;
-
-            return data;
+        public WeaponMetaData TransferWeaponMetaData()
+        {
+            return new WeaponMetaData
+            {
+                _weaponName = itemName,
+                _weaponIcon = icon,
+                _weaponType = weaponType
+            };
         }
     }
 }

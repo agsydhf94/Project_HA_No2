@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace HA
 {
+    
+
     public class RifleWeapon : WeaponHandler, IWeapon, IReloadeable
     {
         private PlayerCharacter playerCharacter;
@@ -13,10 +16,12 @@ namespace HA
         [SerializeField] public int magazine_Capacity;
         [SerializeField] public int totalAmmo;
         public GameObject firePosition;
+        private string weaponName;
 
         public ObjectManager objectManager;
         public IObjectSpawner objectSpawner;
         private float lastTimeShoot;
+        
 
         private void Awake()
         {
@@ -35,7 +40,6 @@ namespace HA
         public void InitializeWeaponData(WeaponData data)
         {
             fireRate = data._fireRate;
-            magazine_Current = data._magazineCurrent;
             magazine_Capacity = data._magazineCapacity;
 
             if(playerCharacter == null)
@@ -81,7 +85,8 @@ namespace HA
                 totalAmmo = 0;
             }
 
-            Debug.Log($"재장전 완료: 탄창 = {magazine_Current}/{magazine_Capacity}, 남은 탄약 = {totalAmmo}");
+            // UI에 탄약 정보 갱신
+            playerCharacter.weaponHandler.NotifyAmmoChanged(this);
         }
 
         public void Attack()
@@ -92,7 +97,7 @@ namespace HA
                     return;
 
                 magazine_Current--;
-                
+
                 // Set Direction
                 Vector3 shootingDirection = (playerCharacter.mouseWorldPosition - firePosition.transform.position).normalized;
 
@@ -105,7 +110,21 @@ namespace HA
 
                 // Reset Timer
                 lastTimeShoot = Time.time;
+
+                // UI에 탄약 정보 갱신
+                playerCharacter.weaponHandler.NotifyAmmoChanged(this);
             }
         }
+
+        public BulletData TransferBulletData()
+        {
+            return new BulletData
+            {
+                _magazineCurrent = magazine_Current,
+                _totalAmmo = totalAmmo
+            };
+        }
+
+        
     }
 }

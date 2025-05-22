@@ -13,7 +13,8 @@ namespace HA
         private Vector2 movement;
         private Vector2 look;
         private bool isRunKey;
-        private bool isShowCursor = true;
+        public bool isShowCursor = true;
+        public bool isInputBlocked;
 
         public System.Action OnClickSpace;
         public System.Action OnClickLeftMouseButtonDown;
@@ -79,6 +80,9 @@ namespace HA
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
+
+            if (isInputBlocked)
+                return;
 
             float inputX = Input.GetAxis("Horizontal");
             float inputY = Input.GetAxis("Vertical");

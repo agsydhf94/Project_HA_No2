@@ -5,7 +5,9 @@ using UnityEngine;
 public enum ItemType
 {
     Equipment,
-    Material
+    Material,
+    Money,
+    Exp
 }
 
 namespace HA

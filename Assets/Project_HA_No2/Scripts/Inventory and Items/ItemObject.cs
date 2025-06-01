@@ -9,10 +9,12 @@ namespace HA
         [SerializeField] private Rigidbody rb;
         [SerializeField] private ItemDataSO itemDataSO;
         private Inventory inventory;
+        private CanvasUI canvasUI;
 
         private void Awake()
         {
             inventory = Inventory.Instance;
+            canvasUI = CanvasUI.Instance;
         }
 
         private void SetUpItemName()
@@ -39,6 +41,7 @@ namespace HA
                 return;                
             }
 
+            canvasUI.GetIngameUI().itemPopupContainerUI.ShowItemPopup(itemDataSO);
             inventory.AddItem(itemDataSO);
             Destroy(gameObject);
         }

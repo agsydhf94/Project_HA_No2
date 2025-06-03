@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,5 +15,8 @@ namespace HA
 
         [Header("Quest Information")]
         public QuestInfoSO questInfoSO;
+
+        [Header("Quest Objectives")]
+        public List<IQuestObjective> questObjectives = new List<IQuestObjective>();
     }   
 }

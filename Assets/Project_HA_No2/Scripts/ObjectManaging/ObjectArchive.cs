@@ -1,24 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HA
 {
+    /// <summary>
+    /// Initializes object pools at runtime using the entries from a PoolPrefabTableSO.
+    /// </summary>
     public class ObjectArchive : MonoBehaviour
     {
-        private ObjectPool objectPool;
+        /// <summary>
+        /// Reference to the ScriptableObject that defines which prefabs to pool.
+        /// </summary>
+        [SerializeField] private PoolPrefabTableSO prefabTable;
 
-        [Header("Player Ball Skill")]
-        [SerializeField] private ThrownBall skillBall;
-        [SerializeField] private BulletProjectile bulletTrajectoryStick;
 
+        /// <summary>
+        /// On Awake, registers all prefabs in the pool using the provided table.
+        /// </summary>
         private void Awake()
         {
-            objectPool = ObjectPool.Instance;
+            var pool = ObjectPool.Instance;
 
-            // Player Ball Skill
-            objectPool.CreatePool("skillBall", skillBall, 2);
-            objectPool.CreatePool("bulletTrajectoryStick", bulletTrajectoryStick, 20);
+            foreach (var entry in prefabTable.poolPrefabs)
+            {
+                // Skip invalid entries (missing key or prefab)
+                if (entry.prefab == null || string.IsNullOrEmpty(entry.key))
+                {
+                    Debug.LogWarning($"[ObjectArchive] Invalid pool entry: {entry.key}");
+                    continue;
+                }
+
+                // Create a pool for the specified prefab
+                pool.CreatePool(entry.key, entry.prefab, entry.initialSize);
+            }
         }
     }
 }

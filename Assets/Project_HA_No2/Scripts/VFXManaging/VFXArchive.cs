@@ -1,36 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace HA
 {
+    /// <summary>
+    /// Initializes and registers all VFX prefabs defined in the VFXPoolTableSO into the object pool.
+    /// Inherits from SingletonBase to ensure only one instance exists.
+    /// </summary>
     public class VFXArchive : SingletonBase<VFXArchive>
     {
-        private ObjectPool objectPool;
+        /// <summary>
+        /// Reference to the VFX pool table that contains all VFX entries to preload.
+        /// </summary>
+        [SerializeField] private VFXPoolTableSO tableSO;
 
-        [Header("Sword Hit VFX")]
-        [SerializeField] private ParticleSystem mari_SwordHit;
-
-        [Header("Ball Skill Hit VFX")]
-        [SerializeField] private ParticleSystem mari_BallSkillHit;
-        [SerializeField] private ParticleSystem mari_BallSkillHit_Final;
-
-        [Header("ElementExplode VFX")]
-        [SerializeField] private ParticleSystem mari_ElementExplode;
-
+        /// <summary>
+        /// Called during the Awake phase; initializes the VFX object pools.
+        /// </summary>
         public override void Awake()
         {
-            objectPool = ObjectPool.Instance;
+            base.Awake();
 
-            // Sword Hit VFX
-            objectPool.CreatePool("mari_SwordHit", mari_SwordHit, 2);
+            if (tableSO == null)
+            {
+                Debug.LogError("[VFXArchive] VFXTableSO is not assigned.");
+                return;
+            }
 
-            // Ball Skill Hit VFX
-            objectPool.CreatePool("mari_BallSkillHit", mari_BallSkillHit, 5);
-            objectPool.CreatePool("mari_BallSkillHit_Final", mari_BallSkillHit_Final, 2);
-
-            // ElementExplode VFX
-            objectPool.CreatePool("mari_ElementExplode", mari_ElementExplode, 2);
+            var pool = ObjectPool.Instance;
+            
+            // Iterate through all VFX entries and register them into the object pool
+            foreach (var entry in tableSO.entries)
+            {
+                if (entry.prefab != null)
+                    pool.CreatePool(entry.key, entry.prefab, entry.poolSize);
+                else
+                    Debug.LogWarning($"[VFXArchive] Missing prefab for key: {entry.key}");
+            }
         }
     }
 }

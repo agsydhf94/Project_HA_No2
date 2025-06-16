@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace HA
@@ -19,15 +17,20 @@ namespace HA
 
         public override void UpdateState()
         {
+            // Prevents re-triggering logic if already in the primary attack state
+            if (stateMachine.currentState == playerCharacter.primaryAttackState) return;
+            
             if (Input.GetKeyDown(KeyCode.Y))
             {
                 playerCharacter.CharacterUnArmed();
             }
 
-            if(Input.GetKeyDown(KeyCode.Mouse0))
+            
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 stateMachine.ChangeState(playerCharacter.primaryAttackState);
-            }
+            }            
+            
 
         }
 

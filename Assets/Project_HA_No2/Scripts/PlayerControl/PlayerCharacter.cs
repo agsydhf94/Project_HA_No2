@@ -105,6 +105,7 @@ namespace HA
         private Inventory inventory;
         public InputSystem inputSystem;
         public WeaponHandler weaponHandler;
+        public ComboAttackHandler comboAttackHandler;
 
 
         protected override void Awake()
@@ -114,6 +115,7 @@ namespace HA
             trailRenderer = GetComponent<TrailRenderer>();
             inputSystem = InputSystem.Instance;
             weaponHandler = GetComponent<WeaponHandler>();
+            comboAttackHandler = GetComponent<ComboAttackHandler>();
             cameraSystem = CameraSystem.Instance;
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();

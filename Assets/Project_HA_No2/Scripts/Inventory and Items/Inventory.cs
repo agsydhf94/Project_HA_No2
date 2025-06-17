@@ -1,40 +1,91 @@
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 namespace HA
 {
+    /// <summary>
+    /// Manages the player's entire inventory system, including item storage,
+    /// equipment management, weapon slot integration, UI synchronization,
+    /// and game save/load functionality.
+    /// 
+    /// Responsibilities:
+    /// - Tracks inventory, stash, equipment, and weapon slot items
+    /// - Equips and unequips gear, handling visual parts and stat modifiers
+    /// - Integrates with the WeaponQuickSlotUI and WeaponInfoUI
+    /// - Provides support for crafting, potions, armor usage, and quest tracking
+    /// - Supports full game save/load integration through ISaveManager
+    /// </summary>
     public class Inventory : SingletonBase<Inventory>, ISaveManager
     {
         private PlayerManager playerManager;
         private EquipmentPrefabManager equipmentPrefabManager;
 
+        /// <summary>
+        /// Items given to the player at the beginning of the game.
+        /// </summary>
         public List<ItemDataSO> initialItems;
 
+
+        /// <summary>
+        /// Equipment currently equipped by the player.
+        /// </summary>
         public List<InventoryItem> equipment;
+        /// <summary>
+        /// Dictionary for fast access to currently equipped items by EquipmentDataSO.
+        /// </summary>
         public Dictionary<EquipmentDataSO, InventoryItem> equipmentDictionary;
 
+        /// <summary>
+        /// Weapons currently assigned to quick weapon slots.
+        /// </summary>
+        public List<InventoryItem> weapons;
+        /// <summary>
+        /// Lookup table for quick-access weapons by EquipmentDataSO.
+        /// </summary>
+        public Dictionary<EquipmentDataSO, InventoryItem> weaponDictionary;
+
+
         [Header("Inventory Items")]
+        /// <summary>
+        /// General inventory items (non-stash, non-equipped).
+        /// </summary>
         public List<InventoryItem> inventory;
+        /// <summary>
+        /// Fast lookup for inventory items by their base data.
+        /// </summary>
         public Dictionary<ItemDataSO, InventoryItem> inventoryDictionary;
 
+
+        /// <summary>
+        /// Items stored in the stash (e.g., crafting materials).
+        /// </summary>
         public List<InventoryItem> stash;
+        /// <summary>
+        /// Fast lookup for stash items by their base data.
+        /// </summary>
         public Dictionary<ItemDataSO, InventoryItem> stashDictionary;
 
         [Header("InventoryUI")]
         [SerializeField] private Transform inventorySlotParent;
         [SerializeField] private Transform stashSlotParent;
         [SerializeField] private Transform equipmentSlotParent;
+        [SerializeField] private Transform weaponSlotParent;
         [SerializeField] private Transform statSlotParent;
 
         [Header("Weapon Info UI")]
         [SerializeField] private WeaponInfoUI weaponInfoUI;
+        [SerializeField] private WeaponQuickSlotUI weaponQuickSlotUI;
 
         private ItemSlotUI[] inventoryItemSlots;
         private ItemSlotUI[] stashItemSlots;
         private EquipmentSlotUI[] equipmentSlots;
+        private EquipmentSlotUI[] weaponSlots;
         private StatSlotUI[] statSlots;
+
+
 
         [Header("Items information")]
         private float lastTimeUsedPotion;
@@ -46,6 +97,10 @@ namespace HA
         public List<InventoryItem> loadedItems;
         public List<EquipmentDataSO> loadedEquipments;
 
+
+        /// <summary>
+        /// Initializes dictionaries, UI slots, and loads starting or saved items.
+        /// </summary>
         private void Start()
         {
             playerManager = PlayerManager.Instance;
@@ -60,19 +115,22 @@ namespace HA
             equipment = new List<InventoryItem>();
             equipmentDictionary = new Dictionary<EquipmentDataSO, InventoryItem>();
 
+            weapons = new List<InventoryItem>();
+            weaponDictionary = new Dictionary<EquipmentDataSO, InventoryItem>();
+
             inventoryItemSlots = inventorySlotParent.GetComponentsInChildren<ItemSlotUI>();
             stashItemSlots = stashSlotParent.GetComponentsInChildren<ItemSlotUI>();
             equipmentSlots = equipmentSlotParent.GetComponentsInChildren<EquipmentSlotUI>();
+            weaponSlots = weaponSlotParent.GetComponentsInChildren<EquipmentSlotUI>();
             statSlots = statSlotParent.GetComponentsInChildren<StatSlotUI>();
 
             InitializeItems();
         }
 
-        private void Update()
-        {
-            
-        }
 
+        /// <summary>
+        /// Loads saved equipment and items or initializes from default list.
+        /// </summary>
         private void InitializeItems()
         {
             foreach (EquipmentDataSO equipment in loadedEquipments)
@@ -82,9 +140,9 @@ namespace HA
 
             if (loadedItems.Count > 0)
             {
-                foreach(InventoryItem item in loadedItems)
+                foreach (InventoryItem item in loadedItems)
                 {
-                    for(int i = 0; i < item.stackSize; i++)
+                    for (int i = 0; i < item.stackSize; i++)
                     {
                         AddItem(item.itemDataSO);
                     }
@@ -98,97 +156,206 @@ namespace HA
                 if (initialItems[i] != null)
                 {
                     AddItem(initialItems[i]);
-                }                
+                }
             }
         }
 
-        public void EquipEquipment(ItemDataSO item)
+        
+        /// <summary>
+        /// Registers a weapon into weapon slot tracking and assigns it to a quick slot if needed.
+        /// </summary>
+        public void AssignWeaponToSlot(EquipmentDataSO newWeapon, RectTransform fromRect = null)
         {
-            EquipmentDataSO newEquipment = item as EquipmentDataSO;
-            InventoryItem newItem = new InventoryItem(newEquipment);
+            if (newWeapon == null) return;
 
-            EquipmentDataSO oldEquipment = null;
+            Debug.Log($"[AssignWeaponToSlot] Called with: {newWeapon.name}");
 
-            foreach (KeyValuePair<EquipmentDataSO, InventoryItem> _item in equipmentDictionary)
+
+            var existingWeapons = weaponDictionary
+                .Where(kvp => (kvp.Value.itemDataSO as EquipmentDataSO).equipmentType == newWeapon.equipmentType)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            foreach (var existingWeapon in existingWeapons)
             {
-                if (_item.Key.equipmentType == newEquipment.equipmentType)
-                {
-                    oldEquipment = _item.Key;
-                }
+                Debug.Log($"[UnAssign] Removing existing weapon: {existingWeapon}");
+                weaponDictionary.Remove(existingWeapon);
+                weapons.RemoveAll(i => i.itemDataSO == existingWeapon);
             }
 
-            if(oldEquipment != null)
-            {
-                // ÀÌ¹Ì ÀåÂøµÈ Àåºñ(oldEquipment)°¡ ÀÖÀ¸¸é Equipment Ã¢¿¡¼± »ç¶óÁ®¾ßÇÏ°í
-                UnEquipEquipment(oldEquipment);
 
-                if(oldEquipment.equipmentType == EquipmentType.Weapon)
-                {
-                    // ±×¸®°í µé°í ÀÖ´ø ÇÁ¸®ÆÕµµ ¾ø¾Ö¾ß ÇÑ´Ù
-                    foreach (var part in oldEquipment.parts)
-                    {
-                        equipmentPrefabManager.UnequipPart(part);
-                    }
-                }                
+            RemoveItem(newWeapon, true);
 
-                // ÇØ´ç Àåºñ´Â »õ·Î ÀåÂøµÉ ¹«±â¿¡ ÀÇÇØ ´Ù½Ã ÀÎº¥Åä¸®·Î µ¹¾Æ°¡¾ß ÇÑ´Ù.
-                AddItem(oldEquipment);
-            }
+            var newItem = new InventoryItem(newWeapon);
+            weapons.Add(newItem);
+            weaponDictionary[newWeapon] = newItem;
 
-            // ÀÌ¹Ì ÀåÂøµÈ Àåºñ(oldEquipment)°¡ ¾ø´Ù¸é
-            // ÇöÀç ÀåÂøµÈ Àåºñ¸¦ °ü¸®ÇÏ´Â °÷(equipment, equipmentDictionary)¿¡ Á¤º¸¸¦ ³Ö°í
-            // ÀÎº¥Åä¸®¿¡¼± Áö¿î´Ù
-            equipment.Add(newItem);
-            equipmentDictionary.Add(newEquipment, newItem);
-            newEquipment.AddModifiers();
+            if (!weaponQuickSlotUI.HasWeapon(newWeapon))
+                weaponQuickSlotUI.RegisterToFirstEmptySlot(newWeapon);
 
-            if(newEquipment.equipmentType == EquipmentType.Weapon)
-            {
-                foreach (var part in newEquipment.parts)
-                {
-                    equipmentPrefabManager.EquipPart(part);
-                }
-
-                // ¹«±â ÀÎÅÍÆäÀÌ½º È¹µæ
-                IWeapon weapon = GameObject.FindGameObjectWithTag(newEquipment.weaponType.ToString()).GetComponent<IWeapon>();
-                weapon.InitializeWeaponData(newEquipment.TransferWeaponData());
-
-                // WeaponMetaData »ı¼º
-                WeaponMetaData meta = newEquipment.TransferWeaponMetaData();
-
-                // WeaponHandler¿¡ µî·Ï (weapon + meta)
-                var weaponHandler = playerManager.playerCharacter.weaponHandler;
-                weaponHandler.SetWeapon(weapon, meta);
-
-                weaponInfoUI.Bind(playerManager.playerCharacter.weaponHandler.GetViewModel());
-            }
             
+            if (!weaponQuickSlotUI.HasWeapon(newWeapon))
+            {
+                var targetSlot = weaponQuickSlotUI.RegisterToFirstEmptySlot(newWeapon);
 
-            RemoveItem(item);
+                // ì—°ì¶œì€ ì—¬ê¸°ì„œ ì‹œì‘
+                if (fromRect != null && targetSlot != null)
+                {
+                    UIAnimationUtility.AnimateItemFlyToSlot(
+                        from: fromRect,
+                        to: targetSlot.iconImage.rectTransform,
+                        iconSprite: newWeapon.icon,
+                        canvasRoot: CanvasUI.Instance.transform
+                    );
+                }
+            }
 
             UpdateSlotUI();
         }
 
+        /// <summary>
+        /// Equips a piece of equipment, removes existing equipment of same type, and updates visuals.
+        /// </summary>
+        public void EquipEquipment(ItemDataSO item)
+        {
+            EquipmentDataSO newEquipment = item as EquipmentDataSO;
+            if (newEquipment == null)
+                return;
+
+            InventoryItem newItem = new InventoryItem(newEquipment);
+
+            EquipmentDataSO oldEquipment = null;
+            foreach (var pair in equipmentDictionary)
+            {
+                if (pair.Key.equipmentType == newEquipment.equipmentType)
+                {
+                    oldEquipment = pair.Key;
+                    break;
+                }
+            }
+
+            if (oldEquipment != null)
+            {
+                UnEquipEquipment(oldEquipment);
+                foreach (var part in oldEquipment.parts)
+                {
+                    equipmentPrefabManager.UnequipPart(part);
+                }
+
+                AddItem(oldEquipment);
+                equipmentDictionary.Remove(oldEquipment);
+                equipment.RemoveAll(i => i.itemDataSO == oldEquipment);
+            }
+
+            equipment.Add(newItem);
+            equipmentDictionary[newEquipment] = newItem;
+            newEquipment.AddModifiers();
+
+            foreach (var part in newEquipment.parts)
+            {
+                equipmentPrefabManager.EquipPart(part);
+            }
+
+            RemoveItem(item);
+            UpdateSlotUI();
+        }
+
+        /// <summary>
+        /// Equips a weapon, removing old one if needed, and updates weapon UI and model.
+        /// </summary>
+        public void EquipWeapon(EquipmentDataSO newWeapon)
+        {
+            if (newWeapon == null || newWeapon.equipmentType != EquipmentType.Weapon)
+                return;
+
+            EquipmentDataSO oldWeapon = null;
+
+            foreach (var pair in equipmentDictionary)
+            {
+                if (pair.Key.equipmentType == EquipmentType.Weapon)
+                {
+                    oldWeapon = pair.Key;
+                    break;
+                }
+            }
+
+            if (oldWeapon != null)
+            {
+                UnEquipEquipment(oldWeapon);
+
+                foreach (var part in oldWeapon.parts)
+                {
+                    equipmentPrefabManager.UnequipPart(part);
+                }
+
+                // Return old weapon to inventory
+                AddItem(oldWeapon);
+                equipmentDictionary.Remove(oldWeapon);
+                equipment.RemoveAll(i => i.itemDataSO == oldWeapon);
+            }
+
+            // Add new weapon
+            var newItem = new InventoryItem(newWeapon);
+            equipment.Add(newItem);
+            equipmentDictionary[newWeapon] = newItem;
+            newWeapon.AddModifiers();
+
+            foreach (var part in newWeapon.parts)
+            {
+                equipmentPrefabManager.EquipPart(part);
+            }
+
+            var weaponHandler = playerManager.playerCharacter.weaponHandler;
+            weaponHandler.SetWeapon(newWeapon);
+            weaponInfoUI.Bind(weaponHandler.GetViewModel());
+        }
+
+        /// <summary>
+        /// Unequips a general equipment item (non-visual).
+        /// </summary>
         public void UnEquipEquipment(EquipmentDataSO itemToRemove)
         {
             if (equipmentDictionary.TryGetValue(itemToRemove, out InventoryItem value))
             {
-
-                if(itemToRemove.equipmentType == EquipmentType.Weapon)
-                {
-                    foreach (var part in itemToRemove.parts)
-                    {
-                        equipmentPrefabManager.UnequipPart(part);
-                    }
-                }                
-
                 equipment.Remove(value);
                 equipmentDictionary.Remove(itemToRemove);
                 itemToRemove.RemoveModifiers();
             }
         }
 
-        // ¾ÆÀÌÅÛ ÇÈ¾÷ÀÌ³ª Ãß°¡ÇÒ ¶§ ÀÌ ¸Ş¼­µå¸¦ È£Ãâ
+        
+        /// <summary>
+        /// Unequips a weapon, removes it from quick slot and re-adds it to inventory.
+        /// </summary>
+        public void UnEquipWeapon(EquipmentDataSO weaponToRemove)
+        {
+
+            if (weaponToRemove == null) return;
+
+            // 1. weaponDictionaryì—ì„œ ì œê±°
+            if (weaponDictionary.ContainsKey(weaponToRemove))
+            {
+                weaponDictionary.Remove(weaponToRemove);
+                weapons.RemoveAll(i => i.itemDataSO.itemID == weaponToRemove.itemID);
+
+                Debug.Log($"[UnEquipWeapon] Removed {weaponToRemove.name} from weaponDictionary");
+            }
+
+            // 2. í€µìŠ¬ë¡¯ UIì—ì„œë„ ì œê±°
+            weaponQuickSlotUI.RemoveWeapon(weaponToRemove);
+
+            // 3. ì¸ë²¤í† ë¦¬ì— ë‹¤ì‹œ ì¶”ê°€
+            AddItem(weaponToRemove);
+
+            // 4. UI ê°±ì‹ 
+            UpdateSlotUI();
+
+        }
+
+        
+        /// <summary>
+        /// Refreshes all UI slots (equipment, inventory, stash, stat).
+        /// </summary>
         private void UpdateSlotUI()
         {
             for (int i = 0; i < equipmentSlots.Length; i++)
@@ -198,14 +365,33 @@ namespace HA
                     if (_item.Key.equipmentType == equipmentSlots[i].equipmentSlotType)
                     {
                         equipmentSlots[i].UpdateSlot(_item.Value);
+                        break;
                     }
                 }
             }
+
+            foreach (var weapon in weaponDictionary)
+            {
+                var weaponItem = weapon.Value;
+                var weaponData = weaponItem.itemDataSO as EquipmentDataSO;
+
+                for (int i = 0; i < weaponSlots.Length; i++)
+                {
+                    if (!weaponSlots[i].isUsing &&
+                        weaponData.equipmentType == weaponSlots[i].equipmentSlotType)
+                    {
+                        weaponSlots[i].UpdateSlot(weaponItem);
+                        break;
+                    }
+                }
+            }
+
 
             for (int i = 0; i < inventoryItemSlots.Length; i++)
             {
                 inventoryItemSlots[i].CleanUpSlot();
             }
+
             for (int i = 0; i < stashItemSlots.Length; i++)
             {
                 stashItemSlots[i].CleanUpSlot();
@@ -225,6 +411,10 @@ namespace HA
             UptateStatUI();
         }
 
+
+        /// <summary>
+        /// Updates the UI for all stat slots.
+        /// </summary>
         public void UptateStatUI()
         {
             for (int i = 0; i < statSlots.Length; i++)
@@ -233,13 +423,29 @@ namespace HA
             }
         }
 
-        public void AddItem(ItemDataSO item)
+
+        /// <summary>
+        /// Adds an item to inventory, stash, or applies money effect. Also triggers collection event.
+        /// </summary>
+        public void AddItem(ItemDataSO item, int stackCount = 1)
         {
             if (item.itemType == ItemType.Equipment && CanAddItemToInventory())
-                AddToInventory(item);
+            {
+                for (int i = 0; i < stackCount; i++)
+                    AddToInventory(item);
+            }
 
-            else if(item.itemType == ItemType.Material)
+            else if (item.itemType == ItemType.Material)
                 AddToStash(item);
+
+            else if (item.itemType == ItemType.Money)
+            {
+                MoneySO money = item as MoneySO;
+                playerManager.currency += money.moneyAmount;
+            }
+
+            EventBus.Instance.Publish(new GameEvent.ItemCollected(item.itemID));
+
 
             UpdateSlotUI();
         }
@@ -272,11 +478,15 @@ namespace HA
             }
         }
 
-        public void RemoveItem(ItemDataSO item)
+
+        /// <summary>
+        /// Removes item from inventory or stash. Optionally skips UI update.
+        /// </summary>
+        public void RemoveItem(ItemDataSO item, bool skipUpdate = false)
         {
-            if(inventoryDictionary.TryGetValue(item, out InventoryItem value))
+            if (inventoryDictionary.TryGetValue(item, out InventoryItem value))
             {
-                if(value.stackSize <= 1)
+                if (value.stackSize <= 1)
                 {
                     inventory.Remove(value);
                     inventoryDictionary.Remove(item);
@@ -287,9 +497,9 @@ namespace HA
                 }
             }
 
-            if(stashDictionary.TryGetValue(item, out InventoryItem stashValue))
+            if (stashDictionary.TryGetValue(item, out InventoryItem stashValue))
             {
-                if(stashValue.stackSize <= 1)
+                if (stashValue.stackSize <= 1)
                 {
                     stash.Remove(stashValue);
                     stashDictionary.Remove(item);
@@ -300,12 +510,15 @@ namespace HA
                 }
             }
 
-            UpdateSlotUI();
+            if (!skipUpdate)
+                UpdateSlotUI();
+
+
         }
 
         public bool CanAddItemToInventory()
         {
-            if(inventory.Count >= inventoryItemSlots.Length)
+            if (inventory.Count >= inventoryItemSlots.Length)
             {
                 return false;
             }
@@ -317,37 +530,37 @@ namespace HA
         {
             List<InventoryItem> materialsToUse = new List<InventoryItem>();
 
-            for(int i = 0; i < requiredMaterials.Count; i++)
+            for (int i = 0; i < requiredMaterials.Count; i++)
             {
                 if (stashDictionary.TryGetValue(requiredMaterials[i].itemDataSO, out InventoryItem stashValue))
                 {
-                    if(stashValue.stackSize >= requiredMaterials[i].stackSize)
+                    if (stashValue.stackSize >= requiredMaterials[i].stackSize)
                     {
-                        // »ı¼º¿¡ ÃæºĞÇÑ ¾ÆÀÌÅÛÀ» stash¿¡ °¡Áö°í ÀÖ´Ù¸é
-                        // »ç¿ëÇØ¼­ ¾ø¾Ù Àç·á ¸ñ·ÏÀÎ materialToUse ¿¡ Ãß°¡
+                        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ stashï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½
+                        // ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ materialToUse ï¿½ï¿½ ï¿½ß°ï¿½
                         materialsToUse.Add(stashValue);
                     }
                     else
                     {
-                        // »ı¼º¿¡ ÇÊ¿äÇÑ Àç·á°¡ stash¿¡ ÀÖÁö¸¸ 
-                        // ±× °³¼ö°¡ ºÎÁ·
+                        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½á°¡ stashï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+                        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                         return false;
                     }
-                    
+
                 }
                 else
                 {
-                    // »ı¼º¿¡ ÇÊ¿äÇÑ Àç·á°¡ stash¿¡ ¾øÀ½
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½á°¡ stashï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                     return false;
                 }
             }
 
-            for(int i = 0; i < materialsToUse.Count; i++)
+            for (int i = 0; i < materialsToUse.Count; i++)
             {
                 RemoveItem(materialsToUse[i].itemDataSO);
             }
 
-            // »ı¼ºÇÑ Àåºñ¸¦ ÀÎº¥Åä¸®¿¡ Ãß°¡
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½ß°ï¿½
             AddItem(equipmentToCraft);
             return true;
         }
@@ -378,7 +591,7 @@ namespace HA
                 return;
 
             bool canUsePotion = Time.time > lastTimeUsedPotion + potionCooldown;
-            if(canUsePotion)
+            if (canUsePotion)
             {
                 potionCooldown = potion.itemCoolDown;
                 potion.PlayEffect(null);
@@ -386,7 +599,7 @@ namespace HA
             }
             else
             {
-                Debug.Log("Æ÷¼Ç Äğ´Ù¿î Áß »ç¿ëÇÒ ¼ö ¾ø¾î¿ä");
+                Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¿ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½");
             }
         }
 
@@ -405,7 +618,7 @@ namespace HA
                 return true;
             }
 
-            Debug.Log("¾Æ¸Ó Äğ´Ù¿î Áß");
+            Debug.Log("ï¿½Æ¸ï¿½ ï¿½ï¿½Ù¿ï¿½ ï¿½ï¿½");
             return false;
         }
 
@@ -413,9 +626,9 @@ namespace HA
         {
             foreach (KeyValuePair<string, int> pair in _data.inventory)
             {
-                foreach(var item in GetItemDataBase())
+                foreach (var item in GetItemDataBase())
                 {
-                    if(item != null && item.itemId == pair.Key)
+                    if (item != null && item.itemID == pair.Key)
                     {
                         InventoryItem itemToLoad = new InventoryItem(item);
                         itemToLoad.stackSize = pair.Value;
@@ -425,11 +638,11 @@ namespace HA
                 }
             }
 
-            foreach(string loadedItemId in _data.equipmentId)
+            foreach (string loadedItemId in _data.equipmentId)
             {
-                foreach(var item in GetItemDataBase())
+                foreach (var item in GetItemDataBase())
                 {
-                    if(item != null && loadedItemId == item.itemId)
+                    if (item != null && loadedItemId == item.itemID)
                     {
                         loadedEquipments.Add(item as EquipmentDataSO);
                     }
@@ -441,23 +654,23 @@ namespace HA
         {
             _data.inventory.Clear();
             _data.equipmentId.Clear();
-            
 
-            foreach(KeyValuePair<ItemDataSO, InventoryItem> pair in inventoryDictionary)
+
+            foreach (KeyValuePair<ItemDataSO, InventoryItem> pair in inventoryDictionary)
             {
                 Debug.Log("Saving inventory...");
                 Debug.Log($"Inventory count: {inventoryDictionary.Count}");
-                _data.inventory.Add(pair.Key.itemId, pair.Value.stackSize);
+                _data.inventory.Add(pair.Key.itemID, pair.Value.stackSize);
             }
 
-            foreach(KeyValuePair<ItemDataSO, InventoryItem> pair in stashDictionary)
+            foreach (KeyValuePair<ItemDataSO, InventoryItem> pair in stashDictionary)
             {
-                _data.inventory.Add(pair.Key.itemId, pair.Value.stackSize);
+                _data.inventory.Add(pair.Key.itemID, pair.Value.stackSize);
             }
 
-            foreach(KeyValuePair<EquipmentDataSO, InventoryItem> pair in equipmentDictionary)
+            foreach (KeyValuePair<EquipmentDataSO, InventoryItem> pair in equipmentDictionary)
             {
-                _data.equipmentId.Add(pair.Key.itemId);
+                _data.equipmentId.Add(pair.Key.itemID);
             }
         }
 
@@ -466,7 +679,7 @@ namespace HA
             List<ItemDataSO> itemDataBase = new List<ItemDataSO>();
             string[] assetNames = AssetDatabase.FindAssets("", new[] { "Assets/Project_HA_No2/ScriptableObjects" });
 
-            foreach(string SOName in assetNames)
+            foreach (string SOName in assetNames)
             {
                 var SOPath = AssetDatabase.GUIDToAssetPath(SOName);
                 var itemData = AssetDatabase.LoadAssetAtPath<ItemDataSO>(SOPath);

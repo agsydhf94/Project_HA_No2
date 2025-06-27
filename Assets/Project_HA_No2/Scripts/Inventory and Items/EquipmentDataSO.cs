@@ -46,6 +46,17 @@ namespace HA
         public int _totalAmmo;
     }
 
+    /// <summary>
+    /// Defines the visual effect (VFX) parameters for a slash, including the effect key,
+    /// local position relative to the attacker, and rotation offset in Euler angles.
+    /// </summary>
+    [System.Serializable]
+    public class SlashVFXSettings
+    {
+        public string slashVFXKey;
+        public Vector3 position;
+        public Vector3 rotation;
+    }
     [CreateAssetMenu(fileName = "EquipmentData", menuName = "DataSO/Equipment")]
     public class EquipmentDataSO : ItemDataSO
     {
@@ -75,6 +86,7 @@ namespace HA
 
         [Header("WeaponData - Grenade")]
         public float explosionRadius;
+        public SlashVFXSettings[] slashVFXSettings;
 
         [Header("Unique Effect")]
         public float itemCoolDown;

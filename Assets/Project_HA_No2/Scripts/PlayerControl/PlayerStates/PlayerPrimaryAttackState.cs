@@ -61,15 +61,39 @@ namespace HA
             base.ExitState();
             playerCharacter.comboAttackHandler.ResetCombo();
         }
-        
+
 
         /// <summary>
-        /// Callback triggered when the hit frame of the attack is reached.
-        /// Executes the actual attack logic (e.g., damage).
+        /// Called at the hit frame of a melee attack animation.
+        /// Executes the current weapon's attack logic (e.g., damage application) and triggers associated visual effects (VFX).
+        /// Uses the combo index to select the corresponding slash VFX and aligns it with the player's facing direction plus a configurable offset.
         /// </summary>
         private void OnHit()
         {
             playerCharacter.weaponHandler.TriggerAttack();
+
+            var currentWeaponData = playerCharacter.weaponHandler.GetCurrentWeaponData();
+            var currentVFXIndex = playerCharacter.comboAttackHandler.currentComboIndex;
+
+            // Base rotation: aligns with the player's forward direction
+            Quaternion baseRotation = Quaternion.LookRotation(playerCharacter.transform.forward);
+
+            // Additional rotation offset defined in the ScriptableObject (Euler angles)
+            Vector3 eulerOffset = currentWeaponData.slashVFXSettings[currentVFXIndex].rotation;
+            Quaternion localOffset = Quaternion.Euler(eulerOffset);
+
+            // Final rotation: base forward-facing alignment plus local adjustment
+            Quaternion finalRotation = baseRotation * localOffset;
+
+            VFXManager.Instance.PlayEffect
+            (
+                currentWeaponData.slashVFXSettings[currentVFXIndex].slashVFXKey,
+                currentWeaponData.slashVFXSettings[currentVFXIndex].position,
+                finalRotation,
+                playerCharacter.transform,
+                1.5f,
+                VFXSourceType.ObjectPool
+            );
         }
 
 

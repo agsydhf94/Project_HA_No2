@@ -46,7 +46,7 @@ namespace HA
         /// <summary>
         /// Index of the current combo in the combo chain.
         /// </summary>
-        private int currentComboIndex;
+        public int currentComboIndex;
 
         /// <summary>
         /// Timer tracking how long the current combo has been playing.
@@ -157,6 +157,12 @@ namespace HA
             attackTimer += Time.deltaTime;
             var currentCombo = comboInfos[currentComboIndex];
 
+            if (!hasAttacked && attackTimer >= currentCombo.hitTiming)
+            {
+                hasAttacked = true;
+                Debug.Log($"[Combo] Hit timing reached at {attackTimer:F2}");
+                onHit?.Invoke();
+            }
 
             // Enable buffer window
             if (attackTimer >= currentCombo.bufferStartTime)

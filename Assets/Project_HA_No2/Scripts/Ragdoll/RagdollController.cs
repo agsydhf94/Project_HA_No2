@@ -3,6 +3,10 @@ using UnityEngine.AI;
 
 namespace HA
 {
+    /// <summary>
+    /// Manages ragdoll activation and force-based ragdoll effects on a humanoid character.
+    /// Automatically collects child rigidbodies and colliders, and handles transitions between animated and physics-driven states.
+    /// </summary>
     public class RagdollController : MonoBehaviour
     {
         public Rigidbody[] rigidbodies;
@@ -22,37 +26,53 @@ namespace HA
             animator = GetComponent<Animator>();
             navMeshAgent = GetComponent<NavMeshAgent>();
 
-            // SetRagdollActive(false);
+            // Disable physics initially
             RidigBodyActive(false);
             ColliderActive(true);
         }
 
+        /// <summary>
+        /// Debug method to activate ragdoll and apply force to the configured bone from the Inspector.
+        /// </summary>
         [ContextMenu("Active Ragdoll With Power")]
-        public void ActiveForceRagdollWithPower()       // ¿¡µðÅÍ¿¡¼­ ÀÓ½Ã·Î È®ÀÎ¿ë menu ÇÔ¼ö
+        public void ActiveForceRagdollWithPower()
         {
-            // public¿¡ ¼±¾ð µÈ ÀÓ½Ã º¯¼öµéÀ» È°¿ëÇÏ¿© Ragdoll¿¡ Force¸¦ Áà¼­ È°¼ºÈ­ ½ÃÅ²´Ù
             ForceActiveRagdollWithPower(targetBone, forceDirection, forcePower);
         }
 
+
+        /// <summary>
+        /// Enables ragdoll and applies force to a specific bone.
+        /// </summary>
+        /// <param name="bone">The bone to apply the force to.</param>
+        /// <param name="direction">Direction of the applied force.</param>
+        /// <param name="power">Magnitude of the force.</param>
         public void ForceActiveRagdollWithPower(HumanBodyBones bone, Vector3 direction, float power)
         {
             SetRagdollActive(true);
 
-            var boneTransform = animator.GetBoneTransform(bone);            // Animator¸¦ ÅëÇØ¼­, HumanBodyBonesÀÇ TransformÀ» °¡Á®¿È
-            var targetRigidbody = boneTransform.GetComponent<Rigidbody>();  // °¡Á®¿Â Bone Transform¿¡¼­ Rigidbody °¡Á®¿È
-            targetRigidbody.AddForce(direction * power, ForceMode.Force);   // °¡Á®¿Â Rigidbody¿¡ ÈûÀ» °¡ÇÑ´Ù
+            var boneTransform = animator.GetBoneTransform(bone);            // Animatorï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½, HumanBodyBonesï¿½ï¿½ Transformï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            var targetRigidbody = boneTransform.GetComponent<Rigidbody>();  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Bone Transformï¿½ï¿½ï¿½ï¿½ Rigidbody ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            targetRigidbody.AddForce(direction * power, ForceMode.Force);   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Rigidbodyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´ï¿½
         }
 
-        // µð¹ö±ë ¿ë
+        /// <summary>
+        /// Disables animation and AI navigation, then enables ragdoll.
+        /// </summary>
         [ContextMenu("Active Ragdoll")]
         public void ActiveRagdoll()
         {
-            // to do : RagdollÀ» È°¼ºÈ­ ½ÃÅ³¶§´Â Animator, NavMesh µîÀ» ¸ðµÎ ²¨ÁÖ´Â °ÍÀÌ ÁÁÀ½
+            // to do : Ragdollï¿½ï¿½ È°ï¿½ï¿½È­ ï¿½ï¿½Å³ï¿½ï¿½ï¿½ï¿½ Animator, NavMesh ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             animator.enabled = false;
             navMeshAgent.enabled = false;
             SetRagdollActive(true);
         }
 
+
+        /// <summary>
+        /// Toggles the ragdoll state by enabling/disabling rigidbodies and colliders.
+        /// </summary>
+        /// <param name="isActive">Whether the ragdoll should be active.</param>
         public void SetRagdollActive(bool isActive)
         {
             RidigBodyActive(isActive);
@@ -60,6 +80,11 @@ namespace HA
             ColliderActive(isActive);
         }
 
+
+        /// <summary>
+        /// Enables or disables all child rigidbodies' physics simulation.
+        /// </summary>
+        /// <param name="isActive">If true, enables dynamic physics; otherwise sets rigidbodies to kinematic.</param>
         public void RidigBodyActive(bool isActive)
         {
             foreach (var rb in rigidbodies)
@@ -68,6 +93,11 @@ namespace HA
             }
         }
 
+
+        /// <summary>
+        /// Enables or disables all child colliders.
+        /// </summary>
+        /// <param name="isActive">If true, enables colliders; otherwise disables them.</param>
         public void ColliderActive(bool isActive)
         {
             foreach (var col in colliders)

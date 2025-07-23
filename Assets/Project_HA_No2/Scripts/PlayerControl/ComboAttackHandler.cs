@@ -105,6 +105,12 @@ namespace HA
         private Action<int> onComboAnimation;
 
         /// <summary>
+        /// List of camera shake profiles corresponding to each combo stage.
+        /// Used to trigger appropriate screen shake feedback on hit.
+        /// </summary>
+        public ShakeProfileSO[] shakeProfileSOs;
+
+        /// <summary>
         /// Callback triggered when the combo ends (due to timeout or completion).
         /// </summary>
         private Action onComboEnd;
@@ -162,6 +168,13 @@ namespace HA
                 hasAttacked = true;
                 Debug.Log($"[Combo] Hit timing reached at {attackTimer:F2}");
                 onHit?.Invoke();
+
+                // Retrieve the camera shake profile associated with the current combo stage.
+                var profile = shakeProfileSOs[currentComboIndex];
+
+                // Publish a CameraShakeEvent using the retrieved profile to trigger screen shake.
+                Debug.Log($"[Combo] Publishing CameraShakeEvent with profile: {profile?.name}");   
+                EventBus.Instance.Publish(new CameraShakeEvent(profile));
             }
 
             // Enable buffer window

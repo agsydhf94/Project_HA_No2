@@ -27,6 +27,7 @@ namespace HA
 
             playerCharacter.SetAimInput();
 
+            playerCharacter.canvasUI.crosshairUI.SetVisible(true);
             playerCharacter.subWalkingSpeedDelta = playerCharacter.rifleArmed_WalkingDelta;
             playerCharacter.subRunningSpeedDelta = playerCharacter.rifleArmed_RunningDelta;
         }
@@ -38,6 +39,7 @@ namespace HA
             if (Input.GetMouseButton(1))
             {
                 playerCharacter.characterAnimator.SetBool("RifleAim", true);
+                playerCharacter.canvasUI.crosshairUI.SetAiming(true);
                 playerCharacter.isAiming = true;
                 Debug.Log("Rifle Aiming");
             }
@@ -45,6 +47,7 @@ namespace HA
             if (Input.GetMouseButtonUp(1))
             {
                 playerCharacter.characterAnimator.SetBool("RifleAim", false);
+                playerCharacter.canvasUI.crosshairUI.SetAiming(false);
             }
 
             if (Input.GetMouseButton(0))
@@ -73,6 +76,7 @@ namespace HA
                 base.ExitState();
 
             playerCharacter.rigBuilder.layers[0].rig.weight = 0f;
+            playerCharacter.canvasUI.crosshairUI.SetVisible(false);
         }
 
     }

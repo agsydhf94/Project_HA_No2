@@ -14,6 +14,7 @@ namespace HA
         [Header("Dialog Screen")]
         [SerializeField] public DialogUI dialogUI;
 
+        [SerializeField] public CrosshairUI crosshairUI;
         [SerializeField] private GameObject characterUI;
         [SerializeField] private GameObject skillTreeUI;
         [SerializeField] private GameObject craftUI;

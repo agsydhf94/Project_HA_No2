@@ -106,6 +106,7 @@ namespace HA
         public InputSystem inputSystem;
         public WeaponHandler weaponHandler;
         public ComboAttackHandler comboAttackHandler;
+        public CanvasUI canvasUI;
 
 
         protected override void Awake()
@@ -117,6 +118,7 @@ namespace HA
             weaponHandler = GetComponent<WeaponHandler>();
             comboAttackHandler = GetComponent<ComboAttackHandler>();
             cameraSystem = CameraSystem.Instance;
+            canvasUI = CanvasUI.Instance;
             mainCamera = Camera.main;
             stateMachine = new PlayerStateMachine();
             skillManager = SkillManager.Instance;

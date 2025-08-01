@@ -32,6 +32,9 @@ namespace HA
         private TextTyper typer;
 
         private ObjectManager objectManager;
+        public string soundKey;
+        private SoundManager soundManager;
+        private AudioSource audioSource;
 
         /// <summary>
         /// Subscribes to the typing event and caches ObjectManager.
@@ -41,6 +44,7 @@ namespace HA
             typer = GetComponent<TextTyper>();
             typer.OnCharacterTyped += OnCharacterTyped;
             objectManager = ObjectManager.Instance;
+            soundManager = SoundManager.Instance;
         }
 
 
@@ -81,9 +85,18 @@ namespace HA
             GameObject effectUIGameObject = effectUIComponent.gameObject;
 
             effectUIGameObject.transform.position = worldPos;
-
-            // 크기 및 정렬 조정 (필요시)
             effectUIGameObject.transform.localScale = Vector3.one * 1.2f;
+
+            if (soundKey != null)
+            {
+                if (audioSource == null)
+                {
+                    audioSource = gameObject.AddComponent<AudioSource>();
+                }
+
+                soundManager.PlaySound(soundKey, null, audioSource);
+                
+            }
 
             await UniTask.Delay((int)(lifetime * 1000));
             objectManager.Return("TextBackgroundEffectUI", effectUIComponent);

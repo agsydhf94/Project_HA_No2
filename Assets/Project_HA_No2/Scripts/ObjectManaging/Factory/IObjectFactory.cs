@@ -24,5 +24,14 @@ namespace HA
         /// <param name="key">The identifier of the object to load.</param>
         /// <returns>A UniTask that completes with the loaded component.</returns>
         UniTask<Component> LoadObjectAsync(string key);
+
+
+        /// <summary>
+        /// Returns or releases the specified object based on the implementation's source (e.g., pool, addressables).
+        /// This ensures proper cleanup or reuse depending on the factory type.
+        /// </summary>
+        /// <param name="key">The identifier of the object to return or release.</param>
+        /// <param name="component">The component instance to return or release.</param>
+        void ReturnObject(string key, Component component);
     }
 }

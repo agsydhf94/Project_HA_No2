@@ -36,5 +36,16 @@ namespace HA
             // Pool에서는 FallbackPath 필요 없음, 무조건 실패 처리
             return UniTask.FromResult<Component>(null);
         }
+
+
+        /// <summary>
+        /// Returns the specified component back to the object pool for future reuse.
+        /// </summary>
+        /// <param name="key">The identifier used to categorize the pooled object.</param>
+        /// <param name="component">The component instance to return to the pool.</param>
+        public void ReturnObject(string key, Component component)
+        {
+            pool.ReturnToPool(key, component);
+        }
     }
 }

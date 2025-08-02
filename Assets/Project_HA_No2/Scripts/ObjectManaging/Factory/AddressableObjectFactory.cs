@@ -18,7 +18,7 @@ namespace HA
         public bool TryLoadImmediate(string key, out Component component)
         {
             component = null;
-            return false; 
+            return false;
         }
 
 
@@ -35,6 +35,19 @@ namespace HA
 
             Debug.LogWarning($"[Addressables] Failed to load object: {key}");
             return null;
+        }
+        
+
+        /// <summary>
+        /// Releases the specified Addressables instance back to the system.
+        /// This method is used for proper cleanup of instantiated objects.
+        /// </summary>
+        public void ReturnObject(string key, Component component)
+        {
+            if (component != null && component.gameObject != null)
+            {
+                Addressables.ReleaseInstance(component.gameObject);
+            }
         }
     }
 }

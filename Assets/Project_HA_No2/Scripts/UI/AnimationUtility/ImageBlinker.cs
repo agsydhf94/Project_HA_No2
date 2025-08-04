@@ -15,25 +15,30 @@ namespace HA
         public float blinkSpeed = 2f;
         public float maxAlpha = 0.66f;
 
-        public async UniTask BlinkForSeconds(float seconds, CancellationToken ct = default)
+        public async UniTask BlinkForSeconds(
+            float seconds,
+            Color? blinkColor = null,
+            Color? finalColor = null,
+            CancellationToken ct = default)
         {
             float timer = 0f;
-            Color color = targetImage.color;
+            Color baseColor = blinkColor ?? targetImage.color;
 
             while (timer < seconds)
             {
                 if (ct.IsCancellationRequested) break;
 
                 float alpha = Mathf.PingPong(Time.time * blinkSpeed, maxAlpha);
-                color.a = alpha;
-                targetImage.color = color;
+                Color currentColor = baseColor;
+                currentColor.a = alpha;
+                targetImage.color = currentColor;
 
                 timer += Time.deltaTime;
                 await UniTask.Yield(PlayerLoopTiming.Update);
             }
 
-            color.a = 0f;
-            targetImage.color = color;
+            // After blinking ends
+            targetImage.color = finalColor ?? new Color(baseColor.r, baseColor.g, baseColor.b, 0f);
         }
     }
 }

@@ -37,33 +37,63 @@ namespace HA
         [SerializeField] private Color delayedColor = Color.red;
 
         private float currentFill = 1f;
+        private Tween shrinkTween;
+        private bool hasDelayedStarted = false;
 
 
         /// <summary>
-        /// Updates the fill values of both immediate and delayed images.
-        /// The delayed image animates with delay to reflect change.
+        /// Updates the fill amount of both immediate and delayed images.
+        /// The delayed image animates after a short delay if it's the first update,
+        /// or animates immediately if it's already started.
         /// </summary>
-        /// <param name="normalized">Normalized fill value (0 to 1).</param>
+        /// <param name="normalized">The normalized fill amount (0 to 1).</param>
         public void SetFillAmount(float normalized)
         {
             currentFill = normalized;
             immediateImage.fillAmount = normalized;
 
             delayedImage.color = delayedColor;
-            delayedImage.DOKill();
-            delayedImage.DOFillAmount(normalized, shrinkDuration)
-                      .SetDelay(delay)
-                      .SetEase(Ease.OutCubic);
+
+            if (!hasDelayedStarted)
+            {
+                // Start the delayed animation with initial delay (only once)
+                hasDelayedStarted = true;
+
+                shrinkTween?.Kill();
+                shrinkTween = delayedImage.DOFillAmount(normalized, shrinkDuration)
+                    .SetDelay(delay)
+                    .SetEase(Ease.OutCubic)
+                    .OnComplete(() =>
+                    {
+                        shrinkTween = null;
+                    });
+            }
+            else
+            {
+                // If already started, animate immediately (only if the value decreased)
+                if (delayedImage.fillAmount > normalized)
+                {
+                    shrinkTween?.Kill();
+                    shrinkTween = delayedImage.DOFillAmount(normalized, shrinkDuration)
+                        .SetEase(Ease.OutCubic)
+                        .OnComplete(() =>
+                        {
+                            shrinkTween = null;
+                        });
+                }
+            }
         }
 
-
         /// <summary>
-        /// Instantly sets both immediate and delayed images to the given fill amount,
-        /// bypassing animation.
+        /// Immediately synchronizes both images to the specified fill amount.
+        /// Cancels any ongoing animation and resets delay logic.
         /// </summary>
-        /// <param name="normalized">Normalized health value (0 to 1).</param>
+        /// <param name="normalized">The normalized fill amount (0 to 1).</param>
         public void ForceSync(float normalized)
         {
+            shrinkTween?.Kill();
+            hasDelayedStarted = false;
+
             immediateImage.fillAmount = delayedImage.fillAmount = normalized;
         }
     }

@@ -1,48 +1,74 @@
 using UnityEngine;
 using DG.Tweening;
+using Cinemachine;
 
 namespace HA
 {
     /// <summary>
     /// Applies directional camera shake based on a configurable <see cref="ShakeProfileSO"/>.
-    /// Automatically subscribes to <see cref="CameraShakeEvent"/> via the EventBus.
-    /// Restores original camera position when shake ends.
+    /// Subscribes to <see cref="CameraShakeEvent"/> via the EventBus and resets noise after shake ends.
     /// </summary>
     public class ProfiledCameraShaker : MonoBehaviour
     {
         /// <summary>
-        /// Camera transform to apply the shake to. Defaults to main camera if not assigned.
+        /// Reference to the Cinemachine virtual camera used for applying shakes.
         /// </summary>
-        [SerializeField] private Transform targetCamera;
+        [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
         /// <summary>
-        /// Default shake profile to use when none is provided in the event.
+        /// Default shake profile used if none is specified in the event.
         /// </summary>
         [SerializeField] private ShakeProfileSO defaultProfile;
 
+
         /// <summary>
-        /// Cached local position of the camera before shake starts.
+        /// Cached Perlin noise component from the virtual camera.
         /// </summary>
-        private Vector3 originalLocalPos;
+        private CinemachineBasicMultiChannelPerlin noise;
 
         /// <summary>
         /// Currently active shake tween, if any.
         /// </summary>
         private Tween shakeTween;
 
+
+        /// <summary>
+        /// Validates required camera components and initializes noise settings.
+        /// </summary>
         private void Awake()
         {
-            if (targetCamera == null)
-                targetCamera = Camera.main.transform;
+            if (virtualCamera == null)
+            {
+                Debug.LogError("[Shaker] Virtual Camera is not assigned.");
+                enabled = false;
+                return;
+            }
 
-            originalLocalPos = targetCamera.localPosition;
+            noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            if (noise == null)
+            {
+                Debug.LogError("[Shaker] No Perlin Noise component found on virtual camera.");
+                enabled = false;
+                return;
+            }
+
+            noise.m_AmplitudeGain = 0f;
+            noise.m_FrequencyGain = 0f;
         }
 
+
+        /// <summary>
+        /// Subscribes to the camera shake event on enable.
+        /// </summary>
         private void OnEnable()
         {
             EventBus.Instance.Subscribe<CameraShakeEvent>(OnCameraShakeRequested);
         }
 
+
+        /// <summary>
+        /// Unsubscribes from the camera shake event on disable.
+        /// </summary>
         private void OnDisable()
         {
             EventBus.Instance.Unsubscribe<CameraShakeEvent>(OnCameraShakeRequested);
@@ -50,9 +76,9 @@ namespace HA
 
 
         /// <summary>
-        /// Called when a camera shake is requested through the event bus.
+        /// Called when a camera shake event is received from the EventBus.
         /// </summary>
-        /// <param name="evt">The camera shake event payload, which may include a profile.</param>
+        /// <param name="evt">Shake event containing an optional <see cref="ShakeProfileSO"/>.</param>
         private void OnCameraShakeRequested(CameraShakeEvent evt)
         {
             PlayShake(evt.profile);
@@ -60,9 +86,9 @@ namespace HA
 
 
         /// <summary>
-        /// Starts a new camera shake based on the given or default profile.
+        /// Starts a new camera shake using the given profile, or the default if none provided.
         /// </summary>
-        /// <param name="profile">Optional shake profile to override the default.</param>
+        /// <param name="profile">Shake profile to apply (optional).</param>
         public void PlayShake(ShakeProfileSO profile = null)
         {
             profile ??= defaultProfile;
@@ -70,27 +96,21 @@ namespace HA
             if (shakeTween != null && shakeTween.IsActive())
                 shakeTween.Kill();
 
-            shakeTween = DOTween.To(() => 0f, t => ApplyShake(t, profile), 1f, profile.duration)
-                .SetEase(Ease.Linear)
-                .OnComplete(() =>
-                {
-                    targetCamera.localPosition = originalLocalPos;
-                });
-        }
+            // Set base noise values
+            noise.m_AmplitudeGain = profile.strength;
+            noise.m_FrequencyGain = profile.frequency;
 
-
-        /// <summary>
-        /// Applies the per-frame camera offset based on the profile's intensity curve and direction.
-        /// </summary>
-        /// <param name="t">Normalized time (0 to 1).</param>
-        /// <param name="profile">The shake profile to apply.</param>
-        private void ApplyShake(float t, ShakeProfileSO profile)
-        {
-            float curveValue = profile.intensityCurve.Evaluate(t);
-            float shakeNoise = Mathf.Sin(Time.time * profile.frequency * Mathf.PI * 2f); // 주기적인 진동
-
-            Vector3 offset = profile.direction.normalized * curveValue * profile.strength * shakeNoise;
-            targetCamera.localPosition = originalLocalPos + offset;
+            // Gradually reduce amplitude over time based on curve
+            shakeTween = DOTween.To(() => 1f, t =>
+            {
+                float curveValue = profile.intensityCurve.Evaluate(1f - t);
+                noise.m_AmplitudeGain = profile.strength * curveValue;
+            }, 0f, profile.duration).SetEase(Ease.Linear)
+              .OnComplete(() =>
+              {
+                  noise.m_AmplitudeGain = 0f;
+                  noise.m_FrequencyGain = 0f;
+              });
         }
     }
 }

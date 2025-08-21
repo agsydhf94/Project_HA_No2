@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -6,11 +7,23 @@ namespace HA
 {
     public class CanvasUI : SingletonBase<CanvasUI>
     {
+        /// <summary>
+        /// Callback invoked when the confirm UI's "Yes" button is pressed.
+        /// Designed as a generic confirm callback.
+        private Action OnYes;
+
+        /// <summary>
+        /// Callback invoked when the confirm UI's "No" button is pressed.
+        /// Designed as a generic confirm callback.
+        /// </summary>
+        private Action OnNo;
         [Header("End Screen")]
         [SerializeField] private FadeScreenUI fadeScreenUI;
         [SerializeField] private GameObject endText;
         [SerializeField] private GameObject restartButton;
 
+        [Header("Scene Change Screen")]
+        [SerializeField] public WarpConfirmUI warpConfirmUI;
         [Header("Dialog Screen")]
         [SerializeField] public DialogUI dialogUI;
 
@@ -116,6 +129,54 @@ namespace HA
             inputSystem.isInputBlocked = false;
         }
 
+        /// <summary>
+        /// Opens the warp confirmation UI and assigns callbacks for Yes/No responses.
+        /// </summary>
+        /// <param name="confirmYesCallback">
+        /// Callback invoked when the user confirms (presses "Yes").
+        /// </param>
+        /// <param name="confirmNoCallback">
+        /// Optional callback invoked when the user cancels (presses "No").
+        /// </param>
+        public void OpenWarpConfirmUI(Action confirmYesCallback, Action confirmNoCallback = null)
+        {
+            warpConfirmUI.gameObject.SetActive(true);
+            warpConfirmUI.uIFadeScaler.PlayShow();
+
+            OnYes = confirmYesCallback;
+            OnNo = confirmNoCallback;
+        }
+
+
+        /// <summary>
+        /// Closes the warp confirmation UI and clears assigned callbacks.
+        /// </summary>
+        public void CloseWarpConfirmUI()
+        {
+            warpConfirmUI.uIFadeScaler.PlayHide();
+            OnYes = null;
+            OnNo = null;
+        }
+
+
+        /// <summary>
+        /// Handles Yes button click: closes the UI and invokes the assigned callback.
+        /// </summary>
+        public void WarpUI_OnClickYes()
+        {
+            CloseWarpConfirmUI();
+            OnYes?.Invoke();
+        }
+
+
+        /// <summary>
+        /// Handles No button click: closes the UI and invokes the assigned callback.
+        /// </summary>
+        public void WarpUI_OnClickNo()
+        {
+            CloseWarpConfirmUI();
+            OnNo?.Invoke();
+        }
         public void SwitchOnEndScreen()
         {
             fadeScreenUI.FadeOut();
